@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnDestroy, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import jsPDF from 'jspdf';
 import { supabase } from '../../integrations/supabase/client';
@@ -36,13 +36,20 @@ interface RegistroBasico {
   data: Date;
 }
 
+interface DistribuicaoHumor {
+  label: string;
+  valor: number;
+  cor: string;
+  percentual: number;
+}
+
 @Component({
   selector: 'app-dashboard',
   imports: [],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
-export class Dashboard implements OnInit {
+export class Dashboard implements OnInit, OnDestroy {
   semana: DiaDaSemana[] = [
     { id: 'segunda', label: 'Seg', v: 0 },
     { id: 'terca',   label: 'Ter', v: 0 },
@@ -74,10 +81,20 @@ export class Dashboard implements OnInit {
 
   mesFiltro: string = new Date().toISOString().slice(0, 7);
 
+  /* ==== Carrossel do card do gráfico ==== */
+  slideAtual = 0;
+  readonly totalSlides = 3;
+  totalRegistrosGeral = 0;
+  distribuicaoHumor: DistribuicaoHumor[] = [];
+  distribuicaoConicGradient = 'conic-gradient(var(--accent) 0% 100%)';
+  diasSequencia = 0;
+
   private readonly coresTag = ['roxo', 'azul', 'verde', 'vermelho'];
+  private readonly coresDistribuicao = ['#7C3AED', '#3b82f6', '#22c55e', '#ef4444', '#eab308'];
   private topbarActions = inject(TopbarActionsService);
   private destroyRef = inject(DestroyRef);
   private registrosTodos: RegistroBasico[] = [];
+  private intervaloCarrossel: ReturnType<typeof setInterval> | null = null;
 
   async ngOnInit() {
     this.topbarActions.acoes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(acao => {
@@ -103,10 +120,87 @@ export class Dashboard implements OnInit {
     }
 
     this.registrosTodos = data.map(r => ({ humor: r.humor, data: new Date(r.criado_em) }));
+    this.totalRegistrosGeral = this.registrosTodos.length;
 
     this.calcularSemana(this.registrosTodos);
+    this.calcularDistribuicaoHumor(this.registrosTodos);
+    this.calcularSequencia(this.registrosTodos);
     this.aplicarFiltroMes();
     this.recalcularGrafico();
+    this.iniciarAutoRotacao();
+  }
+
+  ngOnDestroy(): void {
+    if (this.intervaloCarrossel) clearInterval(this.intervaloCarrossel);
+  }
+
+  private iniciarAutoRotacao(): void {
+    this.intervaloCarrossel = setInterval(() => this.proximoSlide(), 7000);
+  }
+
+  private reiniciarAutoRotacao(): void {
+    if (this.intervaloCarrossel) clearInterval(this.intervaloCarrossel);
+    this.iniciarAutoRotacao();
+  }
+
+  irParaSlide(i: number): void {
+    this.slideAtual = i;
+    this.reiniciarAutoRotacao();
+  }
+
+  proximoSlide(): void {
+    this.slideAtual = (this.slideAtual + 1) % this.totalSlides;
+  }
+
+  slideAnterior(): void {
+    this.slideAtual = (this.slideAtual - 1 + this.totalSlides) % this.totalSlides;
+    this.reiniciarAutoRotacao();
+  }
+
+  private calcularDistribuicaoHumor(registros: RegistroBasico[]): void {
+    const contagem = new Map<string, number>();
+    registros.forEach(r => contagem.set(r.humor, (contagem.get(r.humor) ?? 0) + 1));
+    const total = registros.length;
+
+    const entradas = [...contagem.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5);
+
+    this.distribuicaoHumor = entradas.map(([humor, valor], i) => ({
+      label: labelDoHumor(humor),
+      valor,
+      cor: this.coresDistribuicao[i % this.coresDistribuicao.length],
+      percentual: total ? Math.round((valor / total) * 100) : 0,
+    }));
+
+    if (this.distribuicaoHumor.length === 0) {
+      this.distribuicaoConicGradient = 'conic-gradient(var(--accent) 0% 100%)';
+      return;
+    }
+
+    let acumulado = 0;
+    const partes = this.distribuicaoHumor.map(d => {
+      const inicio = acumulado;
+      acumulado += d.percentual;
+      return `${d.cor} ${inicio}% ${acumulado}%`;
+    });
+    if (acumulado < 100) {
+      partes.push(`var(--accent) ${acumulado}% 100%`);
+    }
+    this.distribuicaoConicGradient = `conic-gradient(${partes.join(', ')})`;
+  }
+
+  private calcularSequencia(registros: RegistroBasico[]): void {
+    const dias = new Set(registros.map(r => r.data.toDateString()));
+    let contador = 0;
+    const cursor = new Date();
+
+    if (!dias.has(cursor.toDateString())) {
+      cursor.setDate(cursor.getDate() - 1);
+    }
+    while (dias.has(cursor.toDateString())) {
+      contador++;
+      cursor.setDate(cursor.getDate() - 1);
+    }
+    this.diasSequencia = contador;
   }
 
   private aplicarFiltroMes(): void {
