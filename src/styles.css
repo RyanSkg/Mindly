@@ -44,6 +44,24 @@ html, body {
   }
 }
 
+/* Segurança contra estouro de largura em telas estreitas: itens de
+   grid/flex não encolhem abaixo do conteúdo por padrão (min-width: auto),
+   então um texto um pouco mais longo empurra a borda pra fora da tela.
+   Isso força todo mundo a respeitar a largura do contêiner. */
+@media (max-width: 720px) {
+  .grid-2 > *,
+  .grid-estatisticas > *,
+  .estatisticas > *,
+  .grafico > *,
+  .pagina-oito > *,
+  .cards > *,
+  .registros-recentes li,
+  .card-cabecalho > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+}
+
 /* ===== Refresh visual (estilo Stakent) =====
    Seletores com tag (div.card) ganham dos estilos
    de componente (.card) por especificidade. */
