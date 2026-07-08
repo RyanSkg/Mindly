@@ -7,6 +7,7 @@ import { emojiDoHumor } from '../../shared/humor.util';
 import { TopbarActionsService } from '../../shared/topbar-actions.service';
 import { PerfilService } from '../../shared/perfil.service';
 import { NotificacoesService } from '../../shared/notificacoes.service';
+import { ModalService } from '../../shared/modal.service';
 
 interface Humor {
     id: string;
@@ -82,6 +83,7 @@ export class Diario implements OnInit {
   private topbarActions = inject(TopbarActionsService);
   private destroyRef = inject(DestroyRef);
   private notificacoes = inject(NotificacoesService);
+  private modal = inject(ModalService);
   private mediaRecorder: MediaRecorder | null = null;
   private audioChunks: Blob[] = [];
   perfil = inject(PerfilService);
@@ -326,7 +328,12 @@ export class Diario implements OnInit {
   }
 
   async excluirRegistro(registro: RegistroRecente) {
-    const confirmou = confirm('Excluir este registro? Essa ação não pode ser desfeita.');
+    const confirmou = await this.modal.confirmar({
+      titulo: 'Excluir registro',
+      mensagem: 'Excluir este registro? Essa ação não pode ser desfeita.',
+      textoConfirmar: 'Excluir',
+      perigo: true,
+    });
     if (!confirmou) return;
 
     const { error } = await supabase.from('registros').delete().eq('id', registro.id);
@@ -374,9 +381,12 @@ export class Diario implements OnInit {
     if (this.selecionados.size === 0 || this.excluindoSelecionados) return;
 
     const quantidade = this.selecionados.size;
-    const confirmou = confirm(
-      `Excluir ${quantidade} registro${quantidade > 1 ? 's' : ''}? Essa ação não pode ser desfeita.`
-    );
+    const confirmou = await this.modal.confirmar({
+      titulo: 'Excluir registros',
+      mensagem: `Excluir ${quantidade} registro${quantidade > 1 ? 's' : ''}? Essa ação não pode ser desfeita.`,
+      textoConfirmar: 'Excluir',
+      perigo: true,
+    });
     if (!confirmou) return;
 
     this.excluindoSelecionados = true;

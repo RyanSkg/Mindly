@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { supabase } from '../../integrations/supabase/client';
 import { PerfilService } from '../../shared/perfil.service';
+import { ModalService } from '../../shared/modal.service';
 
 interface Preferencias {
   lembrete_diario: boolean;
@@ -35,6 +36,7 @@ export class Configuracoes implements OnInit {
   erroExclusao = '';
 
   private router = inject(Router);
+  private modal = inject(ModalService);
   private userId: string | null = null;
 
   async ngOnInit() {
@@ -146,9 +148,12 @@ export class Configuracoes implements OnInit {
   async excluirConta() {
     if (this.excluindo) return;
 
-    const confirmou = confirm(
-      'Tem certeza que quer excluir sua conta? Todos os seus registros, contatos e relatórios serão apagados para sempre. Essa ação não pode ser desfeita.'
-    );
+    const confirmou = await this.modal.confirmar({
+      titulo: 'Excluir conta',
+      mensagem: 'Tem certeza que quer excluir sua conta? Todos os seus registros, contatos e relatórios serão apagados para sempre. Essa ação não pode ser desfeita.',
+      textoConfirmar: 'Excluir conta',
+      perigo: true,
+    });
     if (!confirmou) return;
 
     this.excluindo = true;
@@ -157,6 +162,7 @@ export class Configuracoes implements OnInit {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
       this.excluindo = false;
+      this.erroExclusao = 'Sessão expirada. Faça login novamente e tente de novo.';
       return;
     }
 
@@ -167,8 +173,8 @@ export class Configuracoes implements OnInit {
       });
 
       if (!resposta.ok) {
-        const erro = await resposta.json();
-        throw new Error(erro.error || 'Não foi possível excluir a conta.');
+        const erro = await resposta.json().catch(() => ({ error: `Erro ${resposta.status} ao excluir conta.` }));
+        throw new Error(erro.error || `Erro ${resposta.status} ao excluir conta.`);
       }
 
       await supabase.auth.signOut();
