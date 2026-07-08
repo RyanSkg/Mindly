@@ -8,8 +8,8 @@
       @if (!editando) {
         <h2>{{ perfil.nome() }}</h2>
         <p class="email">{{ perfil.email() }}</p>
-        @if (membroDesde) {
-          <p class="membro-desde">Membro desde {{ membroDesde | date:'MMMM y' }}</p>
+        @if (perfil.membroDesde()) {
+          <p class="membro-desde">Membro desde {{ perfil.membroDesde() | date:'MMMM y' }}</p>
         }
       } @else {
         <div class="form-editar">

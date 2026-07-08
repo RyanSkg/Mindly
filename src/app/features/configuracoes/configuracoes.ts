@@ -40,7 +40,8 @@ export class Configuracoes implements OnInit {
   async ngOnInit() {
     await this.perfil.carregar();
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { session } } = await supabase.auth.getSession();
+    const user = session?.user;
     if (!user) return;
     this.userId = user.id;
 

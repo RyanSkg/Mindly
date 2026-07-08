@@ -23,7 +23,6 @@ export class Perfil implements OnInit {
   perfil = inject(PerfilService);
   private router = inject(Router);
 
-  membroDesde: Date | null = null;
   metodoLogin = 'Email e senha';
 
   totalRegistros = 0;
@@ -46,13 +45,13 @@ export class Perfil implements OnInit {
   async ngOnInit() {
     await this.perfil.carregar();
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { session } } = await supabase.auth.getSession();
+    const user = session?.user;
     if (!user) {
       this.carregando = false;
       return;
     }
 
-    this.membroDesde = user.created_at ? new Date(user.created_at) : null;
     this.metodoLogin = user.app_metadata?.['provider'] === 'google' ? 'Google' : 'Email e senha';
 
     const [registros, contatos, relatorios] = await Promise.all([

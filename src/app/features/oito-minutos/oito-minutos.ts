@@ -91,7 +91,8 @@ export class OitoMinutos implements OnInit {
     if (!this.novoNome.trim() || !this.novaRelacao.trim() || this.salvandoContato) return;
     this.salvandoContato = true;
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { session } } = await supabase.auth.getSession();
+    const user = session?.user;
     if (!user) {
       this.salvandoContato = false;
       return;

@@ -46,7 +46,8 @@ export class NotificacoesService {
 
   /** Cria uma notificação para o usuário logado e atualiza a lista/badge na hora. */
   async criar(titulo: string, mensagem?: string): Promise<void> {
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { session } } = await supabase.auth.getSession();
+    const user = session?.user;
     if (!user) return;
 
     const { data, error } = await supabase
