@@ -20,9 +20,15 @@ interface TagEmocao {
     cor: string;
 }
 
+interface ConteudoSugerido {
+    tipo: 'ler' | 'assistir' | 'ouvir';
+    sugestao: string;
+}
+
 interface AnaliseIA {
     comentario: string;
     sugestao: string;
+    conteudos: ConteudoSugerido[];
     tags: TagEmocao[];
 }
 
@@ -33,6 +39,7 @@ interface RegistroRecente {
     data: Date;
     comentarioIA: string | null;
     sugestaoIA: string | null;
+    conteudosIA: ConteudoSugerido[];
     tagsIA: TagEmocao[];
 }
 
@@ -128,7 +135,7 @@ export class Diario implements OnInit {
 
     let query = supabase
       .from('registros')
-      .select('id, humor, texto, criado_em, comentario_ia, sugestao_ia, tags_ia')
+      .select('id, humor, texto, criado_em, comentario_ia, sugestao_ia, conteudos_ia, tags_ia')
       .order('criado_em', { ascending: false });
 
     if (this.filtroData) {
@@ -150,6 +157,7 @@ export class Diario implements OnInit {
         data: new Date(r.criado_em),
         comentarioIA: r.comentario_ia,
         sugestaoIA: r.sugestao_ia,
+        conteudosIA: r.conteudos_ia ?? [],
         tagsIA: r.tags_ia ?? [],
       }));
 
@@ -158,6 +166,7 @@ export class Diario implements OnInit {
         this.ultimaAnalise = {
           comentario: maisRecente.comentarioIA,
           sugestao: maisRecente.sugestaoIA ?? '',
+          conteudos: maisRecente.conteudosIA,
           tags: maisRecente.tagsIA,
         };
       }
@@ -214,6 +223,7 @@ export class Diario implements OnInit {
         data: new Date(registro.criado_em),
         comentarioIA: null,
         sugestaoIA: null,
+        conteudosIA: [],
         tagsIA: [],
       });
       this.textoRegistro = '';
@@ -241,6 +251,7 @@ export class Diario implements OnInit {
       data: new Date(registro.criado_em),
       comentarioIA: null,
       sugestaoIA: null,
+      conteudosIA: [],
       tagsIA: [],
     };
     this.registrosRecentes.unshift(novoRegistro);
@@ -262,20 +273,27 @@ export class Diario implements OnInit {
         throw new Error('Não foi possível analisar agora.');
       }
 
-      const dados: { comentario: string; sugestao: string; tags: string[] } = await resposta.json();
+      const dados: { comentario: string; sugestao: string; conteudos: ConteudoSugerido[]; tags: string[] } = await resposta.json();
       const tags: TagEmocao[] = (dados.tags ?? []).map((label, i) => ({
         label,
         cor: this.coresTag[i % this.coresTag.length],
       }));
+      const conteudos = dados.conteudos ?? [];
 
       novoRegistro.comentarioIA = dados.comentario;
       novoRegistro.sugestaoIA = dados.sugestao ?? null;
+      novoRegistro.conteudosIA = conteudos;
       novoRegistro.tagsIA = tags;
-      this.ultimaAnalise = { comentario: dados.comentario, sugestao: dados.sugestao ?? '', tags };
+      this.ultimaAnalise = { comentario: dados.comentario, sugestao: dados.sugestao ?? '', conteudos, tags };
 
       await supabase
         .from('registros')
-        .update({ comentario_ia: dados.comentario, sugestao_ia: dados.sugestao ?? null, tags_ia: tags })
+        .update({
+          comentario_ia: dados.comentario,
+          sugestao_ia: dados.sugestao ?? null,
+          conteudos_ia: conteudos,
+          tags_ia: tags,
+        })
         .eq('id', registro.id);
     } catch (err) {
       this.erroAnalise = err instanceof Error ? err.message : 'Erro ao analisar';
@@ -395,6 +413,7 @@ export class Diario implements OnInit {
           ? {
               comentario: this.registrosRecentes[0].comentarioIA,
               sugestao: this.registrosRecentes[0].sugestaoIA ?? '',
+              conteudos: this.registrosRecentes[0].conteudosIA,
               tags: this.registrosRecentes[0].tagsIA,
             }
           : null;
