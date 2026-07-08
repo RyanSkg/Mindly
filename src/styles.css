@@ -1,7 +1,7 @@
-/* Estilos globais do EchoMind */
+/* Estilos globais do Mindly */
 
 :root {
-  /* Paleta roxa escura do EchoMind (mesmos valores OKLCH do design original) */
+  /* Paleta roxa escura do Mindly (mesmos valores OKLCH do design original) */
   --background:        oklch(0.13 0.04 295);
   --foreground:        oklch(0.96 0.02 300);
   --surface:           oklch(0.17 0.05 295);

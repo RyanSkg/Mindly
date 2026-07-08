@@ -277,7 +277,7 @@ export class Dashboard implements OnInit {
     let y = 20;
 
     doc.setFontSize(18);
-    doc.text('EchoMind — Relatório de Humor', 14, y);
+    doc.text('Mindly — Relatório de Humor', 14, y);
     y += 8;
     doc.setFontSize(10);
     doc.setTextColor(120);
@@ -318,6 +318,6 @@ export class Dashboard implements OnInit {
       });
     }
 
-    doc.save(`echomind-dashboard-${Date.now()}.pdf`);
+    doc.save(`mindly-dashboard-${Date.now()}.pdf`);
   }
 }

@@ -28,7 +28,7 @@ export class Psicologo implements OnInit {
     especialidade: 'Psicóloga clínica — CRP 06/123456',
     mensagem: 'Ótima semana, Ryan! Continue registrando seu humor diariamente.',
     conectada: true,
-    email: 'renata.souza@echomind-exemplo.com',
+    email: 'renata.souza@mindly-exemplo.com',
   };
 
   relatorios: Relatorio[] = [];
@@ -119,7 +119,7 @@ export class Psicologo implements OnInit {
   }
 
   agendarConsulta() {
-    const assunto = encodeURIComponent('Agendamento de consulta - EchoMind');
+    const assunto = encodeURIComponent('Agendamento de consulta - Mindly');
     const corpo = encodeURIComponent(
       `Olá ${this.psicologa.nome},\n\nGostaria de agendar uma consulta. Poderia me passar os horários disponíveis?\n\nObrigado(a),\n${this.perfil.nome()}`
     );

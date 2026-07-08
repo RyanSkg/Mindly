@@ -136,7 +136,7 @@ export class Configuracoes implements OnInit {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `echomind-meus-dados-${Date.now()}.json`;
+    link.download = `mindly-meus-dados-${Date.now()}.json`;
     link.click();
     URL.revokeObjectURL(url);
 

@@ -5,7 +5,7 @@ import { authGuard } from './guards/auth.guard';
 export const routes: Routes = [
   {
     path: 'auth',
-    title: 'Entrar · EchoMind',
+    title: 'Entrar · Mindly',
     loadComponent: () => import('./features/auth/auth').then((m) => m.Auth),
   },
   {
