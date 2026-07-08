@@ -223,6 +223,34 @@ textarea:focus {
     color: var(--muted-fg);
 }
 
+.registro-texto {
+    flex: 1;
+    min-width: 0;
+}
+
+.registro-texto > div:first-child {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btn-excluir-registro {
+    background: none;
+    border: none;
+    color: var(--muted-fg);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    display: flex;
+    transition: color 0.15s, background-color 0.15s;
+}
+
+.btn-excluir-registro:hover {
+    color: #f87171;
+    background-color: #7f1d1d22;
+}
+
 .tag {
     border-radius: 9999px;
     border: 1px solid;

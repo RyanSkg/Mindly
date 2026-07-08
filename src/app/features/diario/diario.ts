@@ -274,4 +274,19 @@ export class Diario implements OnInit {
     this.humorSelecionado = this.humorSelecionado === id ? '' : id;
     this.dropdownAberto = false;
   }
+
+  async excluirRegistro(registro: RegistroRecente) {
+    const confirmou = confirm('Excluir este registro? Essa ação não pode ser desfeita.');
+    if (!confirmou) return;
+
+    const { error } = await supabase.from('registros').delete().eq('id', registro.id);
+    if (!error) {
+      this.registrosRecentes = this.registrosRecentes.filter(r => r.id !== registro.id);
+      if (this.ultimaAnalise && registro.comentarioIA === this.ultimaAnalise.comentario) {
+        this.ultimaAnalise = this.registrosRecentes[0]?.comentarioIA
+          ? { comentario: this.registrosRecentes[0].comentarioIA, tags: this.registrosRecentes[0].tagsIA }
+          : null;
+      }
+    }
+  }
 }
