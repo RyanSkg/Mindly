@@ -125,4 +125,4 @@ O schema (tabelas `registros`, `contatos`, `relatorios`, `preferencias`, `notifi
 
 **Ryan Sá** — ryansa.04@gmail.com
 
-Projeto final do curso **Ford Enter — Front-end** (Alura)
+Projeto final do curso **Ford Enter — Front-end**
