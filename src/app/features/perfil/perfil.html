@@ -1,0 +1,103 @@
+<div class="pagina-perfil">
+
+  <!-- Cabeçalho -->
+  <div class="card-cabecalho">
+    <div class="avatar-grande">{{ perfil.iniciais() }}</div>
+
+    <div class="cabecalho-info">
+      @if (!editando) {
+        <h2>{{ perfil.nome() }}</h2>
+        <p class="email">{{ perfil.email() }}</p>
+        @if (membroDesde) {
+          <p class="membro-desde">Membro desde {{ membroDesde | date:'MMMM y' }}</p>
+        }
+      } @else {
+        <div class="form-editar">
+          <input type="text" name="nomeEmEdicao" [(ngModel)]="nomeEmEdicao" placeholder="Seu nome" />
+          <div class="form-editar-botoes">
+            <button class="btn-primario" (click)="salvarPerfil()" [disabled]="salvando">Salvar</button>
+            <button class="btn-cancelar" (click)="cancelarEdicao()">Cancelar</button>
+          </div>
+        </div>
+      }
+    </div>
+
+    @if (!editando) {
+      <button class="btn-secundario" (click)="editarPerfil()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+        </svg>
+        Editar
+      </button>
+    }
+  </div>
+
+  <!-- Estatísticas pessoais -->
+  <div class="grid-estatisticas">
+    <div class="stat-card">
+      <div class="stat-valor">{{ totalRegistros }}</div>
+      <div class="stat-label">Registros no diário</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-valor">{{ diasAtivos }}</div>
+      <div class="stat-label">Dias ativos</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-valor">{{ humorMedio }}</div>
+      <div class="stat-label">Humor médio</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-valor">{{ totalContatos }}</div>
+      <div class="stat-label">Contatos de confiança</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <!-- Atividade recente -->
+    <div class="card">
+      <p class="secao-titulo">ATIVIDADE RECENTE</p>
+      @if (!carregando && atividadeRecente.length === 0) {
+        <p class="vazio">Nenhum registro ainda. Que tal começar hoje no Diário?</p>
+      }
+      <div class="lista-atividade">
+        @for (item of atividadeRecente; track item.id) {
+          <div class="atividade-item">
+            <span class="emoji">{{ emojiDoHumor(item.humor) }}</span>
+            <div class="atividade-info">
+              <div class="atividade-texto">{{ item.texto || item.humor }}</div>
+              <div class="atividade-data">{{ item.data | date:'dd/MM, HH:mm' }}</div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Conta -->
+    <div class="card">
+      <p class="secao-titulo">SOBRE A CONTA</p>
+
+      <div class="info-linha">
+        <span>Método de login</span>
+        <strong>{{ metodoLogin }}</strong>
+      </div>
+      <div class="info-linha">
+        <span>Relatórios enviados</span>
+        <strong>{{ totalRelatorios }}</strong>
+      </div>
+      <div class="info-linha ultimo">
+        <span>Contatos cadastrados</span>
+        <strong>{{ totalContatos }}</strong>
+      </div>
+
+      <button class="btn-sair" (click)="sair()" [disabled]="saindo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/>
+        </svg>
+        Sair da conta
+      </button>
+    </div>
+  </div>
+
+</div>

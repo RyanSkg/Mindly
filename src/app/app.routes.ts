@@ -37,6 +37,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/psicologo/psicologo').then((m) => m.Psicologo),
       },
       {
+        path: 'perfil',
+        title: 'Perfil',
+        loadComponent: () => import('./features/perfil/perfil').then((m) => m.Perfil),
+      },
+      {
         path: 'configuracoes',
         title: 'Configurações',
         loadComponent: () =>
