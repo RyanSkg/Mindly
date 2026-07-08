@@ -4,6 +4,7 @@ import jsPDF from 'jspdf';
 import { supabase } from '../../integrations/supabase/client';
 import { labelDoHumor } from '../../shared/humor.util';
 import { TopbarActionsService } from '../../shared/topbar-actions.service';
+import { PerfilService } from '../../shared/perfil.service';
 
 interface Relatorio {
   id: string;
@@ -26,6 +27,7 @@ export class Psicologo implements OnInit {
     especialidade: 'Psicóloga clínica — CRP 06/123456',
     mensagem: 'Ótima semana, Ryan! Continue registrando seu humor diariamente.',
     conectada: true,
+    email: 'renata.souza@echomind-exemplo.com',
   };
 
   relatorios: Relatorio[] = [];
@@ -39,8 +41,10 @@ export class Psicologo implements OnInit {
 
   private topbarActions = inject(TopbarActionsService);
   private destroyRef = inject(DestroyRef);
+  private perfil = inject(PerfilService);
 
   async ngOnInit() {
+    await this.perfil.carregar();
     await this.carregarRelatorios();
     this.topbarActions.acoes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(acao => {
       if (acao === 'enviar-relatorio') this.enviarRelatorio();
@@ -110,7 +114,13 @@ export class Psicologo implements OnInit {
     this.enviando = false;
   }
 
-  agendarConsulta() {}
+  agendarConsulta() {
+    const assunto = encodeURIComponent('Agendamento de consulta - EchoMind');
+    const corpo = encodeURIComponent(
+      `Olá ${this.psicologa.nome},\n\nGostaria de agendar uma consulta. Poderia me passar os horários disponíveis?\n\nObrigado(a),\n${this.perfil.nome()}`
+    );
+    window.open(`mailto:${this.psicologa.email}?subject=${assunto}&body=${corpo}`);
+  }
 
   baixarRelatorio(relatorio: Relatorio) {
     const doc = new jsPDF();

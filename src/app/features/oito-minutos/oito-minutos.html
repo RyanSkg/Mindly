@@ -57,6 +57,9 @@
     @if (contatos.length === 0) {
       <p class="sem-contatos">Nenhum contato ainda. Adicione alguém de confiança!</p>
     }
+    @if (avisoEnviado) {
+      <p class="aviso-mensagem">{{ avisoEnviado }}</p>
+    }
     <div class="lista-contatos">
       @for (contato of contatos; track contato.id) {
         <div class="contato-card">
@@ -70,7 +73,7 @@
             <span class="status-badge" [class]="'status-' + contato.status">
               {{ contato.status === 'disponivel' ? 'Disponível' : contato.status === 'ocupado' ? 'Ocupado' : 'Não perturbe' }}
             </span>
-            <button class="btn-avisar" (click)="avisar(contato)">Avisar</button>
+            <button class="btn-avisar" (click)="avisar(contato)" title="Avisar por WhatsApp">Avisar</button>
           </div>
         </div>
       }
@@ -89,6 +92,7 @@
       <div class="form-contato">
         <input type="text" name="novoNome" [(ngModel)]="novoNome" placeholder="Nome do contato" />
         <input type="text" name="novaRelacao" [(ngModel)]="novaRelacao" placeholder="Relação (ex: Amigo, Família)" />
+        <input type="tel" name="novoTelefone" [(ngModel)]="novoTelefone" placeholder="WhatsApp (opcional, ex: 5511999999999)" />
         <div class="form-contato-botoes">
           <button class="btn-avisar" (click)="adicionarContato()" [disabled]="salvandoContato">Salvar</button>
           <button class="btn-cancelar" (click)="cancelarFormulario()">Cancelar</button>

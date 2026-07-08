@@ -1,5 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { supabase } from '../../integrations/supabase/client';
 import { PerfilService } from '../../shared/perfil.service';
 
@@ -29,6 +30,11 @@ export class Configuracoes implements OnInit {
   nomeEmEdicao = '';
   salvandoPerfil = false;
 
+  exportando = false;
+  excluindo = false;
+  erroExclusao = '';
+
+  private router = inject(Router);
   private userId: string | null = null;
 
   async ngOnInit() {
@@ -105,6 +111,71 @@ export class Configuracoes implements OnInit {
     this.salvandoPerfil = false;
   }
 
-  exportarDados() {}
-  excluirConta() {}
+  async exportarDados() {
+    if (this.exportando || !this.userId) return;
+    this.exportando = true;
+
+    const [registros, contatos, relatorios, preferencias] = await Promise.all([
+      supabase.from('registros').select('*').eq('user_id', this.userId),
+      supabase.from('contatos').select('*').eq('user_id', this.userId),
+      supabase.from('relatorios').select('*').eq('user_id', this.userId),
+      supabase.from('preferencias').select('*').eq('user_id', this.userId).maybeSingle(),
+    ]);
+
+    const dados = {
+      perfil: { nome: this.perfil.nome(), email: this.perfil.email() },
+      exportado_em: new Date().toISOString(),
+      registros: registros.data ?? [],
+      contatos: contatos.data ?? [],
+      relatorios: relatorios.data ?? [],
+      preferencias: preferencias.data ?? null,
+    };
+
+    const blob = new Blob([JSON.stringify(dados, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `echomind-meus-dados-${Date.now()}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+
+    this.exportando = false;
+  }
+
+  async excluirConta() {
+    if (this.excluindo) return;
+
+    const confirmou = confirm(
+      'Tem certeza que quer excluir sua conta? Todos os seus registros, contatos e relatórios serão apagados para sempre. Essa ação não pode ser desfeita.'
+    );
+    if (!confirmou) return;
+
+    this.excluindo = true;
+    this.erroExclusao = '';
+
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      this.excluindo = false;
+      return;
+    }
+
+    try {
+      const resposta = await fetch('/api/excluir-conta', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+
+      if (!resposta.ok) {
+        const erro = await resposta.json();
+        throw new Error(erro.error || 'Não foi possível excluir a conta.');
+      }
+
+      await supabase.auth.signOut();
+      this.router.navigate(['/auth']);
+    } catch (err) {
+      this.erroExclusao = err instanceof Error ? err.message : 'Erro ao excluir conta';
+    } finally {
+      this.excluindo = false;
+    }
+  }
 }

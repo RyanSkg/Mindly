@@ -132,6 +132,18 @@ textarea:focus {
     opacity: 1;
 }
 
+.card-acoes button.gravando {
+    background-color: #7f1d1d55 !important;
+    border-color: #7f1d1d !important;
+    color: #fca5a5 !important;
+    animation: pulsar 1.2s ease-in-out infinite;
+}
+
+@keyframes pulsar {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
 /* Seções abaixo dos cards */
 
 .registros-analisados {

@@ -66,7 +66,9 @@
     <div class="card-acoes">
       <button (click)="registrarHumor()" [disabled]="salvando">Apenas Salvar</button>
       <button (click)="registrarHumoreAnalisar()" [disabled]="salvando || analisando">Salvar e Analisar</button>
-      <button (click)="audio()">Áudio</button>
+      <button (click)="audio()" [disabled]="transcrevendo" [class.gravando]="gravando">
+        {{ gravando ? 'Parar gravação' : (transcrevendo ? 'Transcrevendo...' : 'Áudio') }}
+      </button>
     </div>
   </div>
 </div>

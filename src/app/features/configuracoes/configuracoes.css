@@ -165,6 +165,12 @@
 
 .btn-perigo:hover { background-color: #3b0a0a55; }
 
+.erro-exclusao {
+    font-size: 12px;
+    color: #f87171;
+    margin-top: 8px;
+}
+
 /* Privacidade */
 
 .privacidade-texto {

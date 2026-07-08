@@ -67,9 +67,14 @@ export class Diario implements OnInit {
   erroAnalise: string = '';
   ultimaAnalise: AnaliseIA | null = null;
 
+  gravando: boolean = false;
+  transcrevendo: boolean = false;
+
   private readonly coresTag = ['roxo', 'azul', 'verde', 'vermelho'];
   private topbarActions = inject(TopbarActionsService);
   private destroyRef = inject(DestroyRef);
+  private mediaRecorder: MediaRecorder | null = null;
+  private audioChunks: Blob[] = [];
   perfil = inject(PerfilService);
 
   emojiDoHumor = emojiDoHumor;
@@ -174,7 +179,11 @@ export class Diario implements OnInit {
       const resposta = await fetch('/api/analisar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ humor: registro.humor, texto: registro.texto }),
+        body: JSON.stringify({
+          humor: registro.humor,
+          emoji: emojiDoHumor(registro.humor),
+          texto: registro.texto,
+        }),
       });
 
       if (!resposta.ok) {
@@ -202,7 +211,59 @@ export class Diario implements OnInit {
     }
   }
 
-  audio() {
+  async audio() {
+    if (this.gravando) {
+      this.mediaRecorder?.stop();
+      return;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      this.audioChunks = [];
+      this.mediaRecorder = new MediaRecorder(stream);
+
+      this.mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) this.audioChunks.push(e.data);
+      };
+
+      this.mediaRecorder.onstop = async () => {
+        stream.getTracks().forEach(track => track.stop());
+        this.gravando = false;
+        await this.transcreverAudio();
+      };
+
+      this.mediaRecorder.start();
+      this.gravando = true;
+      this.erroAnalise = '';
+    } catch {
+      this.erroAnalise = 'Não foi possível acessar o microfone. Verifique as permissões do navegador.';
+    }
+  }
+
+  private async transcreverAudio() {
+    if (this.audioChunks.length === 0) return;
+    this.transcrevendo = true;
+
+    const blob = new Blob(this.audioChunks, { type: 'audio/webm' });
+
+    try {
+      const resposta = await fetch('/api/transcrever', {
+        method: 'POST',
+        headers: { 'Content-Type': 'audio/webm' },
+        body: blob,
+      });
+
+      if (!resposta.ok) throw new Error('Não foi possível transcrever o áudio.');
+
+      const dados: { texto: string } = await resposta.json();
+      this.textoRegistro = this.textoRegistro
+        ? `${this.textoRegistro} ${dados.texto}`.trim()
+        : dados.texto;
+    } catch (err) {
+      this.erroAnalise = err instanceof Error ? err.message : 'Erro ao transcrever áudio';
+    } finally {
+      this.transcrevendo = false;
+    }
   }
 
   toggleDropdown() {

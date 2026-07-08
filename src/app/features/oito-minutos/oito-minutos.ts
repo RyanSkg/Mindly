@@ -10,6 +10,7 @@ interface Contato {
   iniciais: string;
   nome: string;
   relacao: string;
+  telefone: string | null;
   status: 'disponivel' | 'ocupado' | 'nao-perturbe';
   ultimaConversa: string;
 }
@@ -27,7 +28,10 @@ export class OitoMinutos implements OnInit {
   mostrarFormulario: boolean = false;
   novoNome: string = '';
   novaRelacao: string = '';
+  novoTelefone: string = '';
   salvandoContato: boolean = false;
+
+  avisoEnviado: string = '';
 
   private topbarActions = inject(TopbarActionsService);
   private destroyRef = inject(DestroyRef);
@@ -42,7 +46,7 @@ export class OitoMinutos implements OnInit {
   private async carregarContatos() {
     const { data, error } = await supabase
       .from('contatos')
-      .select('id, nome, relacao, status, criado_em')
+      .select('id, nome, relacao, telefone, status, criado_em')
       .order('criado_em', { ascending: true });
 
     if (!error && data) {
@@ -50,11 +54,12 @@ export class OitoMinutos implements OnInit {
     }
   }
 
-  private mapearContato(c: { id: string; nome: string; relacao: string; status: string; criado_em: string }): Contato {
+  private mapearContato(c: { id: string; nome: string; relacao: string; telefone: string | null; status: string; criado_em: string }): Contato {
     return {
       id: c.id,
       nome: c.nome,
       relacao: c.relacao,
+      telefone: c.telefone,
       status: c.status as Contato['status'],
       iniciais: this.gerarIniciais(c.nome),
       ultimaConversa: tempoRelativo(new Date(c.criado_em)),
@@ -77,6 +82,7 @@ export class OitoMinutos implements OnInit {
     this.mostrarFormulario = false;
     this.novoNome = '';
     this.novaRelacao = '';
+    this.novoTelefone = '';
   }
 
   async adicionarContato() {
@@ -91,7 +97,13 @@ export class OitoMinutos implements OnInit {
 
     const { data, error } = await supabase
       .from('contatos')
-      .insert({ user_id: user.id, nome: this.novoNome, relacao: this.novaRelacao, status: 'disponivel' })
+      .insert({
+        user_id: user.id,
+        nome: this.novoNome,
+        relacao: this.novaRelacao,
+        telefone: this.novoTelefone.trim() || null,
+        status: 'disponivel',
+      })
       .select()
       .single();
 
@@ -102,9 +114,20 @@ export class OitoMinutos implements OnInit {
     this.salvandoContato = false;
   }
 
-  avisar(contato: Contato) {}
+  avisar(contato: Contato) {
+    this.avisoEnviado = '';
 
-  encerrarSessao() {}
+    const texto = this.mensagem.trim()
+      ? this.mensagem.trim()
+      : `Oi ${contato.nome}, tudo bem? Estou passando por um momento difícil e gostaria de conversar. Você tem 8 minutos?`;
+
+    if (contato.telefone) {
+      const numero = contato.telefone.replace(/\D/g, '');
+      window.open(`https://wa.me/${numero}?text=${encodeURIComponent(texto)}`, '_blank');
+    } else {
+      this.avisoEnviado = `${contato.nome} não tem telefone cadastrado. Edite o contato para adicionar um número e avisar por WhatsApp.`;
+    }
+  }
 
   ligarCVV() {
     window.open('tel:188');

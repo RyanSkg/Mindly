@@ -4,13 +4,17 @@ export default async function handler(req, res) {
     return;
   }
 
-  const { humor, texto } = req.body ?? {};
+  const { humor, emoji, texto } = req.body ?? {};
   const apiKey = process.env.OPENAI_API_KEY;
 
   if (!apiKey) {
     res.status(500).json({ error: 'OPENAI_API_KEY não configurada no servidor.' });
     return;
   }
+
+  const descricaoTexto = texto
+    ? texto
+    : '(o usuário não escreveu nada, apenas selecionou o humor/emoji — baseie a análise só nisso)';
 
   try {
     const resposta = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -25,11 +29,11 @@ export default async function handler(req, res) {
           {
             role: 'system',
             content:
-              'Você é um assistente de bem-estar emocional do app EchoMind. Analise o humor e o texto do usuário e responda SOMENTE em JSON, no formato {"comentario": "1 a 2 frases empáticas em português", "tags": ["emocao1", "emocao2", "emocao3"]}. As tags são no máximo 3 palavras únicas, em português, minúsculas.',
+              'Você é um assistente de bem-estar emocional do app EchoMind. Analise o humor (e o emoji associado) e o texto do usuário, quando houver, e responda SOMENTE em JSON, no formato {"comentario": "1 a 2 frases empáticas em português", "tags": ["emocao1", "emocao2", "emocao3"]}. Se não houver texto, gere o comentário só com base no humor/emoji selecionado, de forma curta e acolhedora. As tags são no máximo 3 palavras únicas, em português, minúsculas.',
           },
           {
             role: 'user',
-            content: `Humor selecionado: ${humor}\nTexto do registro: ${texto || '(sem texto)'}`,
+            content: `Humor selecionado: ${humor} (emoji: ${emoji ?? '—'})\nTexto do registro: ${descricaoTexto}`,
           },
         ],
         response_format: { type: 'json_object' },

@@ -7,8 +7,10 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 import { join } from 'node:path';
+import { createClient } from '@supabase/supabase-js';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
+const SUPABASE_URL = 'https://dmrevpsqqavzxcavsjvd.supabase.co';
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
@@ -16,18 +18,22 @@ const angularApp = new AngularNodeAppEngine();
 app.use(express.json());
 
 /**
- * Analisa o humor/texto do Diário com IA (OpenAI) e devolve um
+ * Analisa o humor/emoji/texto do Diário com IA (OpenAI) e devolve um
  * comentário empático + tags de emoções. A chave da API nunca
  * chega ao navegador — fica só aqui no servidor.
  */
 app.post('/api/analisar', async (req, res) => {
-  const { humor, texto } = req.body ?? {};
+  const { humor, emoji, texto } = req.body ?? {};
   const apiKey = process.env['OPENAI_API_KEY'];
 
   if (!apiKey) {
     res.status(500).json({ error: 'OPENAI_API_KEY não configurada no servidor.' });
     return;
   }
+
+  const descricaoTexto = texto
+    ? texto
+    : '(o usuário não escreveu nada, apenas selecionou o humor/emoji — baseie a análise só nisso)';
 
   try {
     const resposta = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -42,11 +48,11 @@ app.post('/api/analisar', async (req, res) => {
           {
             role: 'system',
             content:
-              'Você é um assistente de bem-estar emocional do app EchoMind. Analise o humor e o texto do usuário e responda SOMENTE em JSON, no formato {"comentario": "1 a 2 frases empáticas em português", "tags": ["emocao1", "emocao2", "emocao3"]}. As tags são no máximo 3 palavras únicas, em português, minúsculas.',
+              'Você é um assistente de bem-estar emocional do app EchoMind. Analise o humor (e o emoji associado) e o texto do usuário, quando houver, e responda SOMENTE em JSON, no formato {"comentario": "1 a 2 frases empáticas em português", "tags": ["emocao1", "emocao2", "emocao3"]}. Se não houver texto, gere o comentário só com base no humor/emoji selecionado, de forma curta e acolhedora. As tags são no máximo 3 palavras únicas, em português, minúsculas.',
           },
           {
             role: 'user',
-            content: `Humor selecionado: ${humor}\nTexto do registro: ${texto || '(sem texto)'}`,
+            content: `Humor selecionado: ${humor} (emoji: ${emoji ?? '—'})\nTexto do registro: ${descricaoTexto}`,
           },
         ],
         response_format: { type: 'json_object' },
@@ -66,6 +72,84 @@ app.post('/api/analisar', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err instanceof Error ? err.message : 'Erro ao analisar' });
   }
+});
+
+/**
+ * Transcreve um áudio gravado no navegador (Diário → botão "Áudio")
+ * usando o Whisper da OpenAI, e devolve o texto reconhecido.
+ */
+app.post('/api/transcrever', express.raw({ type: '*/*', limit: '15mb' }), async (req, res) => {
+  const apiKey = process.env['OPENAI_API_KEY'];
+
+  if (!apiKey) {
+    res.status(500).json({ error: 'OPENAI_API_KEY não configurada no servidor.' });
+    return;
+  }
+
+  const audioBuffer = req.body as Buffer;
+  if (!audioBuffer || !Buffer.isBuffer(audioBuffer) || audioBuffer.length === 0) {
+    res.status(400).json({ error: 'Áudio vazio.' });
+    return;
+  }
+
+  try {
+    const formData = new FormData();
+    formData.append('file', new Blob([new Uint8Array(audioBuffer)], { type: 'audio/webm' }), 'gravacao.webm');
+    formData.append('model', 'whisper-1');
+    formData.append('language', 'pt');
+
+    const resposta = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${apiKey}` },
+      body: formData,
+    });
+
+    if (!resposta.ok) {
+      const erro = await resposta.text();
+      res.status(resposta.status).json({ error: erro });
+      return;
+    }
+
+    const dados = await resposta.json();
+    res.json({ texto: dados.text ?? '' });
+  } catch (err) {
+    res.status(500).json({ error: err instanceof Error ? err.message : 'Erro ao transcrever' });
+  }
+});
+
+/**
+ * Apaga a conta do usuário autenticado (dados + login) de vez.
+ * Usa a service role key — precisa ficar só no servidor, nunca no navegador.
+ */
+app.post('/api/excluir-conta', async (req, res) => {
+  const authHeader = req.headers.authorization ?? '';
+  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '';
+  const serviceKey = process.env['SUPABASE_SERVICE_ROLE_KEY'];
+
+  if (!token) {
+    res.status(401).json({ error: 'Não autenticado.' });
+    return;
+  }
+  if (!serviceKey) {
+    res.status(500).json({ error: 'SUPABASE_SERVICE_ROLE_KEY não configurada no servidor.' });
+    return;
+  }
+
+  const admin = createClient(SUPABASE_URL, serviceKey);
+
+  const { data: userData, error: userError } = await admin.auth.getUser(token);
+  if (userError || !userData.user) {
+    res.status(401).json({ error: 'Sessão inválida.' });
+    return;
+  }
+
+  const { error: deleteError } = await admin.auth.admin.deleteUser(userData.user.id);
+  if (deleteError) {
+    res.status(500).json({ error: deleteError.message });
+    return;
+  }
+
+  res.json({ ok: true });
 });
 
 /**
