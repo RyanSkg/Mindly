@@ -101,6 +101,11 @@
     <p>Analisando seu registro...</p>
   } @else if (ultimaAnalise) {
     <p>{{ ultimaAnalise.comentario }}</p>
+    @if (ultimaAnalise.sugestao) {
+      <p class="sugestao-ia">
+        <strong>Sugestão:</strong> {{ ultimaAnalise.sugestao }}
+      </p>
+    }
     <div class="tags-emocoes">
       @for (tag of ultimaAnalise.tags; track tag.label) {
         <span class="tag" [class]="'tag-' + tag.cor">{{ tag.label }}</span>
