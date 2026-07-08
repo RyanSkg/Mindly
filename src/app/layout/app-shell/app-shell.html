@@ -1,5 +1,9 @@
 <div class="principal">
-  <div class="sideBar">
+  @if (menuAberto) {
+    <div class="backdrop" (click)="fecharMenu()"></div>
+  }
+
+  <div class="sideBar" [class.aberto]="menuAberto">
     <div class="logo">
       <a routerLink="">
         <svg
@@ -26,6 +30,9 @@
         </svg>
       </a>
       <h1 class="logo-text">EchoMind</h1>
+      <button class="btn-fechar-menu" (click)="fecharMenu()" title="Fechar menu">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
     </div>
     <a class="usuario" routerLink="/perfil" title="Ver e editar perfil">
       <div class="avatar">{{ perfil.iniciais() }}</div>
@@ -82,35 +89,68 @@
       </ul>
     </div>
     <div class="rodape">
-      <div class="rodape-notificacoes">
+      <button class="rodape-notificacoes" (click)="toggleNotificacoes()">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
         Notificações
-        <span class="badge">2</span>
-      </div>
+        @if (notificacoes.naoLidas() > 0) {
+          <span class="badge">{{ notificacoes.naoLidas() }}</span>
+        }
+      </button>
       <button class="rodape-sair" title="Sair" (click)="sair()">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
       </button>
     </div>
+
+    @if (notificacoesAbertas) {
+      <div class="painel-notificacoes">
+        <div class="painel-notificacoes-topo">
+          <span>Notificações</span>
+          @if (notificacoes.naoLidas() > 0) {
+            <button (click)="notificacoes.marcarTodasComoLidas()">Marcar todas como lidas</button>
+          }
+        </div>
+        @if (notificacoes.lista().length === 0) {
+          <p class="painel-notificacoes-vazio">Nenhuma notificação ainda.</p>
+        }
+        <ul>
+          @for (n of notificacoes.lista(); track n.id) {
+            <li [class.nao-lida]="!n.lida" (click)="abrirNotificacao(n.id)">
+              <div class="notificacao-titulo">{{ n.titulo }}</div>
+              @if (n.mensagem) {
+                <div class="notificacao-mensagem">{{ n.mensagem }}</div>
+              }
+              <div class="notificacao-tempo">{{ tempoRelativo(n.criado_em) }}</div>
+            </li>
+          }
+        </ul>
+      </div>
+    }
   </div>
+
   <div class="conteudo">
     <div class="topBar">
-      <h2>{{ tituloPagina }}</h2>
+      <div class="topBar-esquerda">
+        <button class="btn-hamburguer" (click)="toggleMenu()" title="Abrir menu">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+        </button>
+        <h2>{{ tituloPagina }}</h2>
+      </div>
       <div class="topBar-acoes">
         @if (rotaAtual === 'diario') {
-          <button class="tb-btn">
+          <label class="tb-btn tb-data">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-            Hoje, {{ dataHoje | date:'d MMM' }}
-          </button>
+            <input type="date" [max]="dataHoje | date:'yyyy-MM-dd'" (change)="dispararAcao('filtrar-data', $any($event.target).value)" />
+          </label>
           <button class="tb-btn tb-btn-primario" (click)="dispararAcao('analisar-ia')">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
             Analisar com IA
           </button>
         }
         @if (rotaAtual === 'dashboard') {
-          <button class="tb-btn">
+          <label class="tb-btn tb-data">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-            {{ dataHoje | date:'MMMM y' }}
-          </button>
+            <input type="month" [max]="dataHoje | date:'yyyy-MM'" [value]="dataHoje | date:'yyyy-MM'" (change)="dispararAcao('filtrar-mes', $any($event.target).value)" />
+          </label>
           <button class="tb-btn tb-btn-primario" (click)="dispararAcao('gerar-pdf')">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
             Gerar PDF

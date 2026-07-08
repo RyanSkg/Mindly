@@ -7,12 +7,52 @@
 }
 
 .sideBar {
+    position: relative;
     width: 240px;
     background-color: var(--sidebar);
     padding: 0;
     display: flex;
     flex-direction: column;
     border-right: 1px solid var(--border);
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.btn-fechar-menu {
+    display: none;
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: var(--muted-fg);
+    cursor: pointer;
+    padding: 4px;
+}
+
+.btn-hamburguer {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--foreground);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    margin-right: 6px;
+    transition: background-color 0.15s;
+}
+
+.btn-hamburguer:hover {
+    background-color: var(--accent);
+}
+
+.topBar-esquerda {
+    display: flex;
+    align-items: center;
+}
+
+.backdrop {
+    display: none;
 }
 
 .active {
@@ -198,6 +238,21 @@
     opacity: 0.9;
 }
 
+.tb-data {
+    position: relative;
+    cursor: default;
+}
+
+.tb-data input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    border: none;
+    width: 100%;
+    color-scheme: dark;
+}
+
 .tb-usuario {
     display: flex;
     align-items: center;
@@ -252,6 +307,107 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    background: none;
+    border: none;
+    color: var(--muted-fg);
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    transition: color 0.15s;
+}
+
+.rodape-notificacoes:hover {
+    color: var(--brand-soft);
+}
+
+/* Painel de notificações */
+
+.painel-notificacoes {
+    position: absolute;
+    left: 12px;
+    bottom: 60px;
+    width: 280px;
+    max-height: 340px;
+    overflow-y: auto;
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+    z-index: 40;
+}
+
+.painel-notificacoes-topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--foreground);
+}
+
+.painel-notificacoes-topo button {
+    background: none;
+    border: none;
+    color: var(--brand-soft);
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.painel-notificacoes-topo button:hover {
+    text-decoration: underline;
+}
+
+.painel-notificacoes-vazio {
+    padding: 16px 14px;
+    font-size: 12px;
+    color: var(--muted-fg);
+}
+
+.painel-notificacoes ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.painel-notificacoes li {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
+
+.painel-notificacoes li:last-child {
+    border-bottom: none;
+}
+
+.painel-notificacoes li:hover {
+    background-color: var(--surface-2);
+}
+
+.painel-notificacoes li.nao-lida {
+    background-color: var(--accent);
+}
+
+.notificacao-titulo {
+    font-size: 13px;
+    color: var(--foreground);
+    font-weight: 500;
+}
+
+.notificacao-mensagem {
+    font-size: 12px;
+    color: var(--muted-fg);
+    margin-top: 2px;
+}
+
+.notificacao-tempo {
+    font-size: 11px;
+    color: var(--brand-muted);
+    margin-top: 4px;
 }
 
 .badge {
@@ -283,4 +439,38 @@
 .rodape-sair:hover {
     background-color: var(--accent);
     color: var(--brand-soft);
+}
+
+/* Menu hamburguer — telas estreitas */
+
+@media (max-width: 900px) {
+    .btn-hamburguer {
+        display: flex;
+    }
+
+    .btn-fechar-menu {
+        display: flex;
+    }
+
+    .sideBar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 50;
+        transform: translateX(-100%);
+    }
+
+    .sideBar.aberto {
+        transform: translateX(0);
+        box-shadow: 8px 0 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .backdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 40;
+    }
 }

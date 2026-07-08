@@ -17,17 +17,19 @@ const angularApp = new AngularNodeAppEngine();
 
 app.use(express.json());
 
+const GEMINI_MODELO = 'gemini-2.0-flash';
+
 /**
- * Analisa o humor/emoji/texto do Diário com IA (OpenAI) e devolve um
- * comentário empático + tags de emoções. A chave da API nunca
- * chega ao navegador — fica só aqui no servidor.
+ * Analisa o humor/emoji/texto do Diário com IA (Google Gemini, gratuito)
+ * e devolve um comentário empático + tags de emoções. A chave da API
+ * nunca chega ao navegador — fica só aqui no servidor.
  */
 app.post('/api/analisar', async (req, res) => {
   const { humor, emoji, texto } = req.body ?? {};
-  const apiKey = process.env['OPENAI_API_KEY'];
+  const apiKey = process.env['GEMINI_API_KEY'];
 
   if (!apiKey) {
-    res.status(500).json({ error: 'OPENAI_API_KEY não configurada no servidor.' });
+    res.status(500).json({ error: 'GEMINI_API_KEY não configurada no servidor.' });
     return;
   }
 
@@ -36,29 +38,27 @@ app.post('/api/analisar', async (req, res) => {
     : '(o usuário não escreveu nada, apenas selecionou o humor/emoji — baseie a análise só nisso)';
 
   try {
-    const resposta = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
+    const resposta = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODELO}:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: {
+            parts: [{
+              text: 'Você é um assistente de bem-estar emocional do app EchoMind. Analise o humor (e o emoji associado) e o texto do usuário, quando houver, e responda SOMENTE em JSON, no formato {"comentario": "1 a 2 frases empáticas em português", "tags": ["emocao1", "emocao2", "emocao3"]}. Se não houver texto, gere o comentário só com base no humor/emoji selecionado, de forma curta e acolhedora. As tags são no máximo 3 palavras únicas, em português, minúsculas.',
+            }],
+          },
+          contents: [{
+            parts: [{ text: `Humor selecionado: ${humor} (emoji: ${emoji ?? '—'})\nTexto do registro: ${descricaoTexto}` }],
+          }],
+          generationConfig: {
+            responseMimeType: 'application/json',
+            temperature: 0.6,
+          },
+        }),
       },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          {
-            role: 'system',
-            content:
-              'Você é um assistente de bem-estar emocional do app EchoMind. Analise o humor (e o emoji associado) e o texto do usuário, quando houver, e responda SOMENTE em JSON, no formato {"comentario": "1 a 2 frases empáticas em português", "tags": ["emocao1", "emocao2", "emocao3"]}. Se não houver texto, gere o comentário só com base no humor/emoji selecionado, de forma curta e acolhedora. As tags são no máximo 3 palavras únicas, em português, minúsculas.',
-          },
-          {
-            role: 'user',
-            content: `Humor selecionado: ${humor} (emoji: ${emoji ?? '—'})\nTexto do registro: ${descricaoTexto}`,
-          },
-        ],
-        response_format: { type: 'json_object' },
-        temperature: 0.6,
-      }),
-    });
+    );
 
     if (!resposta.ok) {
       const erro = await resposta.text();
@@ -67,7 +67,7 @@ app.post('/api/analisar', async (req, res) => {
     }
 
     const dados = await resposta.json();
-    const conteudo = dados.choices?.[0]?.message?.content ?? '{}';
+    const conteudo = dados.candidates?.[0]?.content?.parts?.[0]?.text ?? '{}';
     res.json(JSON.parse(conteudo));
   } catch (err) {
     res.status(500).json({ error: err instanceof Error ? err.message : 'Erro ao analisar' });
@@ -76,13 +76,13 @@ app.post('/api/analisar', async (req, res) => {
 
 /**
  * Transcreve um áudio gravado no navegador (Diário → botão "Áudio")
- * usando o Whisper da OpenAI, e devolve o texto reconhecido.
+ * usando o Gemini (entende áudio nativamente), e devolve o texto.
  */
 app.post('/api/transcrever', express.raw({ type: '*/*', limit: '15mb' }), async (req, res) => {
-  const apiKey = process.env['OPENAI_API_KEY'];
+  const apiKey = process.env['GEMINI_API_KEY'];
 
   if (!apiKey) {
-    res.status(500).json({ error: 'OPENAI_API_KEY não configurada no servidor.' });
+    res.status(500).json({ error: 'GEMINI_API_KEY não configurada no servidor.' });
     return;
   }
 
@@ -93,16 +93,21 @@ app.post('/api/transcrever', express.raw({ type: '*/*', limit: '15mb' }), async 
   }
 
   try {
-    const formData = new FormData();
-    formData.append('file', new Blob([new Uint8Array(audioBuffer)], { type: 'audio/webm' }), 'gravacao.webm');
-    formData.append('model', 'whisper-1');
-    formData.append('language', 'pt');
-
-    const resposta = await fetch('https://api.openai.com/v1/audio/transcriptions', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${apiKey}` },
-      body: formData,
-    });
+    const resposta = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODELO}:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{
+            parts: [
+              { text: 'Transcreva o áudio a seguir para texto em português do Brasil. Responda apenas com a transcrição pura, sem comentários, sem aspas.' },
+              { inlineData: { mimeType: 'audio/webm', data: audioBuffer.toString('base64') } },
+            ],
+          }],
+        }),
+      },
+    );
 
     if (!resposta.ok) {
       const erro = await resposta.text();
@@ -111,7 +116,8 @@ app.post('/api/transcrever', express.raw({ type: '*/*', limit: '15mb' }), async 
     }
 
     const dados = await resposta.json();
-    res.json({ texto: dados.text ?? '' });
+    const texto = dados.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+    res.json({ texto: texto.trim() });
   } catch (err) {
     res.status(500).json({ error: err instanceof Error ? err.message : 'Erro ao transcrever' });
   }

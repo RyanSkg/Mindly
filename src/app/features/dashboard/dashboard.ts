@@ -72,13 +72,20 @@ export class Dashboard implements OnInit {
   caminhoLinha: string = '';
   caminhoArea: string = '';
 
+  mesFiltro: string = new Date().toISOString().slice(0, 7);
+
   private readonly coresTag = ['roxo', 'azul', 'verde', 'vermelho'];
   private topbarActions = inject(TopbarActionsService);
   private destroyRef = inject(DestroyRef);
+  private registrosTodos: RegistroBasico[] = [];
 
   async ngOnInit() {
     this.topbarActions.acoes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(acao => {
-      if (acao === 'gerar-pdf') this.gerarRelatorio();
+      if (acao.tipo === 'gerar-pdf') this.gerarRelatorio();
+      if (acao.tipo === 'filtrar-mes' && acao.valor) {
+        this.mesFiltro = acao.valor;
+        this.aplicarFiltroMes();
+      }
     });
 
     const { data: { user } } = await supabase.auth.getUser();
@@ -94,12 +101,24 @@ export class Dashboard implements OnInit {
       return;
     }
 
-    const registros: RegistroBasico[] = data.map(r => ({ humor: r.humor, data: new Date(r.criado_em) }));
+    this.registrosTodos = data.map(r => ({ humor: r.humor, data: new Date(r.criado_em) }));
 
-    this.calcularSemana(registros);
-    this.calcularEstatisticas(registros);
-    this.calcularEmocoesFrequentes(registros);
+    this.calcularSemana(this.registrosTodos);
+    this.aplicarFiltroMes();
     this.recalcularGrafico();
+  }
+
+  private aplicarFiltroMes(): void {
+    const [ano, mes] = this.mesFiltro.split('-').map(Number);
+    const inicioMes = new Date(ano, mes - 1, 1);
+    const fimMes = new Date(ano, mes, 1);
+    const registrosDoMes = this.registrosTodos.filter(r => r.data >= inicioMes && r.data < fimMes);
+
+    const hoje = new Date();
+    const ehMesAtual = ano === hoje.getFullYear() && mes - 1 === hoje.getMonth();
+
+    this.calcularEstatisticas(registrosDoMes, ehMesAtual);
+    this.calcularEmocoesFrequentes(registrosDoMes);
   }
 
   private inicioDaSemana(referencia: Date): Date {
@@ -142,41 +161,47 @@ export class Dashboard implements OnInit {
     return { texto, positivo: diff >= 0 };
   }
 
-  private calcularEstatisticas(registros: RegistroBasico[]): void {
+  private calcularEstatisticas(registros: RegistroBasico[], ehMesAtual: boolean): void {
     const totalRegistros = registros.length;
     const humorMedio = totalRegistros
       ? registros.reduce((soma, r) => soma + valorDoHumor(r.humor), 0) / totalRegistros
       : 0;
     const diasUnicos = new Set(registros.map(r => r.data.toDateString()));
 
-    const hoje = new Date();
-    const inicioSemanaAtual = this.inicioDaSemana(hoje);
-    const inicioSemanaPassada = new Date(inicioSemanaAtual);
-    inicioSemanaPassada.setDate(inicioSemanaAtual.getDate() - 7);
+    let deltaRegistros = { texto: '—', positivo: true };
+    let deltaHumor = { texto: '—', positivo: true };
+    let deltaDias = { texto: '—', positivo: true };
 
-    const estaSemana = registros.filter(r => r.data >= inicioSemanaAtual);
-    const semanaPassada = registros.filter(r => r.data >= inicioSemanaPassada && r.data < inicioSemanaAtual);
+    if (ehMesAtual) {
+      const hoje = new Date();
+      const inicioSemanaAtual = this.inicioDaSemana(hoje);
+      const inicioSemanaPassada = new Date(inicioSemanaAtual);
+      inicioSemanaPassada.setDate(inicioSemanaAtual.getDate() - 7);
 
-    const deltaRegistros = this.calcularDelta(estaSemana.length, semanaPassada.length, true);
+      const estaSemana = this.registrosTodos.filter(r => r.data >= inicioSemanaAtual);
+      const semanaPassada = this.registrosTodos.filter(r => r.data >= inicioSemanaPassada && r.data < inicioSemanaAtual);
 
-    const mediaEstaSemana = estaSemana.length
-      ? estaSemana.reduce((s, r) => s + valorDoHumor(r.humor), 0) / estaSemana.length
-      : 0;
-    const mediaSemanaPassada = semanaPassada.length
-      ? semanaPassada.reduce((s, r) => s + valorDoHumor(r.humor), 0) / semanaPassada.length
-      : 0;
-    const deltaHumor = this.calcularDelta(mediaEstaSemana, mediaSemanaPassada);
+      deltaRegistros = this.calcularDelta(estaSemana.length, semanaPassada.length, true);
 
-    const inicioMesAtual = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
-    const inicioMesPassado = new Date(hoje.getFullYear(), hoje.getMonth() - 1, 1);
+      const mediaEstaSemana = estaSemana.length
+        ? estaSemana.reduce((s, r) => s + valorDoHumor(r.humor), 0) / estaSemana.length
+        : 0;
+      const mediaSemanaPassada = semanaPassada.length
+        ? semanaPassada.reduce((s, r) => s + valorDoHumor(r.humor), 0) / semanaPassada.length
+        : 0;
+      deltaHumor = this.calcularDelta(mediaEstaSemana, mediaSemanaPassada);
 
-    const diasEsteMes = new Set(
-      registros.filter(r => r.data >= inicioMesAtual).map(r => r.data.toDateString())
-    ).size;
-    const diasMesPassado = new Set(
-      registros.filter(r => r.data >= inicioMesPassado && r.data < inicioMesAtual).map(r => r.data.toDateString())
-    ).size;
-    const deltaDias = this.calcularDelta(diasEsteMes, diasMesPassado);
+      const inicioMesAtual = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+      const inicioMesPassado = new Date(hoje.getFullYear(), hoje.getMonth() - 1, 1);
+
+      const diasEsteMes = new Set(
+        this.registrosTodos.filter(r => r.data >= inicioMesAtual).map(r => r.data.toDateString())
+      ).size;
+      const diasMesPassado = new Set(
+        this.registrosTodos.filter(r => r.data >= inicioMesPassado && r.data < inicioMesAtual).map(r => r.data.toDateString())
+      ).size;
+      deltaDias = this.calcularDelta(diasEsteMes, diasMesPassado);
+    }
 
     this.estatisticas = [
       { valor: String(totalRegistros), label: 'Registros totais', delta: deltaRegistros.texto, positivo: deltaRegistros.positivo },

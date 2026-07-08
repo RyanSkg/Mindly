@@ -1,4 +1,5 @@
-export function tempoRelativo(data: Date): string {
+export function tempoRelativo(dataEntrada: Date | string): string {
+  const data = dataEntrada instanceof Date ? dataEntrada : new Date(dataEntrada);
   const agora = new Date();
   const diffMs = agora.getTime() - data.getTime();
   const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));

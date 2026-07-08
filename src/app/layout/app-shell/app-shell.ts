@@ -5,6 +5,8 @@ import { filter } from 'rxjs/operators';
 import { supabase } from '../../integrations/supabase/client';
 import { TopbarActionsService } from '../../shared/topbar-actions.service';
 import { PerfilService } from '../../shared/perfil.service';
+import { NotificacoesService } from '../../shared/notificacoes.service';
+import { tempoRelativo } from '../../shared/tempo.util';
 
 @Component({
   selector: 'app-shell',
@@ -17,20 +19,27 @@ export class AppShell implements OnInit {
   rotaAtual = '';
   dataHoje = new Date();
 
+  menuAberto = false;
+  notificacoesAbertas = false;
+
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private topbarActions = inject(TopbarActionsService);
   perfil = inject(PerfilService);
+  notificacoes = inject(NotificacoesService);
+  tempoRelativo = tempoRelativo;
 
   ngOnInit(): void {
     this.atualizarRota();
     this.perfil.carregar();
+    this.notificacoes.carregar();
     this.router.events
       .pipe(
         filter(event => event instanceof NavigationEnd),
       )
       .subscribe(() => {
         this.atualizarRota();
+        this.menuAberto = false;
       });
   }
 
@@ -39,8 +48,28 @@ export class AppShell implements OnInit {
     this.rotaAtual = this.route.firstChild?.snapshot.routeConfig?.path ?? '';
   }
 
-  dispararAcao(acao: string): void {
-    this.topbarActions.disparar(acao);
+  dispararAcao(acao: string, valor?: string): void {
+    this.topbarActions.disparar(acao, valor);
+  }
+
+  toggleMenu(): void {
+    this.menuAberto = !this.menuAberto;
+  }
+
+  fecharMenu(): void {
+    this.menuAberto = false;
+  }
+
+  toggleNotificacoes(): void {
+    this.notificacoesAbertas = !this.notificacoesAbertas;
+  }
+
+  fecharNotificacoes(): void {
+    this.notificacoesAbertas = false;
+  }
+
+  abrirNotificacao(id: string): void {
+    this.notificacoes.marcarComoLida(id);
   }
 
   async sair(): Promise<void> {

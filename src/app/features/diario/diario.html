@@ -114,25 +114,53 @@
 </div>
 
 <div class="registros-recentes">
-  <h3>Registros Recentes</h3>
-  @if (registrosRecentes.length === 0) {
-    <p class="sem-registros">Nenhum registro ainda. Salve seu primeiro humor acima!</p>
+  <div class="registros-cabecalho">
+    <h3>{{ filtroData ? ('Registros de ' + (filtroData + 'T00:00:00' | date:'dd/MM/y')) : 'Registros Recentes' }}</h3>
+    @if (filtroData) {
+      <button class="btn-selecionar" (click)="limparFiltroData()">Ver recentes</button>
+    }
+    @if (registrosRecentes.length > 0) {
+      @if (!modoSelecao) {
+        <button class="btn-selecionar" (click)="toggleModoSelecao()">Selecionar</button>
+      } @else {
+        <div class="acoes-selecao">
+          <button class="btn-selecionar-todos" (click)="selecionarTodos()">
+            {{ selecionados.size === registrosRecentes.length ? 'Desmarcar todos' : 'Selecionar todos' }}
+          </button>
+          <button class="btn-excluir-selecionados" (click)="excluirSelecionados()" [disabled]="selecionados.size === 0 || excluindoSelecionados">
+            Excluir ({{ selecionados.size }})
+          </button>
+          <button class="btn-cancelar-selecao" (click)="toggleModoSelecao()">Cancelar</button>
+        </div>
+      }
+    }
+  </div>
+
+  @if (registrosRecentes.length === 0 && !carregandoRegistros) {
+    <p class="sem-registros">
+      {{ filtroData ? 'Nenhum registro nesse dia.' : 'Nenhum registro ainda. Salve seu primeiro humor acima!' }}
+    </p>
   }
   <ul>
     @for (registro of registrosRecentes; track registro.id) {
-      <li>
+      <li [class.selecionavel]="modoSelecao" (click)="modoSelecao && toggleSelecao(registro.id)">
+        @if (modoSelecao) {
+          <input type="checkbox" class="checkbox-registro" [checked]="selecionados.has(registro.id)" (click)="$event.stopPropagation(); toggleSelecao(registro.id)" />
+        }
         <span class="emoji">{{ emojiDoHumor(registro.humor) }}</span>
         <div class="registro-texto">
           <div>{{ registro.texto || registro.humor }}</div>
           <div class="data">{{ registro.data | date:'dd/MM, HH:mm' }}</div>
         </div>
-        <button class="btn-excluir-registro" (click)="excluirRegistro(registro)" title="Excluir registro">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-            <path d="M10 11v6"/><path d="M14 11v6"/>
-          </svg>
-        </button>
+        @if (!modoSelecao) {
+          <button class="btn-excluir-registro" (click)="excluirRegistro(registro)" title="Excluir registro">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+              <path d="M10 11v6"/><path d="M14 11v6"/>
+            </svg>
+          </button>
+        }
       </li>
     }
   </ul>

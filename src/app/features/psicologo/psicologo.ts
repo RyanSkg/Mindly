@@ -5,6 +5,7 @@ import { supabase } from '../../integrations/supabase/client';
 import { labelDoHumor } from '../../shared/humor.util';
 import { TopbarActionsService } from '../../shared/topbar-actions.service';
 import { PerfilService } from '../../shared/perfil.service';
+import { NotificacoesService } from '../../shared/notificacoes.service';
 
 interface Relatorio {
   id: string;
@@ -42,12 +43,13 @@ export class Psicologo implements OnInit {
   private topbarActions = inject(TopbarActionsService);
   private destroyRef = inject(DestroyRef);
   private perfil = inject(PerfilService);
+  private notificacoes = inject(NotificacoesService);
 
   async ngOnInit() {
     await this.perfil.carregar();
     await this.carregarRelatorios();
     this.topbarActions.acoes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(acao => {
-      if (acao === 'enviar-relatorio') this.enviarRelatorio();
+      if (acao.tipo === 'enviar-relatorio') this.enviarRelatorio();
     });
   }
 
@@ -110,6 +112,7 @@ export class Psicologo implements OnInit {
     if (!error && data) {
       this.relatorios = this.relatorios.map(r => ({ ...r, principal: false }));
       this.relatorios.unshift({ id: data.id, titulo: data.titulo, detalhes: data.detalhes, tags: data.tags, principal: true });
+      this.notificacoes.criar('Relatório enviado', `${data.titulo} foi enviado para ${this.psicologa.nome}.`);
     }
     this.enviando = false;
   }

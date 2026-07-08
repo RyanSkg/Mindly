@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { supabase } from '../../integrations/supabase/client';
 import { tempoRelativo } from '../../shared/tempo.util';
 import { TopbarActionsService } from '../../shared/topbar-actions.service';
+import { NotificacoesService } from '../../shared/notificacoes.service';
 
 interface Contato {
   id: string;
@@ -35,11 +36,12 @@ export class OitoMinutos implements OnInit {
 
   private topbarActions = inject(TopbarActionsService);
   private destroyRef = inject(DestroyRef);
+  private notificacoes = inject(NotificacoesService);
 
   async ngOnInit() {
     await this.carregarContatos();
     this.topbarActions.acoes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(acao => {
-      if (acao === 'adicionar-contato') this.abrirFormulario();
+      if (acao.tipo === 'adicionar-contato') this.abrirFormulario();
     });
   }
 
@@ -110,6 +112,7 @@ export class OitoMinutos implements OnInit {
     if (!error && data) {
       this.contatos.push(this.mapearContato(data));
       this.cancelarFormulario();
+      this.notificacoes.criar('Novo contato adicionado', `${data.nome} agora faz parte da sua rede de apoio.`);
     }
     this.salvandoContato = false;
   }

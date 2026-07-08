@@ -1,3 +1,5 @@
+const GEMINI_MODELO = 'gemini-2.0-flash';
+
 export const config = {
   api: {
     bodyParser: false,
@@ -10,9 +12,9 @@ export default async function handler(req, res) {
     return;
   }
 
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    res.status(500).json({ error: 'OPENAI_API_KEY não configurada no servidor.' });
+    res.status(500).json({ error: 'GEMINI_API_KEY não configurada no servidor.' });
     return;
   }
 
@@ -28,16 +30,21 @@ export default async function handler(req, res) {
   }
 
   try {
-    const formData = new FormData();
-    formData.append('file', new Blob([audioBuffer], { type: 'audio/webm' }), 'gravacao.webm');
-    formData.append('model', 'whisper-1');
-    formData.append('language', 'pt');
-
-    const resposta = await fetch('https://api.openai.com/v1/audio/transcriptions', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${apiKey}` },
-      body: formData,
-    });
+    const resposta = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODELO}:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{
+            parts: [
+              { text: 'Transcreva o áudio a seguir para texto em português do Brasil. Responda apenas com a transcrição pura, sem comentários, sem aspas.' },
+              { inlineData: { mimeType: 'audio/webm', data: audioBuffer.toString('base64') } },
+            ],
+          }],
+        }),
+      },
+    );
 
     if (!resposta.ok) {
       const erro = await resposta.text();
@@ -46,7 +53,8 @@ export default async function handler(req, res) {
     }
 
     const dados = await resposta.json();
-    res.status(200).json({ texto: dados.text ?? '' });
+    const texto = dados.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+    res.status(200).json({ texto: texto.trim() });
   } catch (err) {
     res.status(500).json({ error: err instanceof Error ? err.message : 'Erro ao transcrever' });
   }

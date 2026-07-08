@@ -6,6 +6,7 @@ import { supabase } from '../../integrations/supabase/client';
 import { emojiDoHumor } from '../../shared/humor.util';
 import { TopbarActionsService } from '../../shared/topbar-actions.service';
 import { PerfilService } from '../../shared/perfil.service';
+import { NotificacoesService } from '../../shared/notificacoes.service';
 
 interface Humor {
     id: string;
@@ -70,9 +71,17 @@ export class Diario implements OnInit {
   gravando: boolean = false;
   transcrevendo: boolean = false;
 
+  modoSelecao: boolean = false;
+  selecionados: Set<string> = new Set();
+  excluindoSelecionados: boolean = false;
+
+  filtroData: string | null = null;
+  carregandoRegistros: boolean = false;
+
   private readonly coresTag = ['roxo', 'azul', 'verde', 'vermelho'];
   private topbarActions = inject(TopbarActionsService);
   private destroyRef = inject(DestroyRef);
+  private notificacoes = inject(NotificacoesService);
   private mediaRecorder: MediaRecorder | null = null;
   private audioChunks: Blob[] = [];
   perfil = inject(PerfilService);
@@ -83,16 +92,40 @@ export class Diario implements OnInit {
     await this.perfil.carregar();
     await this.carregarRegistros();
     this.topbarActions.acoes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(acao => {
-      if (acao === 'analisar-ia') this.registrarHumoreAnalisar();
+      if (acao.tipo === 'analisar-ia') this.registrarHumoreAnalisar();
+      if (acao.tipo === 'filtrar-data' && acao.valor) this.filtrarPorData(acao.valor);
     });
   }
 
+  async filtrarPorData(data: string) {
+    const hoje = new Date().toISOString().slice(0, 10);
+    this.filtroData = data === hoje ? null : data;
+    await this.carregarRegistros();
+  }
+
+  limparFiltroData() {
+    this.filtroData = null;
+    this.carregarRegistros();
+  }
+
   private async carregarRegistros() {
-    const { data, error } = await supabase
+    this.carregandoRegistros = true;
+
+    let query = supabase
       .from('registros')
       .select('id, humor, texto, criado_em, comentario_ia, tags_ia')
-      .order('criado_em', { ascending: false })
-      .limit(8);
+      .order('criado_em', { ascending: false });
+
+    if (this.filtroData) {
+      const inicio = new Date(`${this.filtroData}T00:00:00`);
+      const fim = new Date(inicio);
+      fim.setDate(fim.getDate() + 1);
+      query = query.gte('criado_em', inicio.toISOString()).lt('criado_em', fim.toISOString());
+    } else {
+      query = query.limit(8);
+    }
+
+    const { data, error } = await query;
 
     if (!error && data) {
       this.registrosRecentes = data.map(r => ({
@@ -109,6 +142,7 @@ export class Diario implements OnInit {
         this.ultimaAnalise = { comentario: maisRecente.comentarioIA, tags: maisRecente.tagsIA };
       }
     }
+    this.carregandoRegistros = false;
   }
 
   definirSaudacao(): string {
@@ -128,7 +162,22 @@ export class Diario implements OnInit {
       .select()
       .single();
 
+    if (!error && data) {
+      this.notificarMarco(user.id);
+    }
+
     return !error && data ? data : null;
+  }
+
+  private async notificarMarco(userId: string) {
+    const { count } = await supabase
+      .from('registros')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', userId);
+
+    if (count && count % 5 === 0) {
+      this.notificacoes.criar('Parabéns! 🎉', `Você já tem ${count} registros no seu Diário. Continue assim!`);
+    }
   }
 
   async registrarHumor() {
@@ -282,11 +331,64 @@ export class Diario implements OnInit {
     const { error } = await supabase.from('registros').delete().eq('id', registro.id);
     if (!error) {
       this.registrosRecentes = this.registrosRecentes.filter(r => r.id !== registro.id);
-      if (this.ultimaAnalise && registro.comentarioIA === this.ultimaAnalise.comentario) {
+      this.atualizarAnaliseAposExclusao(new Set([registro.id]));
+    }
+  }
+
+  toggleModoSelecao() {
+    this.modoSelecao = !this.modoSelecao;
+    this.selecionados.clear();
+  }
+
+  toggleSelecao(id: string) {
+    if (this.selecionados.has(id)) {
+      this.selecionados.delete(id);
+    } else {
+      this.selecionados.add(id);
+    }
+  }
+
+  selecionarTodos() {
+    if (this.selecionados.size === this.registrosRecentes.length) {
+      this.selecionados.clear();
+    } else {
+      this.registrosRecentes.forEach(r => this.selecionados.add(r.id));
+    }
+  }
+
+  private atualizarAnaliseAposExclusao(idsExcluidos: Set<string>) {
+    if (this.ultimaAnalise) {
+      const aindaExiste = this.registrosRecentes.some(
+        r => r.comentarioIA === this.ultimaAnalise?.comentario && !idsExcluidos.has(r.id)
+      );
+      if (!aindaExiste) {
         this.ultimaAnalise = this.registrosRecentes[0]?.comentarioIA
           ? { comentario: this.registrosRecentes[0].comentarioIA, tags: this.registrosRecentes[0].tagsIA }
           : null;
       }
     }
+  }
+
+  async excluirSelecionados() {
+    if (this.selecionados.size === 0 || this.excluindoSelecionados) return;
+
+    const quantidade = this.selecionados.size;
+    const confirmou = confirm(
+      `Excluir ${quantidade} registro${quantidade > 1 ? 's' : ''}? Essa ação não pode ser desfeita.`
+    );
+    if (!confirmou) return;
+
+    this.excluindoSelecionados = true;
+    const ids = [...this.selecionados];
+
+    const { error } = await supabase.from('registros').delete().in('id', ids);
+    if (!error) {
+      const idsExcluidos = new Set(ids);
+      this.registrosRecentes = this.registrosRecentes.filter(r => !idsExcluidos.has(r.id));
+      this.atualizarAnaliseAposExclusao(idsExcluidos);
+      this.selecionados.clear();
+      this.modoSelecao = false;
+    }
+    this.excluindoSelecionados = false;
   }
 }
