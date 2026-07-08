@@ -111,6 +111,43 @@
         <span class="tag" [class]="'tag-' + tag.cor">{{ tag.label }}</span>
       }
     </div>
+
+    @if (!conversaAberta) {
+      <button class="btn-responder" (click)="abrirConversa()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        Responder
+      </button>
+    } @else {
+      <div class="conversa-ia">
+        <div class="conversa-mensagens">
+          @for (m of mensagensConversa; track $index) {
+            <div class="msg" [class.msg-usuario]="m.role === 'user'" [class.msg-ia]="m.role === 'assistant'">
+              {{ m.content }}
+            </div>
+          }
+          @if (enviandoConversa) {
+            <div class="msg msg-ia msg-digitando">Digitando...</div>
+          }
+        </div>
+        @if (erroConversa) {
+          <p class="erro-analise">{{ erroConversa }}</p>
+        }
+        <div class="conversa-input">
+          <input
+            type="text"
+            [(ngModel)]="novaMensagem"
+            placeholder="Escreva sua resposta..."
+            (keyup.enter)="enviarMensagemConversa()"
+            [disabled]="enviandoConversa"
+          />
+          <button (click)="enviarMensagemConversa()" [disabled]="enviandoConversa">Enviar</button>
+        </div>
+        <button class="btn-fechar-conversa" (click)="fecharConversa()">Fechar conversa</button>
+      </div>
+    }
   } @else if (erroAnalise) {
     <p class="erro-analise">{{ erroAnalise }}</p>
   } @else {

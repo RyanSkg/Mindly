@@ -109,6 +109,9 @@
         <input type="text" name="novoNome" [(ngModel)]="novoNome" placeholder="Nome do contato" />
         <input type="text" name="novaRelacao" [(ngModel)]="novaRelacao" placeholder="Relação (ex: Amigo, Família)" />
         <input type="tel" name="novoTelefone" [(ngModel)]="novoTelefone" placeholder="WhatsApp (opcional, ex: 5511999999999)" />
+        @if (erroContato) {
+          <p class="erro-contato">{{ erroContato }}</p>
+        }
         <div class="form-contato-botoes">
           <button class="btn-avisar" (click)="salvarContato()" [disabled]="salvandoContato">Salvar</button>
           <button class="btn-cancelar" (click)="cancelarFormulario()">Cancelar</button>

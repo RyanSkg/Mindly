@@ -35,6 +35,7 @@ export class OitoMinutos implements OnInit {
 
   avisoEnviado: string = '';
   enviandoMensagem: boolean = false;
+  erroContato: string = '';
 
   private topbarActions = inject(TopbarActionsService);
   private destroyRef = inject(DestroyRef);
@@ -100,11 +101,13 @@ export class OitoMinutos implements OnInit {
     this.novoNome = '';
     this.novaRelacao = '';
     this.novoTelefone = '';
+    this.erroContato = '';
   }
 
   async salvarContato() {
     if (!this.novoNome.trim() || !this.novaRelacao.trim() || this.salvandoContato) return;
     this.salvandoContato = true;
+    this.erroContato = '';
 
     if (this.contatoEditandoId) {
       const { data, error } = await supabase
@@ -122,6 +125,8 @@ export class OitoMinutos implements OnInit {
         const atualizado = this.mapearContato(data);
         this.contatos = this.contatos.map(c => (c.id === atualizado.id ? atualizado : c));
         this.cancelarFormulario();
+      } else {
+        this.erroContato = error?.message || 'Não foi possível salvar. Tente novamente.';
       }
       this.salvandoContato = false;
       return;
@@ -131,6 +136,7 @@ export class OitoMinutos implements OnInit {
     const user = session?.user;
     if (!user) {
       this.salvandoContato = false;
+      this.erroContato = 'Sessão expirada. Faça login novamente.';
       return;
     }
 
@@ -150,6 +156,8 @@ export class OitoMinutos implements OnInit {
       this.contatos.push(this.mapearContato(data));
       this.cancelarFormulario();
       this.notificacoes.criar('Novo contato adicionado', `${data.nome} agora faz parte da sua rede de apoio.`);
+    } else {
+      this.erroContato = error?.message || 'Não foi possível salvar. Tente novamente.';
     }
     this.salvandoContato = false;
   }

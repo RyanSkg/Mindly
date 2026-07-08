@@ -36,6 +36,11 @@ interface RegistroRecente {
     tagsIA: TagEmocao[];
 }
 
+interface MensagemConversa {
+    role: 'user' | 'assistant';
+    content: string;
+}
+
 @Component({
   selector: 'app-diario',
   imports: [FormsModule, DatePipe],
@@ -80,6 +85,12 @@ export class Diario implements OnInit {
 
   filtroData: string | null = null;
   carregandoRegistros: boolean = false;
+
+  conversaAberta: boolean = false;
+  mensagensConversa: MensagemConversa[] = [];
+  novaMensagem: string = '';
+  enviandoConversa: boolean = false;
+  erroConversa: string = '';
 
   private readonly coresTag = ['roxo', 'azul', 'verde', 'vermelho'];
   private topbarActions = inject(TopbarActionsService);
@@ -415,5 +426,51 @@ export class Diario implements OnInit {
       this.modoSelecao = false;
     }
     this.excluindoSelecionados = false;
+  }
+
+  abrirConversa() {
+    if (!this.ultimaAnalise) return;
+    this.conversaAberta = true;
+    this.erroConversa = '';
+
+    if (this.mensagensConversa.length === 0) {
+      const primeiraMensagem = this.ultimaAnalise.sugestao
+        ? `${this.ultimaAnalise.comentario} ${this.ultimaAnalise.sugestao}`
+        : this.ultimaAnalise.comentario;
+      this.mensagensConversa.push({ role: 'assistant', content: primeiraMensagem });
+    }
+  }
+
+  fecharConversa() {
+    this.conversaAberta = false;
+  }
+
+  async enviarMensagemConversa() {
+    const texto = this.novaMensagem.trim();
+    if (!texto || this.enviandoConversa) return;
+
+    this.mensagensConversa.push({ role: 'user', content: texto });
+    this.novaMensagem = '';
+    this.enviandoConversa = true;
+    this.erroConversa = '';
+
+    try {
+      const resposta = await fetch('/api/conversar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mensagens: this.mensagensConversa }),
+      });
+
+      if (!resposta.ok) {
+        throw new Error('Não foi possível responder agora.');
+      }
+
+      const dados: { resposta: string } = await resposta.json();
+      this.mensagensConversa.push({ role: 'assistant', content: dados.resposta });
+    } catch (err) {
+      this.erroConversa = err instanceof Error ? err.message : 'Erro ao conversar';
+    } finally {
+      this.enviandoConversa = false;
+    }
   }
 }
