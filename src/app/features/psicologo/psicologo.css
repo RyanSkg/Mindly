@@ -193,3 +193,11 @@
     color: var(--muted-fg);
     padding: 8px 0 12px;
 }
+
+/* Mobile */
+
+@media (max-width: 720px) {
+    .grid-2 {
+        grid-template-columns: 1fr;
+    }
+}

@@ -229,3 +229,11 @@
 .toggle-bolinha-ativo {
     transform: translateX(16px);
 }
+
+/* Mobile */
+
+@media (max-width: 720px) {
+    .grid-2 {
+        grid-template-columns: 1fr;
+    }
+}

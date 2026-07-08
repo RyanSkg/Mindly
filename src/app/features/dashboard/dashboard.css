@@ -179,3 +179,15 @@
 .emocoes-card button:hover {
     opacity: 0.9;
 }
+
+/* Mobile */
+
+@media (max-width: 720px) {
+    .estatisticas {
+        grid-template-columns: 1fr;
+    }
+
+    .grafico {
+        grid-template-columns: 1fr;
+    }
+}

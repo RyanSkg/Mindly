@@ -473,4 +473,48 @@
         background-color: rgba(0, 0, 0, 0.5);
         z-index: 40;
     }
+
+    .topBar {
+        padding: 0 14px;
+        height: auto;
+        min-height: 56px;
+        flex-wrap: wrap;
+        row-gap: 8px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+
+    .topBar h2 {
+        font-size: 15px;
+    }
+
+    .topBar-acoes {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .tb-btn {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    .tb-usuario-nome {
+        display: none;
+    }
+
+    .tb-usuario {
+        margin-left: 0;
+        padding: 4px;
+    }
+
+    .pagina {
+        padding: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .sideBar {
+        width: 85vw;
+        max-width: 300px;
+    }
 }

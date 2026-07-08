@@ -267,3 +267,29 @@
 }
 
 .btn-sair:hover { background-color: var(--surface-2); }
+
+/* Mobile */
+
+@media (max-width: 720px) {
+    .card-cabecalho {
+        flex-wrap: wrap;
+    }
+
+    .cabecalho-info {
+        min-width: 200px;
+    }
+
+    .grid-estatisticas {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .grid-2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 420px) {
+    .grid-estatisticas {
+        grid-template-columns: 1fr;
+    }
+}

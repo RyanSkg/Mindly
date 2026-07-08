@@ -395,3 +395,11 @@ textarea:focus {
 .btn-cancelar:hover {
     background-color: var(--surface-2);
 }
+
+/* Mobile */
+
+@media (max-width: 720px) {
+    .pagina-oito {
+        grid-template-columns: 1fr;
+    }
+}

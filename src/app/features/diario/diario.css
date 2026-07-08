@@ -361,3 +361,29 @@ textarea:focus {
 .tag-verde { border-color: #065f46; background: #022c22; color: #6ee7b7; }
 .tag-azul  { border-color: #1e40af; background: #0f1f5c; color: #93c5fd; }
 .sem-registros { font-size: 14px; color: var(--muted-fg); padding: 12px 0; }
+
+/* Mobile */
+
+@media (max-width: 720px) {
+    .cards {
+        flex-direction: column;
+    }
+
+    .registros-recentes ul {
+        grid-template-columns: 1fr;
+    }
+
+    .nome-usuario {
+        font-size: 20px;
+    }
+
+    .registros-cabecalho {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .acoes-selecao {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+}
