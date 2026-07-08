@@ -16,7 +16,7 @@
   <div class="grafico">
     <div class="grafico-card carrossel">
       <div class="carrossel-viewport">
-        <div class="carrossel-trilho" [style.transform]="'translateX(-' + (slideAtual * 100) + '%)'">
+        <div class="carrossel-trilho" [style.transform]="'translateX(-' + (slideAtual * (100 / totalSlides)) + '%)'">
 
           <!-- Slide 1: gráfico de linha -->
           <div class="carrossel-slide">
