@@ -1,0 +1,7 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/EchoMind/browser",
+  "rewrites": [
+    { "source": "/((?!api/).*)", "destination": "/index.csr.html" }
+  ]
+}

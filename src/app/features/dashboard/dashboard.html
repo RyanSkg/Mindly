@@ -1,0 +1,120 @@
+<div class="dashboard">
+  <h2>Seu Dashboard</h2>
+  <div class="estatisticas">
+    @for (item of estatisticas; track item.label) {
+      <div class="estatisticas-card">
+        <div class="estatisticas-topo">
+          <h2>{{ item.valor }}</h2>
+          <span class="delta" [class.delta-positivo]="item.positivo" [class.delta-negativo]="!item.positivo">
+            {{ item.delta }}
+          </span>
+        </div>
+        <p>{{ item.label }}</p>
+      </div>
+    }
+  </div>
+  <div class="grafico">
+    <div class="grafico-card">
+      <div class="card-texto">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-chart-column h-[15px] w-[15px]"
+          aria-hidden="true"
+        >
+          <path d="M3 3v16a2 2 0 0 0 2 2h16"></path>
+          <path d="M18 17V9"></path>
+          <path d="M13 17V5"></path>
+          <path d="M8 17v-3"></path>
+        </svg>
+        <span>HUMOR POR DIA - ESTA SEMANA</span>
+      </div>
+
+      <svg class="grafico-linha" [attr.viewBox]="'0 0 ' + largura + ' ' + altura"
+        preserveAspectRatio="xMidYMid meet" role="img"
+        aria-label="Gráfico de humor por dia da semana">
+        <defs>
+          <linearGradient id="areaHumor" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#A78BFA" stop-opacity="0.35" />
+            <stop offset="100%" stop-color="#A78BFA" stop-opacity="0" />
+          </linearGradient>
+        </defs>
+
+        <!-- Área preenchida -->
+        <path [attr.d]="caminhoArea" fill="url(#areaHumor)" />
+
+        <!-- Linha suave -->
+        <path [attr.d]="caminhoLinha" fill="none" stroke="#A78BFA" stroke-width="2"
+          stroke-linecap="round" />
+
+        <!-- Pontos e rótulos -->
+        @for (ponto of pontos; track ponto.label; let i = $index) {
+          <!-- Crosshair vertical no dia sob o mouse -->
+          @if (pontoAtivo === i) {
+            <line [attr.x1]="ponto.x" [attr.y1]="margem.topo"
+              [attr.x2]="ponto.x" [attr.y2]="altura - margem.baixo"
+              class="crosshair" />
+          }
+
+          <circle [attr.cx]="ponto.x" [attr.cy]="ponto.y"
+            [attr.r]="pontoAtivo === i ? 6 : (ponto.melhor ? 5 : 4)"
+            [attr.fill]="pontoAtivo === i || ponto.melhor ? '#A78BFA' : '#0F0A1E'"
+            stroke="#A78BFA" stroke-width="2" class="ponto-grafico" />
+
+          <!-- Valor: aparece no hover ou no melhor dia -->
+          @if (pontoAtivo === i || (ponto.melhor && pontoAtivo === null)) {
+            <text [attr.x]="ponto.x" [attr.y]="ponto.y - 14" text-anchor="middle"
+              class="valor-destaque">{{ ponto.v }}</text>
+          }
+
+          <text [attr.x]="ponto.x" [attr.y]="altura - 8" text-anchor="middle"
+            class="rotulo-dia" [class.rotulo-ativo]="pontoAtivo === i">{{ ponto.label }}</text>
+
+          <!-- Alvo de hover: coluna inteira do dia, por cima de tudo -->
+          <rect [attr.x]="ponto.x - 40" y="0" width="80" [attr.height]="altura"
+            fill="transparent" style="cursor: pointer"
+            (mouseenter)="pontoAtivo = i" (mouseleave)="pontoAtivo = null" />
+        }
+      </svg>
+    </div>
+    <div class="emocoes-card">
+      <div class="card-texto">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-tag h-[15px] w-[15px]"
+          aria-hidden="true"
+        >
+          <path
+            d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"
+          ></path>
+          <circle cx="7.5" cy="7.5" r=".5" fill="currentColor"></circle>
+        </svg>
+        <span>EMOÇÕES MAIS FREQUENTES</span>
+      </div>
+      <div class="tags-emocoes">
+        @if (emocoesFrequentes.length === 0) {
+          <span class="tag tag-roxo">sem dados ainda</span>
+        }
+        @for (tag of emocoesFrequentes; track tag.label) {
+          <span class="tag" [class]="'tag-' + tag.cor">{{ tag.label }}</span>
+        }
+      </div>
+      <button (click)="gerarRelatorio()">Gerar relatório PDF</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,181 @@
+.dashboard h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--foreground);
+    margin-bottom: 22px;
+}
+
+/* Cards de estatística */
+
+.estatisticas {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.estatisticas-card {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.estatisticas-topo {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.estatisticas-card h2 {
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--brand-soft);
+    margin-bottom: 6px;
+}
+
+.estatisticas-card p {
+    font-size: 12px;
+    color: var(--muted-fg);
+}
+
+.delta {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 9999px;
+    border: 1px solid;
+    flex-shrink: 0;
+}
+
+.delta-positivo {
+    background-color: #22c55e1a;
+    border-color: #22c55e44;
+    color: #4ade80;
+}
+
+.delta-negativo {
+    background-color: #ef44441a;
+    border-color: #ef444444;
+    color: #f87171;
+}
+
+/* Grid dos 2 cards inferiores */
+
+.grafico {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.grafico-card,
+.emocoes-card {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* Rótulo do card (SVG + texto) */
+
+.card-texto {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--brand-soft);
+}
+
+.card-texto svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+/* Gráfico de linha */
+
+.grafico-linha {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.rotulo-dia {
+    font-size: 11px;
+    fill: var(--muted-fg);
+    font-family: inherit;
+}
+
+.valor-destaque {
+    font-size: 12px;
+    font-weight: 600;
+    fill: var(--brand-soft);
+    font-family: inherit;
+}
+
+.ponto-grafico {
+    transition: r 0.15s;
+    pointer-events: none;
+}
+
+.crosshair {
+    stroke: var(--brand-muted);
+    stroke-width: 1;
+    stroke-dasharray: 4 4;
+}
+
+.rotulo-ativo {
+    fill: var(--brand-soft);
+    font-weight: 600;
+}
+
+/* Tags de emoções */
+
+.tags-emocoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag {
+    border-radius: 9999px;
+    border: 1px solid;
+    padding: 3px 12px;
+    font-size: 12px;
+}
+
+.tag-roxo    { border-color: #594C7D; background: #231640; color: var(--brand-soft); }
+.tag-verde   { border-color: #065f46; background: #022c22; color: #6ee7b7; }
+.tag-azul    { border-color: #1e40af; background: #0f1f5c; color: #93c5fd; }
+.tag-vermelho { border-color: #7f1d1d; background: #3b0a0a; color: #fca5a5; }
+
+/* Botão PDF */
+
+.emocoes-card button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    background-color: var(--brand);
+    color: var(--brand-foreground);
+    border: none;
+    border-radius: 8px;
+    padding: 12px 18px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: opacity 0.15s;
+}
+
+.emocoes-card button:hover {
+    opacity: 0.9;
+}

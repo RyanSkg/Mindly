@@ -1,0 +1,47 @@
+import { Routes } from '@angular/router';
+import { AppShell } from './layout/app-shell/app-shell';
+import { authGuard } from './guards/auth.guard';
+
+export const routes: Routes = [
+  {
+    path: 'auth',
+    title: 'Entrar · EchoMind',
+    loadComponent: () => import('./features/auth/auth').then((m) => m.Auth),
+  },
+  {
+    path: '',
+    component: AppShell,
+    canActivate: [authGuard],
+    children: [
+      { path: '', redirectTo: 'diario', pathMatch: 'full' },
+      { path: 'home', redirectTo: 'diario', pathMatch: 'full' },
+      {
+        path: 'diario',
+        title: 'Diário emocional',
+        loadComponent: () => import('./features/diario/diario').then((m) => m.Diario),
+      },
+      {
+        path: 'dashboard',
+        title: 'Dashboard',
+        loadComponent: () => import('./features/dashboard/dashboard').then((m) => m.Dashboard),
+      },
+      {
+        path: 'oito-minutos',
+        title: '8 Minutos',
+        loadComponent: () =>
+          import('./features/oito-minutos/oito-minutos').then((m) => m.OitoMinutos),
+      },
+      {
+        path: 'psicologos',
+        title: 'Psicólogo',
+        loadComponent: () => import('./features/psicologo/psicologo').then((m) => m.Psicologo),
+      },
+      {
+        path: 'configuracoes',
+        title: 'Configurações',
+        loadComponent: () =>
+          import('./features/configuracoes/configuracoes').then((m) => m.Configuracoes),
+      },
+    ],
+  },
+];

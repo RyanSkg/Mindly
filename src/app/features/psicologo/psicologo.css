@@ -1,0 +1,195 @@
+.titulo {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--foreground);
+    margin-bottom: 4px;
+}
+
+.subtitulo {
+    font-size: 13px;
+    color: var(--brand-soft);
+    margin-bottom: 24px;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+/* Card da psicóloga */
+
+.card-psicologa {
+    display: flex;
+    gap: 16px;
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 12px;
+}
+
+.psicologa-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand-muted), var(--brand));
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--brand-soft);
+    flex-shrink: 0;
+}
+
+.psicologa-info {
+    flex: 1;
+}
+
+.psicologa-nome {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--foreground);
+    margin-bottom: 4px;
+}
+
+.psicologa-crp {
+    font-size: 11px;
+    color: var(--brand-soft);
+    margin-bottom: 8px;
+}
+
+.badge-conectada {
+    display: inline-block;
+    background-color: #022c22;
+    border: 1px solid #065f46;
+    color: #6ee7b7;
+    font-size: 10px;
+    padding: 2px 10px;
+    border-radius: 9999px;
+    margin-bottom: 10px;
+}
+
+.psicologa-mensagem {
+    font-size: 12px;
+    font-style: italic;
+    color: var(--muted-fg);
+    line-height: 1.5;
+}
+
+/* Botões */
+
+.btn-primario {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    background-color: var(--brand);
+    color: var(--brand-foreground);
+    border: none;
+    border-radius: 8px;
+    padding: 11px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-bottom: 8px;
+    transition: opacity 0.15s;
+}
+
+.btn-primario:hover { opacity: 0.9; }
+
+.btn-secundario {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    background-color: var(--accent);
+    color: var(--brand-soft);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 11px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
+
+.btn-secundario:hover { background-color: var(--surface-2); }
+
+/* Seção título */
+
+.secao-titulo {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--brand-muted);
+    margin-bottom: 10px;
+}
+
+/* Relatórios */
+
+.relatorio-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 8px;
+}
+
+.relatorio-info { flex: 1; }
+
+.relatorio-titulo {
+    font-size: 13px;
+    color: var(--foreground);
+    margin-bottom: 4px;
+}
+
+.relatorio-titulo-grande {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.relatorio-detalhes {
+    font-size: 12px;
+    color: var(--muted-fg);
+    margin-bottom: 10px;
+}
+
+.relatorio-icone {
+    color: var(--brand-soft);
+    flex-shrink: 0;
+    margin-left: 12px;
+}
+
+/* Tags */
+
+.tags-emocoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.tag {
+    border-radius: 9999px;
+    border: 1px solid;
+    padding: 3px 12px;
+    font-size: 11px;
+}
+
+.tag-roxo  { border-color: #594C7D; background: #231640; color: var(--brand-soft); }
+.tag-verde { border-color: #065f46; background: #022c22; color: #6ee7b7; }
+.tag-azul  { border-color: #1e40af; background: #0f1f5c; color: #93c5fd; }
+.tag-vermelho { border-color: #7f1d1d; background: #3b0a0a; color: #fca5a5; }
+
+.sem-relatorios {
+    font-size: 13px;
+    color: var(--muted-fg);
+    padding: 8px 0 12px;
+}

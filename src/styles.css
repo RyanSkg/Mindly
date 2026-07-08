@@ -1,0 +1,79 @@
+/* Estilos globais do EchoMind */
+
+:root {
+  /* Paleta roxa escura do EchoMind (mesmos valores OKLCH do design original) */
+  --background:        oklch(0.13 0.04 295);
+  --foreground:        oklch(0.96 0.02 300);
+  --surface:           oklch(0.17 0.05 295);
+  --surface-2:         oklch(0.22 0.07 295);
+  --card:              oklch(0.17 0.05 295);
+  --sidebar:           oklch(0.15 0.05 295);
+  --border:            oklch(0.27 0.06 295);
+  --accent:            oklch(0.27 0.09 295);
+  --brand:             oklch(0.55 0.22 295);
+  --brand-foreground:  oklch(0.99 0 0);
+  --brand-soft:        oklch(0.78 0.12 295);
+  --brand-muted:       oklch(0.45 0.08 295);
+  --muted-fg:          oklch(0.55 0.06 295);
+  --success:           oklch(0.7 0.16 160);
+  --danger:            oklch(0.65 0.2 25);
+  --info:              oklch(0.7 0.15 240);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 18px;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* ===== Refresh visual (estilo Stakent) =====
+   Seletores com tag (div.card) ganham dos estilos
+   de componente (.card) por especificidade. */
+
+div.card,
+div.estatisticas-card,
+div.grafico-card,
+div.emocoes-card,
+div.contato-card,
+div.card-psicologa,
+div.relatorio-card,
+div.card-mensagem,
+div.emergencia,
+div.card-explicativo,
+div.registros-analisados {
+  border-radius: 16px;
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 40%);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+div.card:hover,
+div.estatisticas-card:hover,
+div.grafico-card:hover,
+div.emocoes-card:hover,
+div.contato-card:hover,
+div.card-psicologa:hover,
+div.relatorio-card:hover {
+  border-color: var(--brand-muted);
+}
+
+.registros-recentes li {
+  border-radius: 12px;
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 40%);
+  transition: border-color 0.2s;
+}
+
+.registros-recentes li:hover {
+  border-color: var(--brand-muted);
+}
