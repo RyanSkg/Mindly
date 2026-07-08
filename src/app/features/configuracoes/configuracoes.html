@@ -23,23 +23,13 @@
           </div>
         </div>
 
-        @if (!editandoPerfil) {
-          <button class="btn-secundario" (click)="editarPerfil()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
-              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
-            </svg>
-            Editar perfil
-          </button>
-        } @else {
-          <div class="form-editar-perfil">
-            <input type="text" name="nomeEmEdicao" [(ngModel)]="nomeEmEdicao" placeholder="Seu nome" />
-            <div class="form-editar-perfil-botoes">
-              <button class="btn-secundario" (click)="salvarPerfil()" [disabled]="salvandoPerfil">Salvar</button>
-              <button class="btn-cancelar" (click)="cancelarEdicaoPerfil()">Cancelar</button>
-            </div>
-          </div>
-        }
+        <button class="btn-secundario" (click)="irParaPerfil()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+          </svg>
+          Editar perfil
+        </button>
       </div>
 
       <!-- Notificações -->

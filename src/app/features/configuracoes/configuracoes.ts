@@ -27,9 +27,6 @@ export class Configuracoes implements OnInit {
   animacoesReduzidas = false;
 
   perfil = inject(PerfilService);
-  editandoPerfil = false;
-  nomeEmEdicao = '';
-  salvandoPerfil = false;
 
   exportando = false;
   excluindo = false;
@@ -94,24 +91,8 @@ export class Configuracoes implements OnInit {
       .eq('user_id', this.userId);
   }
 
-  editarPerfil() {
-    this.nomeEmEdicao = this.perfil.nome();
-    this.editandoPerfil = true;
-  }
-
-  cancelarEdicaoPerfil() {
-    this.editandoPerfil = false;
-  }
-
-  async salvarPerfil() {
-    if (this.salvandoPerfil) return;
-    this.salvandoPerfil = true;
-
-    const sucesso = await this.perfil.atualizarNome(this.nomeEmEdicao);
-    if (sucesso) {
-      this.editandoPerfil = false;
-    }
-    this.salvandoPerfil = false;
+  irParaPerfil() {
+    this.router.navigate(['/perfil']);
   }
 
   async exportarDados() {

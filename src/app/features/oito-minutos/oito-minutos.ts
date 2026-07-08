@@ -27,12 +27,14 @@ export class OitoMinutos implements OnInit {
   contatos: Contato[] = [];
 
   mostrarFormulario: boolean = false;
+  contatoEditandoId: string | null = null;
   novoNome: string = '';
   novaRelacao: string = '';
   novoTelefone: string = '';
   salvandoContato: boolean = false;
 
   avisoEnviado: string = '';
+  enviandoMensagem: boolean = false;
 
   private topbarActions = inject(TopbarActionsService);
   private destroyRef = inject(DestroyRef);
@@ -77,19 +79,53 @@ export class OitoMinutos implements OnInit {
   }
 
   abrirFormulario() {
+    this.contatoEditandoId = null;
+    this.novoNome = '';
+    this.novaRelacao = '';
+    this.novoTelefone = '';
+    this.mostrarFormulario = true;
+  }
+
+  editarContato(contato: Contato) {
+    this.contatoEditandoId = contato.id;
+    this.novoNome = contato.nome;
+    this.novaRelacao = contato.relacao;
+    this.novoTelefone = contato.telefone ?? '';
     this.mostrarFormulario = true;
   }
 
   cancelarFormulario() {
     this.mostrarFormulario = false;
+    this.contatoEditandoId = null;
     this.novoNome = '';
     this.novaRelacao = '';
     this.novoTelefone = '';
   }
 
-  async adicionarContato() {
+  async salvarContato() {
     if (!this.novoNome.trim() || !this.novaRelacao.trim() || this.salvandoContato) return;
     this.salvandoContato = true;
+
+    if (this.contatoEditandoId) {
+      const { data, error } = await supabase
+        .from('contatos')
+        .update({
+          nome: this.novoNome,
+          relacao: this.novaRelacao,
+          telefone: this.novoTelefone.trim() || null,
+        })
+        .eq('id', this.contatoEditandoId)
+        .select()
+        .single();
+
+      if (!error && data) {
+        const atualizado = this.mapearContato(data);
+        this.contatos = this.contatos.map(c => (c.id === atualizado.id ? atualizado : c));
+        this.cancelarFormulario();
+      }
+      this.salvandoContato = false;
+      return;
+    }
 
     const { data: { session } } = await supabase.auth.getSession();
     const user = session?.user;
@@ -131,6 +167,27 @@ export class OitoMinutos implements OnInit {
     } else {
       this.avisoEnviado = `${contato.nome} não tem telefone cadastrado. Edite o contato para adicionar um número e avisar por WhatsApp.`;
     }
+  }
+
+  enviarMensagem() {
+    this.avisoEnviado = '';
+
+    if (!this.mensagem.trim()) {
+      this.avisoEnviado = 'Escreva como você está se sentindo antes de enviar.';
+      return;
+    }
+
+    const disponivel = this.contatos.find(c => c.status === 'disponivel' && c.telefone)
+      ?? this.contatos.find(c => c.telefone);
+
+    if (!disponivel) {
+      this.avisoEnviado = 'Nenhum contato com telefone cadastrado ainda. Adicione um contato de confiança primeiro.';
+      return;
+    }
+
+    this.enviandoMensagem = true;
+    this.avisar(disponivel);
+    this.enviandoMensagem = false;
   }
 
   ligarCVV() {

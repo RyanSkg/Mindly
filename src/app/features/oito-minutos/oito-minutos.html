@@ -24,6 +24,13 @@
         <span>COMO VOCÊ ESTÁ SE SENTINDO?</span>
       </div>
       <textarea [(ngModel)]="mensagem" placeholder="Escreva o que está sentindo antes de avisar seu contato..."></textarea>
+      <button class="btn-enviar-mensagem" (click)="enviarMensagem()" [disabled]="enviandoMensagem">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>
+        </svg>
+        Enviar
+      </button>
     </div>
 
     <!-- Botões de emergência -->
@@ -73,7 +80,15 @@
             <span class="status-badge" [class]="'status-' + contato.status">
               {{ contato.status === 'disponivel' ? 'Disponível' : contato.status === 'ocupado' ? 'Ocupado' : 'Não perturbe' }}
             </span>
-            <button class="btn-avisar" (click)="avisar(contato)" title="Avisar por WhatsApp">Avisar</button>
+            <div class="contato-acoes">
+              <button class="btn-editar-contato" (click)="editarContato(contato)" title="Editar contato">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+                </svg>
+              </button>
+              <button class="btn-avisar" (click)="avisar(contato)" title="Avisar por WhatsApp">Avisar</button>
+            </div>
           </div>
         </div>
       }
@@ -90,11 +105,12 @@
       </button>
     } @else {
       <div class="form-contato">
+        <p class="form-contato-titulo">{{ contatoEditandoId ? 'Editar contato' : 'Novo contato' }}</p>
         <input type="text" name="novoNome" [(ngModel)]="novoNome" placeholder="Nome do contato" />
         <input type="text" name="novaRelacao" [(ngModel)]="novaRelacao" placeholder="Relação (ex: Amigo, Família)" />
         <input type="tel" name="novoTelefone" [(ngModel)]="novoTelefone" placeholder="WhatsApp (opcional, ex: 5511999999999)" />
         <div class="form-contato-botoes">
-          <button class="btn-avisar" (click)="adicionarContato()" [disabled]="salvandoContato">Salvar</button>
+          <button class="btn-avisar" (click)="salvarContato()" [disabled]="salvandoContato">Salvar</button>
           <button class="btn-cancelar" (click)="cancelarFormulario()">Cancelar</button>
         </div>
       </div>
