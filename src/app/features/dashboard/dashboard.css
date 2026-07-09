@@ -187,8 +187,30 @@
 }
 
 .carrossel-viewport {
+    position: relative;
     overflow: hidden;
     min-height: 230px;
+}
+
+.carrossel-zona {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 18%;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    z-index: 5;
+}
+
+.carrossel-zona-esquerda {
+    left: 0;
+}
+
+.carrossel-zona-direita {
+    right: 0;
 }
 
 .carrossel-trilho {

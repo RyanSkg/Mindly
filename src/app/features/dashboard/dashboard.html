@@ -16,6 +16,12 @@
   <div class="grafico">
     <div class="grafico-card carrossel">
       <div class="carrossel-viewport">
+        <button class="carrossel-zona carrossel-zona-esquerda"
+          (click)="irParaSlide((slideAtual - 1 + totalSlides) % totalSlides)"
+          aria-label="Slide anterior"></button>
+        <button class="carrossel-zona carrossel-zona-direita"
+          (click)="irParaSlide((slideAtual + 1) % totalSlides)"
+          aria-label="Próximo slide"></button>
         <div class="carrossel-trilho" [style.transform]="'translateX(-' + (slideAtual * 100) + '%)'">
 
           <!-- Slide 1: gráfico de linha -->
