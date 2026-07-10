@@ -6,6 +6,7 @@ import { tempoRelativo } from '../../shared/tempo.util';
 import { TopbarActionsService } from '../../shared/topbar-actions.service';
 import { NotificacoesService } from '../../shared/notificacoes.service';
 import { obterUsuarioValido } from '../../shared/sessao.util';
+import { ModalService } from '../../shared/modal.service';
 
 interface Contato {
   id: string;
@@ -37,10 +38,12 @@ export class OitoMinutos implements OnInit {
   avisoEnviado: string = '';
   enviandoMensagem: boolean = false;
   erroContato: string = '';
+  excluindoContato: boolean = false;
 
   private topbarActions = inject(TopbarActionsService);
   private destroyRef = inject(DestroyRef);
   private notificacoes = inject(NotificacoesService);
+  private modal = inject(ModalService);
 
   async ngOnInit() {
     await this.carregarContatos();
@@ -160,6 +163,33 @@ export class OitoMinutos implements OnInit {
       this.erroContato = error?.message || 'Não foi possível salvar. Tente novamente.';
     }
     this.salvandoContato = false;
+  }
+
+  async excluirContato() {
+    if (!this.contatoEditandoId || this.excluindoContato) return;
+
+    const contato = this.contatos.find(c => c.id === this.contatoEditandoId);
+    const confirmou = await this.modal.confirmar({
+      titulo: 'Excluir contato',
+      mensagem: `Tem certeza que deseja excluir ${contato?.nome ?? 'este contato'}? Essa ação não pode ser desfeita.`,
+      textoConfirmar: 'Excluir',
+      perigo: true,
+    });
+    if (!confirmou) return;
+
+    this.excluindoContato = true;
+    const { error } = await supabase
+      .from('contatos')
+      .delete()
+      .eq('id', this.contatoEditandoId);
+
+    if (!error) {
+      this.contatos = this.contatos.filter(c => c.id !== this.contatoEditandoId);
+      this.cancelarFormulario();
+    } else {
+      this.erroContato = error.message || 'Não foi possível excluir. Tente novamente.';
+    }
+    this.excluindoContato = false;
   }
 
   avisar(contato: Contato) {

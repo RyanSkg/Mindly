@@ -115,6 +115,9 @@
         <div class="form-contato-botoes">
           <button class="btn-avisar" (click)="salvarContato()" [disabled]="salvandoContato">Salvar</button>
           <button class="btn-cancelar" (click)="cancelarFormulario()">Cancelar</button>
+          @if (contatoEditandoId) {
+            <button class="btn-excluir-contato" (click)="excluirContato()" [disabled]="excluindoContato">Excluir</button>
+          }
         </div>
       </div>
     }

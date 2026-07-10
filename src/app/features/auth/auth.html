@@ -67,6 +67,15 @@
         <input id="senha" type="password" name="senha" [(ngModel)]="senha" required
           minlength="6" placeholder="••••••••" />
       </div>
+      @if (modo === 'cadastro') {
+        <label class="campo-checkbox">
+          <input type="checkbox" [(ngModel)]="aceitouPolitica" name="aceitouPolitica" />
+          <span>
+            Li e aceito a
+            <button type="button" class="link-politica" (click)="abrirPolitica()">Política de Privacidade</button>
+          </span>
+        </label>
+      }
       @if (erro) {
         <p class="mensagem-erro">{{ erro }}</p>
       }
@@ -95,4 +104,39 @@
     </p>
 
   </div>
+
+  <!-- Popup: Política de Privacidade -->
+  @if (mostrarPolitica) {
+    <div class="politica-backdrop" (click)="fecharPolitica()">
+      <div class="politica-card" (click)="$event.stopPropagation()">
+        <h3>Política de Privacidade</h3>
+        <div class="politica-corpo">
+          <p>
+            A Mindly é um diário emocional que trata dados sobre sua saúde mental — considerados
+            <strong>dados sensíveis</strong> pela Lei Geral de Proteção de Dados (LGPD, Lei nº 13.709/2018).
+            Por isso, pedimos seu consentimento explícito antes de criar sua conta.
+          </p>
+
+          <h4>O que coletamos</h4>
+          <p>Nome, email, registros de humor e textos do diário, contatos de confiança que você cadastrar e, se optar por usar o áudio, a transcrição da sua fala.</p>
+
+          <h4>Como usamos</h4>
+          <p>Seus registros são analisados por uma IA (Groq) para gerar reflexões e sugestões personalizadas, e podem ser usados para montar relatórios que você mesmo escolhe enviar ao seu psicólogo. Não vendemos nem compartilhamos seus dados com terceiros para fins de marketing.</p>
+
+          <h4>Onde ficam armazenados</h4>
+          <p>Seus dados ficam no Supabase, com criptografia em repouso (AES-256) e em trânsito (TLS/HTTPS), protegidos por Row Level Security — apenas você consegue acessar seus próprios registros.</p>
+
+          <h4>Seus direitos</h4>
+          <p>Você pode exportar todos os seus dados em JSON ou excluir sua conta e todos os dados associados a qualquer momento, na página de Configurações.</p>
+
+          <h4>Contato</h4>
+          <p>Dúvidas sobre esta política podem ser enviadas para ryansa.04&#64;gmail.com.</p>
+        </div>
+        <div class="politica-botoes">
+          <button type="button" class="btn-cancelar-politica" (click)="fecharPolitica()">Fechar</button>
+          <button type="button" class="btn-aceitar-politica" (click)="aceitarPolitica()">Li e aceito</button>
+        </div>
+      </div>
+    </div>
+  }
 </div>

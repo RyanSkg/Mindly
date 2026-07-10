@@ -17,6 +17,8 @@ export class Auth implements OnInit, OnDestroy {
   carregando: boolean = false;
   erro: string = '';
   mensagem: string = '';
+  aceitouPolitica: boolean = false;
+  mostrarPolitica: boolean = false;
 
   private router = inject(Router);
   private authSubscription = supabase.auth.onAuthStateChange((event, session) => {
@@ -40,11 +42,31 @@ export class Auth implements OnInit, OnDestroy {
     this.modo = this.modo === 'entrar' ? 'cadastro' : 'entrar';
     this.erro = '';
     this.mensagem = '';
+    this.aceitouPolitica = false;
+  }
+
+  abrirPolitica() {
+    this.mostrarPolitica = true;
+  }
+
+  fecharPolitica() {
+    this.mostrarPolitica = false;
+  }
+
+  aceitarPolitica() {
+    this.aceitouPolitica = true;
+    this.mostrarPolitica = false;
   }
 
   async entrar() {
     this.erro = '';
     this.mensagem = '';
+
+    if (this.modo === 'cadastro' && !this.aceitouPolitica) {
+      this.erro = 'Você precisa aceitar a Política de Privacidade para criar sua conta.';
+      return;
+    }
+
     this.carregando = true;
 
     try {
