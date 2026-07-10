@@ -8,6 +8,7 @@ import { TopbarActionsService } from '../../shared/topbar-actions.service';
 import { PerfilService } from '../../shared/perfil.service';
 import { NotificacoesService } from '../../shared/notificacoes.service';
 import { ModalService } from '../../shared/modal.service';
+import { obterUsuarioValido } from '../../shared/sessao.util';
 
 interface Humor {
     id: string;
@@ -41,6 +42,7 @@ interface RegistroRecente {
     sugestaoIA: string | null;
     conteudosIA: ConteudoSugerido[];
     tagsIA: TagEmocao[];
+    conversaIA: MensagemConversa[];
 }
 
 interface MensagemConversa {
@@ -98,6 +100,7 @@ export class Diario implements OnInit {
   novaMensagem: string = '';
   enviandoConversa: boolean = false;
   erroConversa: string = '';
+  ultimaAnaliseRegistroId: string | null = null;
 
   private readonly coresTag = ['roxo', 'azul', 'verde', 'vermelho'];
   private topbarActions = inject(TopbarActionsService);
@@ -135,7 +138,7 @@ export class Diario implements OnInit {
 
     let query = supabase
       .from('registros')
-      .select('id, humor, texto, criado_em, comentario_ia, sugestao_ia, conteudos_ia, tags_ia')
+      .select('id, humor, texto, criado_em, comentario_ia, sugestao_ia, conteudos_ia, tags_ia, conversa_ia')
       .order('criado_em', { ascending: false });
 
     if (this.filtroData) {
@@ -159,6 +162,7 @@ export class Diario implements OnInit {
         sugestaoIA: r.sugestao_ia,
         conteudosIA: r.conteudos_ia ?? [],
         tagsIA: r.tags_ia ?? [],
+        conversaIA: r.conversa_ia ?? [],
       }));
 
       const maisRecente = this.registrosRecentes[0];
@@ -169,6 +173,8 @@ export class Diario implements OnInit {
           conteudos: maisRecente.conteudosIA,
           tags: maisRecente.tagsIA,
         };
+        this.ultimaAnaliseRegistroId = maisRecente.id;
+        this.mensagensConversa = maisRecente.conversaIA;
       }
     }
     this.carregandoRegistros = false;
@@ -182,9 +188,11 @@ export class Diario implements OnInit {
   }
 
   private async inserirRegistro() {
-    const { data: { session } } = await supabase.auth.getSession();
-    const user = session?.user;
-    if (!user) return null;
+    const user = await obterUsuarioValido();
+    if (!user) {
+      this.erroAnalise = 'Sessão expirada. Atualize a página e tente de novo.';
+      return null;
+    }
 
     const { data, error } = await supabase
       .from('registros')
@@ -192,11 +200,13 @@ export class Diario implements OnInit {
       .select()
       .single();
 
-    if (!error && data) {
-      this.notificarMarco(user.id);
+    if (error || !data) {
+      this.erroAnalise = 'Não foi possível salvar. Atualize a página e tente de novo.';
+      return null;
     }
 
-    return !error && data ? data : null;
+    this.notificarMarco(user.id);
+    return data;
   }
 
   private async notificarMarco(userId: string) {
@@ -225,8 +235,11 @@ export class Diario implements OnInit {
         sugestaoIA: null,
         conteudosIA: [],
         tagsIA: [],
+        conversaIA: [],
       });
       this.textoRegistro = '';
+    } else if (this.erroAnalise) {
+      this.modal.avisar({ titulo: 'Não foi possível salvar', mensagem: this.erroAnalise });
     }
     this.salvando = false;
   }
@@ -253,6 +266,7 @@ export class Diario implements OnInit {
       sugestaoIA: null,
       conteudosIA: [],
       tagsIA: [],
+      conversaIA: [],
     };
     this.registrosRecentes.unshift(novoRegistro);
     this.textoRegistro = '';
@@ -285,6 +299,9 @@ export class Diario implements OnInit {
       novoRegistro.conteudosIA = conteudos;
       novoRegistro.tagsIA = tags;
       this.ultimaAnalise = { comentario: dados.comentario, sugestao: dados.sugestao ?? '', conteudos, tags };
+      this.ultimaAnaliseRegistroId = registro.id;
+      this.mensagensConversa = [];
+      this.conversaAberta = false;
 
       await supabase
         .from('registros')
@@ -404,20 +421,19 @@ export class Diario implements OnInit {
   }
 
   private atualizarAnaliseAposExclusao(idsExcluidos: Set<string>) {
-    if (this.ultimaAnalise) {
-      const aindaExiste = this.registrosRecentes.some(
-        r => r.comentarioIA === this.ultimaAnalise?.comentario && !idsExcluidos.has(r.id)
-      );
-      if (!aindaExiste) {
-        this.ultimaAnalise = this.registrosRecentes[0]?.comentarioIA
-          ? {
-              comentario: this.registrosRecentes[0].comentarioIA,
-              sugestao: this.registrosRecentes[0].sugestaoIA ?? '',
-              conteudos: this.registrosRecentes[0].conteudosIA,
-              tags: this.registrosRecentes[0].tagsIA,
-            }
-          : null;
-      }
+    if (this.ultimaAnalise && this.ultimaAnaliseRegistroId && idsExcluidos.has(this.ultimaAnaliseRegistroId)) {
+      const proximo = this.registrosRecentes[0];
+      this.ultimaAnalise = proximo?.comentarioIA
+        ? {
+            comentario: proximo.comentarioIA,
+            sugestao: proximo.sugestaoIA ?? '',
+            conteudos: proximo.conteudosIA,
+            tags: proximo.tagsIA,
+          }
+        : null;
+      this.ultimaAnaliseRegistroId = proximo?.comentarioIA ? proximo.id : null;
+      this.mensagensConversa = proximo?.conversaIA ?? [];
+      this.conversaAberta = false;
     }
   }
 
@@ -486,10 +502,23 @@ export class Diario implements OnInit {
 
       const dados: { resposta: string } = await resposta.json();
       this.mensagensConversa.push({ role: 'assistant', content: dados.resposta });
+      await this.salvarConversa();
     } catch (err) {
       this.erroConversa = err instanceof Error ? err.message : 'Erro ao conversar';
     } finally {
       this.enviandoConversa = false;
     }
+  }
+
+  private async salvarConversa() {
+    if (!this.ultimaAnaliseRegistroId) return;
+
+    await supabase
+      .from('registros')
+      .update({ conversa_ia: this.mensagensConversa })
+      .eq('id', this.ultimaAnaliseRegistroId);
+
+    const registro = this.registrosRecentes.find(r => r.id === this.ultimaAnaliseRegistroId);
+    if (registro) registro.conversaIA = this.mensagensConversa;
   }
 }

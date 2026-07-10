@@ -4,6 +4,7 @@ import jsPDF from 'jspdf';
 import { supabase } from '../../integrations/supabase/client';
 import { valorDoHumor, labelDoHumor } from '../../shared/humor.util';
 import { TopbarActionsService } from '../../shared/topbar-actions.service';
+import { obterUsuarioValido } from '../../shared/sessao.util';
 
 interface DiaDaSemana {
   id: string;
@@ -105,8 +106,7 @@ export class Dashboard implements OnInit, OnDestroy {
       }
     });
 
-    const { data: { session } } = await supabase.auth.getSession();
-    const user = session?.user;
+    const user = await obterUsuarioValido();
     if (!user) return;
 
     const { data, error } = await supabase

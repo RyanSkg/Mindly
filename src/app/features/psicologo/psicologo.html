@@ -17,6 +17,12 @@
       </div>
 
       <!-- Botões -->
+      @if (temConversaDisponivel) {
+        <label class="check-conversa">
+          <input type="checkbox" [(ngModel)]="incluirConversa" name="incluirConversa" />
+          Incluir minha conversa mais recente com a IA no relatório
+        </label>
+      }
       <button class="btn-primario" (click)="enviarRelatorio()" [disabled]="enviando">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -53,6 +59,12 @@
                 @for (tag of relatorio.tags; track tag.label) {
                   <span class="tag" [class]="'tag-' + tag.cor">{{ tag.label }}</span>
                 }
+              </div>
+            }
+            @if (relatorio.conversaAnexada.length > 0) {
+              <div class="conversa-anexada-badge">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Conversa com a IA anexada
               </div>
             }
           </div>

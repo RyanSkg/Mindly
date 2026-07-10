@@ -79,6 +79,36 @@
     line-height: 1.5;
 }
 
+.check-conversa {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--muted-fg);
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.check-conversa input {
+    accent-color: var(--brand);
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+}
+
+.conversa-anexada-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--brand-soft);
+    background-color: var(--accent);
+    border: 1px solid var(--border);
+    border-radius: 9999px;
+    padding: 3px 10px;
+    margin-top: 8px;
+}
+
 /* Botões */
 
 .btn-primario {

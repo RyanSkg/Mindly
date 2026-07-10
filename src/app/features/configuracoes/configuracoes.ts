@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { supabase } from '../../integrations/supabase/client';
 import { PerfilService } from '../../shared/perfil.service';
 import { ModalService } from '../../shared/modal.service';
+import { obterUsuarioValido } from '../../shared/sessao.util';
 
 interface Preferencias {
   lembrete_diario: boolean;
@@ -39,8 +40,7 @@ export class Configuracoes implements OnInit {
   async ngOnInit() {
     await this.perfil.carregar();
 
-    const { data: { session } } = await supabase.auth.getSession();
-    const user = session?.user;
+    const user = await obterUsuarioValido();
     if (!user) return;
     this.userId = user.id;
 
@@ -69,13 +69,19 @@ export class Configuracoes implements OnInit {
     }
   }
 
+  erroPreferencias = '';
+
   async toggle(prop: 'lembreteDiario' | 'relatorioSemanal' | 'alertasIA' | 'modoEscuro' | 'animacoesReduzidas') {
     this[prop] = !this[prop];
-    await this.salvar();
+    const sucesso = await this.salvar();
+    if (!sucesso) {
+      this[prop] = !this[prop];
+    }
   }
 
-  private async salvar() {
-    if (!this.userId) return;
+  private async salvar(): Promise<boolean> {
+    if (!this.userId) return false;
+    this.erroPreferencias = '';
 
     const preferencias: Preferencias = {
       lembrete_diario: this.lembreteDiario,
@@ -85,10 +91,16 @@ export class Configuracoes implements OnInit {
       animacoes_reduzidas: this.animacoesReduzidas,
     };
 
-    await supabase
+    const { error } = await supabase
       .from('preferencias')
       .update(preferencias)
       .eq('user_id', this.userId);
+
+    if (error) {
+      this.erroPreferencias = 'Não foi possível salvar. Atualize a página e tente de novo.';
+      return false;
+    }
+    return true;
   }
 
   irParaPerfil() {

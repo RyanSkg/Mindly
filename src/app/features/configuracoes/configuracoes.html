@@ -59,6 +59,9 @@
             <span class="toggle-bolinha" [class.toggle-bolinha-ativo]="alertasIA"></span>
           </button>
         </div>
+        @if (erroPreferencias) {
+          <p class="erro-preferencias">{{ erroPreferencias }}</p>
+        }
       </div>
 
     </div>

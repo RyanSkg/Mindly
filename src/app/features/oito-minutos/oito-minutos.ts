@@ -5,6 +5,7 @@ import { supabase } from '../../integrations/supabase/client';
 import { tempoRelativo } from '../../shared/tempo.util';
 import { TopbarActionsService } from '../../shared/topbar-actions.service';
 import { NotificacoesService } from '../../shared/notificacoes.service';
+import { obterUsuarioValido } from '../../shared/sessao.util';
 
 interface Contato {
   id: string;
@@ -132,11 +133,10 @@ export class OitoMinutos implements OnInit {
       return;
     }
 
-    const { data: { session } } = await supabase.auth.getSession();
-    const user = session?.user;
+    const user = await obterUsuarioValido();
     if (!user) {
       this.salvandoContato = false;
-      this.erroContato = 'Sessão expirada. Faça login novamente.';
+      this.erroContato = 'Sessão expirada. Atualize a página e tente de novo.';
       return;
     }
 

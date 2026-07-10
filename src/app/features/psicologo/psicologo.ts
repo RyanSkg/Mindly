@@ -1,23 +1,32 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
 import jsPDF from 'jspdf';
 import { supabase } from '../../integrations/supabase/client';
 import { labelDoHumor } from '../../shared/humor.util';
 import { TopbarActionsService } from '../../shared/topbar-actions.service';
 import { PerfilService } from '../../shared/perfil.service';
 import { NotificacoesService } from '../../shared/notificacoes.service';
+import { obterUsuarioValido } from '../../shared/sessao.util';
+import { ModalService } from '../../shared/modal.service';
+
+interface MensagemConversa {
+  role: 'user' | 'assistant';
+  content: string;
+}
 
 interface Relatorio {
   id: string;
   titulo: string;
   detalhes: string;
   tags: { label: string; cor: string }[];
+  conversaAnexada: MensagemConversa[];
   principal: boolean;
 }
 
 @Component({
   selector: 'app-psicologo',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './psicologo.html',
   styleUrl: './psicologo.css',
 })
@@ -33,6 +42,8 @@ export class Psicologo implements OnInit {
 
   relatorios: Relatorio[] = [];
   enviando: boolean = false;
+  incluirConversa: boolean = false;
+  temConversaDisponivel: boolean = false;
 
   private readonly coresTag = ['roxo', 'azul', 'verde', 'vermelho'];
   private readonly meses = [
@@ -44,10 +55,12 @@ export class Psicologo implements OnInit {
   private destroyRef = inject(DestroyRef);
   private perfil = inject(PerfilService);
   private notificacoes = inject(NotificacoesService);
+  private modal = inject(ModalService);
 
   async ngOnInit() {
     await this.perfil.carregar();
     await this.carregarRelatorios();
+    await this.verificarConversaDisponivel();
     this.topbarActions.acoes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(acao => {
       if (acao.tipo === 'enviar-relatorio') this.enviarRelatorio();
     });
@@ -56,7 +69,7 @@ export class Psicologo implements OnInit {
   private async carregarRelatorios() {
     const { data, error } = await supabase
       .from('relatorios')
-      .select('id, titulo, detalhes, tags, criado_em')
+      .select('id, titulo, detalhes, tags, conversa_anexada, criado_em')
       .order('criado_em', { ascending: false });
 
     if (!error && data) {
@@ -65,19 +78,32 @@ export class Psicologo implements OnInit {
         titulo: r.titulo,
         detalhes: r.detalhes ?? '',
         tags: r.tags ?? [],
+        conversaAnexada: r.conversa_anexada ?? [],
         principal: i === 0,
       }));
     }
+  }
+
+  private async verificarConversaDisponivel() {
+    const { data } = await supabase
+      .from('registros')
+      .select('conversa_ia')
+      .not('conversa_ia', 'is', null)
+      .order('criado_em', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    this.temConversaDisponivel = !!(data?.conversa_ia && data.conversa_ia.length > 0);
   }
 
   async enviarRelatorio() {
     if (this.enviando) return;
     this.enviando = true;
 
-    const { data: { session } } = await supabase.auth.getSession();
-    const user = session?.user;
+    const user = await obterUsuarioValido();
     if (!user) {
       this.enviando = false;
+      this.modal.avisar({ titulo: 'Sessão expirada', mensagem: 'Atualize a página e tente enviar o relatório de novo.' });
       return;
     }
 
@@ -104,16 +130,39 @@ export class Psicologo implements OnInit {
     const titulo = `Relatório — ${this.meses[hoje.getMonth()]} ${hoje.getFullYear()}`;
     const detalhes = `${lista.length} registros · ${semanas} semana${semanas > 1 ? 's' : ''}`;
 
+    let conversaAnexada: MensagemConversa[] = [];
+    if (this.incluirConversa) {
+      const { data: registroComConversa } = await supabase
+        .from('registros')
+        .select('conversa_ia')
+        .eq('user_id', user.id)
+        .not('conversa_ia', 'is', null)
+        .order('criado_em', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      conversaAnexada = registroComConversa?.conversa_ia ?? [];
+    }
+
     const { data, error } = await supabase
       .from('relatorios')
-      .insert({ user_id: user.id, titulo, detalhes, tags })
+      .insert({ user_id: user.id, titulo, detalhes, tags, conversa_anexada: conversaAnexada })
       .select()
       .single();
 
     if (!error && data) {
       this.relatorios = this.relatorios.map(r => ({ ...r, principal: false }));
-      this.relatorios.unshift({ id: data.id, titulo: data.titulo, detalhes: data.detalhes, tags: data.tags, principal: true });
+      this.relatorios.unshift({
+        id: data.id,
+        titulo: data.titulo,
+        detalhes: data.detalhes,
+        tags: data.tags,
+        conversaAnexada: data.conversa_anexada ?? [],
+        principal: true,
+      });
       this.notificacoes.criar('Relatório enviado', `${data.titulo} foi enviado para ${this.psicologa.nome}.`);
+      this.incluirConversa = false;
+    } else {
+      this.modal.avisar({ titulo: 'Não foi possível enviar', mensagem: 'Algo deu errado ao enviar o relatório. Tente novamente.' });
     }
     this.enviando = false;
   }
@@ -148,6 +197,27 @@ export class Psicologo implements OnInit {
       relatorio.tags.forEach(tag => {
         doc.text(`• ${tag.label}`, 14, y);
         y += 7;
+      });
+      y += 4;
+    }
+
+    if (relatorio.conversaAnexada.length > 0) {
+      doc.setFontSize(12);
+      doc.text('Conversa com a IA:', 14, y);
+      y += 8;
+      doc.setFontSize(10);
+      relatorio.conversaAnexada.forEach(msg => {
+        const prefixo = msg.role === 'user' ? 'Paciente: ' : 'IA: ';
+        const linhas = doc.splitTextToSize(prefixo + msg.content, 180);
+        linhas.forEach((linha: string) => {
+          if (y > 280) {
+            doc.addPage();
+            y = 20;
+          }
+          doc.text(linha, 14, y);
+          y += 6;
+        });
+        y += 2;
       });
     }
 

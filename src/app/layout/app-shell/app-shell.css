@@ -241,16 +241,18 @@
 
 .tb-data {
     position: relative;
-    cursor: default;
+    cursor: pointer;
 }
 
-.tb-data input {
+.tb-data-input {
     position: absolute;
-    inset: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    height: 1px;
     opacity: 0;
-    cursor: pointer;
     border: none;
-    width: 100%;
+    pointer-events: none;
     color-scheme: dark;
 }
 

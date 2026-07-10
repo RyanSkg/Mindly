@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { supabase } from '../../integrations/supabase/client';
 import { PerfilService } from '../../shared/perfil.service';
 import { emojiDoHumor, valorDoHumor } from '../../shared/humor.util';
+import { obterUsuarioValido } from '../../shared/sessao.util';
 
 interface AtividadeRecente {
   id: string;
@@ -45,8 +46,7 @@ export class Perfil implements OnInit {
   async ngOnInit() {
     await this.perfil.carregar();
 
-    const { data: { session } } = await supabase.auth.getSession();
-    const user = session?.user;
+    const user = await obterUsuarioValido();
     if (!user) {
       this.carregando = false;
       return;
