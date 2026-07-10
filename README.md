@@ -121,6 +121,15 @@ O schema (tabelas `registros`, `contatos`, `relatorios`, `preferencias`, `notifi
 
 ---
 
+## 🔒 Segurança e privacidade dos dados
+
+- **Criptografia em repouso**: o banco (Supabase/Postgres) criptografa todos os dados armazenados em disco com AES-256, de forma automática — não depende de nenhuma configuração da aplicação.
+- **Criptografia em trânsito**: toda comunicação entre navegador, servidor e banco usa TLS/HTTPS.
+- **Row Level Security**: cada tabela tem políticas que garantem que um usuário só consegue ler, criar ou apagar os próprios registros — mesmo que alguém tente burlar o app e chamar a API diretamente.
+- **Segredos fora do navegador**: chaves sensíveis (IA, exclusão de conta) só existem no servidor, nunca no código que roda no navegador do usuário.
+
+---
+
 ## 👨‍💻 Desenvolvedor
 
 **Ryan Sá** — ryansa.04@gmail.com
