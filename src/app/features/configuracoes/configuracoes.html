@@ -111,11 +111,13 @@
           </svg>
           APARÊNCIA
         </div>
-        <div class="toggle-row">
-          <span>Modo escuro</span>
-          <button class="toggle" [class.toggle-ativo]="modoEscuro" (click)="toggle('modoEscuro')">
-            <span class="toggle-bolinha" [class.toggle-bolinha-ativo]="modoEscuro"></span>
-          </button>
+        <div class="tema-row">
+          <span>Tema</span>
+          <div class="tema-segmentado">
+            <button [class.tema-ativo]="tema === 'claro'" (click)="escolherTema('claro')">Claro</button>
+            <button [class.tema-ativo]="tema === 'escuro'" (click)="escolherTema('escuro')">Escuro</button>
+            <button [class.tema-ativo]="tema === 'automatico'" (click)="escolherTema('automatico')">Automático</button>
+          </div>
         </div>
         <div class="toggle-row ultimo">
           <span>Animações reduzidas</span>

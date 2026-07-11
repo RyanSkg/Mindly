@@ -236,6 +236,43 @@
     transform: translateX(16px);
 }
 
+/* Tema (segmentado) */
+
+.tema-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--foreground);
+    margin-bottom: 12px;
+    gap: 12px;
+}
+
+.tema-segmentado {
+    display: flex;
+    background-color: var(--accent);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 2px;
+}
+
+.tema-segmentado button {
+    background: none;
+    border: none;
+    color: var(--muted-fg);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.tema-segmentado button.tema-ativo {
+    background-color: var(--brand);
+    color: var(--brand-foreground);
+}
+
 /* Mobile */
 
 @media (max-width: 720px) {

@@ -1,6 +1,7 @@
 /* Estilos globais do Mindly */
 
-:root {
+:root,
+:root[data-theme="escuro"] {
   /* Paleta roxa escura do Mindly (mesmos valores OKLCH do design original) */
   --background:        oklch(0.13 0.04 295);
   --foreground:        oklch(0.96 0.02 300);
@@ -18,6 +19,59 @@
   --success:           oklch(0.7 0.16 160);
   --danger:            oklch(0.65 0.2 25);
   --info:              oklch(0.7 0.15 240);
+}
+
+/* Paleta clara — mesma identidade visual (roxo Mindly), fundo e texto invertidos */
+:root[data-theme="claro"] {
+  --background:        oklch(0.985 0.006 295);
+  --foreground:        oklch(0.2 0.045 295);
+  --surface:           oklch(0.96 0.012 295);
+  --surface-2:         oklch(0.91 0.02 295);
+  --card:              oklch(0.995 0.004 295);
+  --sidebar:           oklch(0.97 0.01 295);
+  --border:            oklch(0.87 0.02 295);
+  --accent:            oklch(0.93 0.03 295);
+  --brand:             oklch(0.5 0.22 295);
+  --brand-foreground:  oklch(0.99 0 0);
+  --brand-soft:        oklch(0.42 0.16 295);
+  --brand-muted:       oklch(0.58 0.09 295);
+  --muted-fg:          oklch(0.45 0.04 295);
+  --success:           oklch(0.55 0.15 160);
+  --danger:            oklch(0.55 0.2 25);
+  --info:              oklch(0.55 0.15 240);
+}
+
+/* Antes do JS aplicar a preferência salva, segue o esquema do sistema
+   operacional (usado no modo "automático" e no primeiro carregamento). */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    --background:        oklch(0.985 0.006 295);
+    --foreground:        oklch(0.2 0.045 295);
+    --surface:           oklch(0.96 0.012 295);
+    --surface-2:         oklch(0.91 0.02 295);
+    --card:              oklch(0.995 0.004 295);
+    --sidebar:           oklch(0.97 0.01 295);
+    --border:            oklch(0.87 0.02 295);
+    --accent:            oklch(0.93 0.03 295);
+    --brand:             oklch(0.5 0.22 295);
+    --brand-foreground:  oklch(0.99 0 0);
+    --brand-soft:        oklch(0.42 0.16 295);
+    --brand-muted:       oklch(0.58 0.09 295);
+    --muted-fg:          oklch(0.45 0.04 295);
+    --success:           oklch(0.55 0.15 160);
+    --danger:            oklch(0.55 0.2 25);
+    --info:              oklch(0.55 0.15 240);
+  }
+}
+
+/* Animações reduzidas: aplicado via atributo global no <html> */
+:root[data-animacoes="reduzidas"] *,
+:root[data-animacoes="reduzidas"] *::before,
+:root[data-animacoes="reduzidas"] *::after {
+  animation-duration: 0.001ms !important;
+  animation-delay: 0ms !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
 }
 
 * {

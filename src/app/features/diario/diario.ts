@@ -109,6 +109,7 @@ export class Diario implements OnInit {
   private modal = inject(ModalService);
   private mediaRecorder: MediaRecorder | null = null;
   private audioChunks: Blob[] = [];
+  private alertasIAHabilitado = true;
   perfil = inject(PerfilService);
 
   emojiDoHumor = emojiDoHumor;
@@ -116,10 +117,22 @@ export class Diario implements OnInit {
   async ngOnInit() {
     await this.perfil.carregar();
     await this.carregarRegistros();
+    this.carregarPreferenciaAlertasIA();
     this.topbarActions.acoes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(acao => {
       if (acao.tipo === 'analisar-ia') this.registrarHumoreAnalisar();
       if (acao.tipo === 'filtrar-data' && acao.valor) this.filtrarPorData(acao.valor);
     });
+  }
+
+  private async carregarPreferenciaAlertasIA() {
+    const user = await obterUsuarioValido();
+    if (!user) return;
+    const { data } = await supabase
+      .from('preferencias')
+      .select('alertas_ia')
+      .eq('user_id', user.id)
+      .maybeSingle();
+    if (data) this.alertasIAHabilitado = data.alertas_ia;
   }
 
   async filtrarPorData(data: string) {
@@ -312,6 +325,10 @@ export class Diario implements OnInit {
           tags_ia: tags,
         })
         .eq('id', registro.id);
+
+      if (this.alertasIAHabilitado) {
+        this.notificacoes.criar('Análise da IA pronta', 'A reflexão sobre o seu registro mais recente já está disponível no Diário.');
+      }
     } catch (err) {
       this.erroAnalise = err instanceof Error ? err.message : 'Erro ao analisar';
     } finally {

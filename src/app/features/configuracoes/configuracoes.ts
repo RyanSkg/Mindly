@@ -5,12 +5,13 @@ import { supabase } from '../../integrations/supabase/client';
 import { PerfilService } from '../../shared/perfil.service';
 import { ModalService } from '../../shared/modal.service';
 import { obterUsuarioValido } from '../../shared/sessao.util';
+import { TemaService, Tema } from '../../shared/tema.service';
 
 interface Preferencias {
   lembrete_diario: boolean;
   relatorio_semanal: boolean;
   alertas_ia: boolean;
-  modo_escuro: boolean;
+  tema: Tema;
   animacoes_reduzidas: boolean;
 }
 
@@ -24,7 +25,7 @@ export class Configuracoes implements OnInit {
   lembreteDiario = true;
   relatorioSemanal = false;
   alertasIA = true;
-  modoEscuro = true;
+  tema: Tema = 'escuro';
   animacoesReduzidas = false;
 
   perfil = inject(PerfilService);
@@ -35,6 +36,7 @@ export class Configuracoes implements OnInit {
 
   private router = inject(Router);
   private modal = inject(ModalService);
+  private temaService = inject(TemaService);
   private userId: string | null = null;
 
   async ngOnInit() {
@@ -46,7 +48,7 @@ export class Configuracoes implements OnInit {
 
     const { data, error } = await supabase
       .from('preferencias')
-      .select('lembrete_diario, relatorio_semanal, alertas_ia, modo_escuro, animacoes_reduzidas')
+      .select('lembrete_diario, relatorio_semanal, alertas_ia, tema, animacoes_reduzidas')
       .eq('user_id', user.id)
       .maybeSingle();
 
@@ -54,7 +56,7 @@ export class Configuracoes implements OnInit {
       this.lembreteDiario = data.lembrete_diario;
       this.relatorioSemanal = data.relatorio_semanal;
       this.alertasIA = data.alertas_ia;
-      this.modoEscuro = data.modo_escuro;
+      this.tema = (data.tema as Tema | null) ?? 'escuro';
       this.animacoesReduzidas = data.animacoes_reduzidas;
     } else {
       // Primeira vez do usuário: cria a linha com os valores padrão
@@ -63,7 +65,7 @@ export class Configuracoes implements OnInit {
         lembrete_diario: this.lembreteDiario,
         relatorio_semanal: this.relatorioSemanal,
         alertas_ia: this.alertasIA,
-        modo_escuro: this.modoEscuro,
+        tema: this.tema,
         animacoes_reduzidas: this.animacoesReduzidas,
       });
     }
@@ -71,11 +73,26 @@ export class Configuracoes implements OnInit {
 
   erroPreferencias = '';
 
-  async toggle(prop: 'lembreteDiario' | 'relatorioSemanal' | 'alertasIA' | 'modoEscuro' | 'animacoesReduzidas') {
+  async toggle(prop: 'lembreteDiario' | 'relatorioSemanal' | 'alertasIA' | 'animacoesReduzidas') {
     this[prop] = !this[prop];
     const sucesso = await this.salvar();
     if (!sucesso) {
       this[prop] = !this[prop];
+      return;
+    }
+    if (prop === 'animacoesReduzidas') this.temaService.aplicarAnimacoes(this.animacoesReduzidas);
+  }
+
+  async escolherTema(tema: Tema) {
+    if (this.tema === tema) return;
+    const anterior = this.tema;
+    this.tema = tema;
+    this.temaService.aplicarTema(tema);
+
+    const sucesso = await this.salvar();
+    if (!sucesso) {
+      this.tema = anterior;
+      this.temaService.aplicarTema(anterior);
     }
   }
 
@@ -87,7 +104,7 @@ export class Configuracoes implements OnInit {
       lembrete_diario: this.lembreteDiario,
       relatorio_semanal: this.relatorioSemanal,
       alertas_ia: this.alertasIA,
-      modo_escuro: this.modoEscuro,
+      tema: this.tema,
       animacoes_reduzidas: this.animacoesReduzidas,
     };
 

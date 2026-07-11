@@ -3,5 +3,9 @@
   "outputDirectory": "dist/EchoMind/browser",
   "rewrites": [
     { "source": "/((?!api/).*)", "destination": "/index.csr.html" }
+  ],
+  "crons": [
+    { "path": "/api/lembrete-diario", "schedule": "0 20 * * *" },
+    { "path": "/api/relatorio-semanal", "schedule": "0 13 * * 1" }
   ]
 }
