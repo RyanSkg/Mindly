@@ -17,6 +17,13 @@
       <span>Mindly</span>
     </div>
     <div class="home-topbar-acoes">
+      <button class="btn-tema" (click)="alternarTema()" [title]="temaEscuro ? 'Mudar para modo claro' : 'Mudar para modo escuro'">
+        @if (temaEscuro) {
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        } @else {
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        }
+      </button>
       @if (logado) {
         <a routerLink="/diario" class="btn-registrar">Abrir o app</a>
       } @else {
@@ -135,7 +142,7 @@
           <span class="passo-numero">1</span>
           <div>
             <h3>Crie sua conta profissional</h3>
-            <p>Clique em <strong>Registrar</strong>, escolha <strong>"Sou psicólogo(a)"</strong> e informe seu CRP e especialidade. Seu cadastro passa por uma aprovação manual antes de liberar o acesso.</p>
+            <p>Clique em <strong>Registrar</strong>, escolha <strong>"Sou psicólogo(a)"</strong> e informe seu CRP e especialidade. Seu cadastro passa por uma aprovação antes de liberar o acesso.</p>
           </div>
         </div>
         <div class="passo">
@@ -172,7 +179,7 @@
 
   <!-- Rodapé -->
   <footer class="home-rodape">
-    <p>Mindly — Diário emocional com IA · Projeto Ford Enter</p>
+    <p>Mindly — Diário emocional com IA</p>
     <button class="btn-registrar" (click)="irParaRegistro()">Criar minha conta</button>
   </footer>
 </div>

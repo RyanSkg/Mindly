@@ -41,6 +41,25 @@
     gap: 10px;
 }
 
+.btn-tema {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted-fg);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.btn-tema:hover {
+    background-color: var(--accent);
+    color: var(--brand-soft);
+}
+
 .btn-entrar {
     display: inline-flex;
     align-items: center;
