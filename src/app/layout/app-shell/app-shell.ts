@@ -23,6 +23,7 @@ export class AppShell implements OnInit {
   menuAberto = false;
   notificacoesAbertas = false;
   ehPsicologo = false;
+  ehAdmin = false;
 
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -38,6 +39,7 @@ export class AppShell implements OnInit {
     this.notificacoes.carregar();
 
     const meuPerfil = await this.perfis.carregar();
+    this.ehAdmin = !!meuPerfil?.admin;
     if (meuPerfil?.tipo === 'psicologo') {
       if (!meuPerfil.aprovado) {
         this.router.navigate(['/pendente-aprovacao']);

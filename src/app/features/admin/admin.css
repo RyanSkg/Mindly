@@ -1,0 +1,155 @@
+.pagina-admin h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--foreground);
+    margin-bottom: 4px;
+}
+
+.subtitulo {
+    font-size: 13px;
+    color: var(--brand-soft);
+    margin-bottom: 24px;
+}
+
+.cards-resumo {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.card {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 16px;
+}
+
+.cards-resumo .card {
+    margin-bottom: 0;
+}
+
+.resumo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.resumo-numero {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--foreground);
+}
+
+.resumo-label {
+    font-size: 12px;
+    color: var(--muted-fg);
+}
+
+.card-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--brand-soft);
+    margin-bottom: 12px;
+}
+
+.vazio {
+    font-size: 13px;
+    color: var(--muted-fg);
+}
+
+.linha-perfil {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.linha-perfil:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.perfil-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand-muted), var(--brand));
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--brand-soft);
+    flex-shrink: 0;
+}
+
+.perfil-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.perfil-username {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--foreground);
+}
+
+.perfil-detalhe {
+    font-size: 12px;
+    color: var(--muted-fg);
+    margin-top: 2px;
+}
+
+.acoes {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.btn-aprovar {
+    background-color: var(--brand);
+    color: var(--brand-foreground);
+    border: none;
+    border-radius: 6px;
+    padding: 7px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+
+.btn-aprovar:hover { opacity: 0.9; }
+
+.btn-recusar,
+.btn-revogar {
+    background-color: #ef444422;
+    border: 1px solid #ef444455;
+    color: #f87171;
+    border-radius: 6px;
+    padding: 7px 14px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    flex-shrink: 0;
+}
+
+.btn-recusar:hover,
+.btn-revogar:hover { opacity: 0.8; }
+
+.btn-aprovar:disabled,
+.btn-recusar:disabled,
+.btn-revogar:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@media (max-width: 720px) {
+    .cards-resumo {
+        grid-template-columns: 1fr;
+    }
+}

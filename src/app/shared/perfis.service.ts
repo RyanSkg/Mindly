@@ -8,6 +8,7 @@ export interface Perfil {
   username: string;
   tipo: TipoConta;
   aprovado: boolean;
+  admin?: boolean;
   crp: string | null;
   especialidade: string | null;
 }

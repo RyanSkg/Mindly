@@ -38,6 +38,11 @@ export const routes: Routes = [
           import('./features/painel-psicologo/painel-psicologo').then((m) => m.PainelPsicologo),
       },
       {
+        path: 'admin',
+        title: 'Administração',
+        loadComponent: () => import('./features/admin/admin').then((m) => m.Admin),
+      },
+      {
         path: 'diario',
         title: 'Diário emocional',
         loadComponent: () => import('./features/diario/diario').then((m) => m.Diario),
