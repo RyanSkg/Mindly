@@ -61,9 +61,12 @@ export class OitoMinutos implements OnInit {
   private perfis = inject(PerfisService);
   private conexoes = inject(ConexoesService);
 
+  carregandoContatos = true;
+
   async ngOnInit() {
     await this.carregarContatos();
     await this.carregarMindly();
+    this.carregandoContatos = false;
     this.topbarActions.acoes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(acao => {
       if (acao.tipo === 'adicionar-contato') this.abrirFormulario();
     });

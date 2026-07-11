@@ -56,12 +56,18 @@ export class PainelPsicologo implements OnInit {
   linkConvite = '';
   linkCopiado = false;
 
+  // Notas privadas sobre o paciente selecionado
+  notaConteudo = '';
+  salvandoNota = false;
+  notaSalva = false;
+
   async ngOnInit() {
     const perfil = await this.perfis.carregar();
     if (perfil) {
       this.linkConvite = this.conexoes.linkConvite('psicologo', perfil.user_id);
     }
     await this.carregarTudo();
+    await this.carregarNota();
     this.carregando = false;
   }
 
@@ -106,6 +112,48 @@ export class PainelPsicologo implements OnInit {
 
   selecionarPaciente(userId: string) {
     this.pacienteSelecionadoId = userId;
+    this.carregarNota();
+  }
+
+  /* ==== Notas privadas do psicólogo ==== */
+
+  private async carregarNota() {
+    this.notaConteudo = '';
+    this.notaSalva = false;
+    if (!this.pacienteSelecionadoId) return;
+
+    const user = await obterUsuarioValido();
+    if (!user) return;
+
+    const { data } = await supabase
+      .from('notas_psicologo')
+      .select('conteudo')
+      .eq('psicologo_id', user.id)
+      .eq('paciente_id', this.pacienteSelecionadoId)
+      .maybeSingle();
+
+    this.notaConteudo = data?.conteudo ?? '';
+  }
+
+  async salvarNota() {
+    if (this.salvandoNota || !this.pacienteSelecionadoId) return;
+    this.salvandoNota = true;
+    this.notaSalva = false;
+
+    const user = await obterUsuarioValido();
+    if (user) {
+      const { error } = await supabase.from('notas_psicologo').upsert({
+        psicologo_id: user.id,
+        paciente_id: this.pacienteSelecionadoId,
+        conteudo: this.notaConteudo,
+        atualizado_em: new Date().toISOString(),
+      });
+      if (!error) {
+        this.notaSalva = true;
+        setTimeout(() => (this.notaSalva = false), 2500);
+      }
+    }
+    this.salvandoNota = false;
   }
 
   get pacienteSelecionado(): ConexaoComPerfil | null {
@@ -176,6 +224,111 @@ export class PainelPsicologo implements OnInit {
     navigator.clipboard?.writeText(this.linkConvite);
     this.linkCopiado = true;
     setTimeout(() => (this.linkCopiado = false), 2000);
+  }
+
+  /** PDF com o resumo do paciente: gráficos de registros e emoções + notas. */
+  exportarResumoPaciente() {
+    const paciente = this.pacienteSelecionado;
+    if (!paciente) return;
+
+    const doc = new jsPDF();
+    const roxo: [number, number, number] = [124, 58, 237];
+    let y = 20;
+
+    doc.setFontSize(18);
+    doc.text(`Resumo do paciente @${paciente.outroPerfil.username}`, 14, y);
+    y += 8;
+    doc.setFontSize(10);
+    doc.setTextColor(120);
+    doc.text(`Gerado em ${new Date().toLocaleDateString('pt-BR')} · ${this.relatoriosDoPaciente.length} relatório(s) recebido(s)`, 14, y);
+    doc.setTextColor(0);
+    y += 14;
+
+    // Gráfico de barras: registros por relatório
+    const barras = this.graficoRegistros;
+    if (barras.length > 0) {
+      doc.setFontSize(13);
+      doc.text('Registros por relatório', 14, y);
+      y += 6;
+
+      const alturaMax = 40;
+      const larguraBarra = 14;
+      const espaco = 8;
+      const baseY = y + alturaMax;
+      const maior = Math.max(1, ...barras.map(b => b.valor));
+
+      barras.forEach((barra, i) => {
+        const x = 14 + i * (larguraBarra + espaco);
+        const altura = Math.max(2, (barra.valor / maior) * alturaMax);
+        doc.setFillColor(...roxo);
+        doc.rect(x, baseY - altura, larguraBarra, altura, 'F');
+        doc.setFontSize(8);
+        doc.text(String(barra.valor), x + larguraBarra / 2, baseY - altura - 1.5, { align: 'center' });
+        doc.text(barra.label, x + larguraBarra / 2, baseY + 4.5, { align: 'center' });
+      });
+      y = baseY + 14;
+    }
+
+    // Emoções mais observadas
+    const emocoes = this.emocoesFrequentes;
+    if (emocoes.length > 0) {
+      doc.setFontSize(13);
+      doc.text('Emoções mais observadas', 14, y);
+      y += 7;
+
+      const larguraTrilho = 90;
+      emocoes.forEach(emocao => {
+        doc.setFontSize(10);
+        doc.text(emocao.label, 14, y + 3.5);
+        doc.setFillColor(230, 230, 235);
+        doc.rect(55, y, larguraTrilho, 4.5, 'F');
+        doc.setFillColor(...roxo);
+        doc.rect(55, y, (emocao.percentual / 100) * larguraTrilho, 4.5, 'F');
+        doc.text(`${emocao.percentual}%`, 55 + larguraTrilho + 4, y + 3.5);
+        y += 9;
+      });
+      y += 6;
+    }
+
+    // Notas do psicólogo
+    if (this.notaConteudo.trim()) {
+      doc.setFontSize(13);
+      doc.text('Minhas anotações', 14, y);
+      y += 7;
+      doc.setFontSize(10);
+      const linhas = doc.splitTextToSize(this.notaConteudo.trim(), 180);
+      linhas.forEach((linha: string) => {
+        if (y > 280) {
+          doc.addPage();
+          y = 20;
+        }
+        doc.text(linha, 14, y);
+        y += 5.5;
+      });
+      y += 6;
+    }
+
+    // Lista de relatórios
+    if (this.relatoriosDoPaciente.length > 0) {
+      if (y > 250) {
+        doc.addPage();
+        y = 20;
+      }
+      doc.setFontSize(13);
+      doc.text('Relatórios recebidos', 14, y);
+      y += 7;
+      doc.setFontSize(10);
+      this.relatoriosDoPaciente.forEach(r => {
+        if (y > 280) {
+          doc.addPage();
+          y = 20;
+        }
+        doc.text(`• ${r.criadoEm.toLocaleDateString('pt-BR')} — ${r.titulo} (${r.detalhes})`, 14, y);
+        y += 6;
+      });
+    }
+
+    doc.save(`resumo-${paciente.outroPerfil.username}.pdf`);
   }
 
   baixarRelatorio(relatorio: RelatorioRecebido) {

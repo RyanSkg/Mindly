@@ -53,6 +53,10 @@
         @if (pacientes.length > 3) {
           <input type="text" class="input-filtro" [(ngModel)]="filtroPaciente" placeholder="Pesquisar paciente..." />
         }
+        @if (carregando) {
+          <div class="skeleton skeleton-linha"></div>
+          <div class="skeleton skeleton-linha curta"></div>
+        }
         @if (!carregando && pacientes.length === 0) {
           <p class="vazio">Nenhum paciente conectado ainda. Cadastre pelo &#64;usuario ou compartilhe seu link.</p>
         }
@@ -71,7 +75,13 @@
 
     <!-- Coluna direita: visão do paciente selecionado -->
     <div class="coluna-detalhe">
-      @if (!pacienteSelecionado) {
+      @if (carregando) {
+        <div class="card">
+          <div class="skeleton skeleton-linha"></div>
+          <div class="skeleton skeleton-linha curta"></div>
+          <div class="skeleton skeleton-card"></div>
+        </div>
+      } @else if (!pacienteSelecionado) {
         <div class="card detalhe-vazio">
           <p>Selecione um paciente na lista para ver os gráficos e relatórios dele.</p>
         </div>
@@ -79,9 +89,27 @@
         <!-- Cabeçalho do paciente -->
         <div class="card cabecalho-paciente">
           <span class="paciente-avatar avatar-grande">{{ pacienteSelecionado.outroPerfil.username.slice(0, 2).toUpperCase() }}</span>
-          <div>
+          <div class="cabecalho-info">
             <p class="detalhe-nome">{{ '@' + pacienteSelecionado.outroPerfil.username }}</p>
             <p class="detalhe-sub">{{ relatoriosDoPaciente.length }} relatório{{ relatoriosDoPaciente.length === 1 ? '' : 's' }} recebido{{ relatoriosDoPaciente.length === 1 ? '' : 's' }}</p>
+          </div>
+          @if (relatoriosDoPaciente.length > 0) {
+            <button class="btn-exportar" (click)="exportarResumoPaciente()">Exportar resumo (PDF)</button>
+          }
+        </div>
+
+        <!-- Notas privadas -->
+        <div class="card">
+          <p class="card-label">MINHAS ANOTAÇÕES (SÓ VOCÊ VÊ)</p>
+          <textarea class="nota-textarea" [(ngModel)]="notaConteudo" rows="4"
+            placeholder="Anote observações sobre este paciente..."></textarea>
+          <div class="nota-rodape">
+            @if (notaSalva) {
+              <span class="nota-salva">Salvo ✓</span>
+            }
+            <button class="btn-primario" (click)="salvarNota()" [disabled]="salvandoNota">
+              {{ salvandoNota ? 'Salvando...' : 'Salvar anotações' }}
+            </button>
           </div>
         </div>
 

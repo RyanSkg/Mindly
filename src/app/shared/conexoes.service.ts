@@ -61,6 +61,20 @@ export class ConexoesService {
       const erro = error.code === '23505' ? 'Vocês já têm uma conexão ou pedido em andamento.' : 'Não foi possível enviar o pedido.';
       return { ok: false, erro };
     }
+
+    // Avisa o destinatário no sino dele (falha silenciosa: o pedido já foi criado).
+    const meuUsername = (await this.perfis.carregar())?.username ?? 'alguém';
+    const mensagem = tipo === 'psicologo'
+      ? (alvo.tipo === 'psicologo'
+        ? `@${meuUsername} quer se conectar com você como paciente.`
+        : `@${meuUsername} quer ser seu(sua) psicólogo(a) no Mindly.`)
+      : `@${meuUsername} quer te adicionar como contato de confiança no 8 Minutos.`;
+    await supabase.rpc('notificar_conexao', {
+      destino: userId,
+      titulo: 'Novo pedido de conexão',
+      mensagem,
+    });
+
     return { ok: true };
   }
 
@@ -105,11 +119,27 @@ export class ConexoesService {
   }
 
   async responder(conexaoId: string, aceitar: boolean): Promise<boolean> {
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('conexoes')
       .update({ status: aceitar ? 'aceito' : 'recusado', respondido_em: new Date().toISOString() })
-      .eq('id', conexaoId);
-    return !error;
+      .eq('id', conexaoId)
+      .select('solicitante_id, destinatario_id')
+      .maybeSingle();
+
+    if (error) return false;
+
+    // Avisa quem enviou o pedido que ele foi aceito (falha silenciosa).
+    if (aceitar && data) {
+      const user = await obterUsuarioValido();
+      const outroId = data.solicitante_id === user?.id ? data.destinatario_id : data.solicitante_id;
+      const meuUsername = (await this.perfis.carregar())?.username ?? 'alguém';
+      await supabase.rpc('notificar_conexao', {
+        destino: outroId,
+        titulo: 'Pedido de conexão aceito',
+        mensagem: `@${meuUsername} aceitou seu pedido de conexão no Mindly.`,
+      });
+    }
+    return true;
   }
 
   async remover(conexaoId: string): Promise<boolean> {

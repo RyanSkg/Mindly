@@ -98,6 +98,40 @@ html, body {
   }
 }
 
+/* Skeleton de carregamento (usado enquanto os dados do Supabase chegam) */
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--accent);
+  border-radius: 8px;
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+  animation: skeleton-brilho 1.4s infinite;
+}
+
+@keyframes skeleton-brilho {
+  100% { transform: translateX(100%); }
+}
+
+.skeleton-linha {
+  height: 14px;
+  margin-bottom: 10px;
+}
+
+.skeleton-linha.curta { width: 55%; }
+
+.skeleton-card {
+  height: 74px;
+  margin-bottom: 10px;
+}
+
 /* Segurança contra estouro de largura em telas estreitas: itens de
    grid/flex não encolhem abaixo do conteúdo por padrão (min-width: auto),
    então um texto um pouco mais longo empurra a borda pra fora da tela.

@@ -120,7 +120,11 @@
 
     <!-- Contatos -->
     <p class="secao-titulo">CONTATOS DE CONFIANÇA</p>
-    @if (contatos.length === 0) {
+    @if (carregandoContatos) {
+      <div class="skeleton skeleton-card"></div>
+      <div class="skeleton skeleton-card"></div>
+    }
+    @if (contatos.length === 0 && !carregandoContatos) {
       <p class="sem-contatos">Nenhum contato ainda. Adicione alguém de confiança!</p>
     }
     @if (avisoEnviado) {

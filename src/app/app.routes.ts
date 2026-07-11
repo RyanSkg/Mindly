@@ -76,4 +76,10 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: '**',
+    title: 'Página não encontrada · Mindly',
+    loadComponent: () =>
+      import('./features/nao-encontrada/nao-encontrada').then((m) => m.NaoEncontrada),
+  },
 ];

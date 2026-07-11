@@ -204,6 +204,11 @@
     }
   </div>
 
+  @if (carregandoRegistros && registrosRecentes.length === 0) {
+    <div class="skeleton skeleton-card"></div>
+    <div class="skeleton skeleton-card"></div>
+    <div class="skeleton skeleton-card"></div>
+  }
   @if (registrosRecentes.length === 0 && !carregandoRegistros) {
     <p class="sem-registros">
       {{ filtroData ? 'Nenhum registro nesse dia.' : 'Nenhum registro ainda. Salve seu primeiro humor acima!' }}
