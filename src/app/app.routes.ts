@@ -4,6 +4,11 @@ import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
+    path: 'home',
+    title: 'Mindly — Diário emocional com IA',
+    loadComponent: () => import('./features/home/home').then((m) => m.Home),
+  },
+  {
     path: 'auth',
     title: 'Entrar · Mindly',
     loadComponent: () => import('./features/auth/auth').then((m) => m.Auth),
@@ -21,7 +26,6 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: '', redirectTo: 'diario', pathMatch: 'full' },
-      { path: 'home', redirectTo: 'diario', pathMatch: 'full' },
       {
         path: 'convite/:userId',
         title: 'Convite · Mindly',

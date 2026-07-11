@@ -1,5 +1,5 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { supabase } from '../../integrations/supabase/client';
 
@@ -26,6 +26,7 @@ export class Auth implements OnInit, OnDestroy {
   mostrarPolitica: boolean = false;
 
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private authSubscription = supabase.auth.onAuthStateChange((event, session) => {
     if (event === 'SIGNED_IN' && session) {
       this.router.navigate(['/diario']);
@@ -33,6 +34,10 @@ export class Auth implements OnInit, OnDestroy {
   });
 
   async ngOnInit() {
+    if (this.route.snapshot.queryParamMap.get('modo') === 'cadastro') {
+      this.modo = 'cadastro';
+    }
+
     const { data } = await supabase.auth.getSession();
     if (data.session) {
       this.router.navigate(['/diario']);
