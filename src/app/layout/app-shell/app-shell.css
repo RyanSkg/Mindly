@@ -8,7 +8,10 @@
 }
 
 .sideBar {
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
     width: 240px;
     background-color: var(--sidebar);
     padding: 0;
@@ -16,11 +19,18 @@
     flex-direction: column;
     border-right: 1px solid var(--border);
     flex-shrink: 0;
+    z-index: 50;
+    transform: translateX(-100%);
     transition: transform 0.2s ease;
 }
 
+.sideBar.aberto {
+    transform: translateX(0);
+    box-shadow: 8px 0 24px rgba(0, 0, 0, 0.4);
+}
+
 .btn-fechar-menu {
-    display: none;
+    display: flex;
     margin-left: auto;
     background: none;
     border: none;
@@ -30,7 +40,7 @@
 }
 
 .btn-hamburguer {
-    display: none;
+    display: flex;
     align-items: center;
     justify-content: center;
     background: none;
@@ -53,7 +63,10 @@
 }
 
 .backdrop {
-    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 40;
 }
 
 .active {
@@ -444,39 +457,9 @@
     color: var(--brand-soft);
 }
 
-/* Menu hamburguer — telas estreitas */
+/* Ajustes de topbar em telas estreitas (o menu hamburguer agora vale pra qualquer largura) */
 
 @media (max-width: 900px) {
-    .btn-hamburguer {
-        display: flex;
-    }
-
-    .btn-fechar-menu {
-        display: flex;
-    }
-
-    .sideBar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        z-index: 50;
-        transform: translateX(-100%);
-    }
-
-    .sideBar.aberto {
-        transform: translateX(0);
-        box-shadow: 8px 0 24px rgba(0, 0, 0, 0.4);
-    }
-
-    .backdrop {
-        display: block;
-        position: fixed;
-        inset: 0;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 40;
-    }
-
     .topBar {
         padding: 0 14px;
         height: auto;
