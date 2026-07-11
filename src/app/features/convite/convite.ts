@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PerfisService, Perfil } from '../../shared/perfis.service';
 import { ConexoesService, TipoConexao } from '../../shared/conexoes.service';
+import { ehUuidValido } from '../../shared/validacao.util';
 
 @Component({
   selector: 'app-convite',
@@ -26,7 +27,7 @@ export class Convite implements OnInit {
     const userId = this.route.snapshot.paramMap.get('userId');
     this.tipo = this.route.snapshot.queryParamMap.get('tipo') === 'psicologo' ? 'psicologo' : 'contato';
 
-    if (userId) {
+    if (ehUuidValido(userId)) {
       this.perfilAlvo = await this.perfis.buscarPorUserId(userId);
     }
     this.carregando = false;

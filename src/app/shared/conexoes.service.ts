@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { supabase } from '../integrations/supabase/client';
 import { PerfisService, Perfil } from './perfis.service';
 import { obterUsuarioValido } from './sessao.util';
+import { ehUuidValido } from './validacao.util';
 
 export type TipoConexao = 'contato' | 'psicologo';
 
@@ -26,6 +27,8 @@ export class ConexoesService {
   }
 
   async solicitarPorUserId(userId: string, tipo: TipoConexao, perfilAlvo?: Perfil): Promise<{ ok: boolean; erro?: string }> {
+    if (!ehUuidValido(userId)) return { ok: false, erro: 'Identificador de usuário inválido.' };
+
     const user = await obterUsuarioValido();
     if (!user) return { ok: false, erro: 'Sessão expirada. Atualize a página e tente de novo.' };
     if (userId === user.id) return { ok: false, erro: 'Você não pode se conectar consigo mesmo.' };
@@ -63,7 +66,9 @@ export class ConexoesService {
 
   async listar(tipo: TipoConexao, status?: 'pendente' | 'aceito' | 'recusado'): Promise<ConexaoComPerfil[]> {
     const user = await obterUsuarioValido();
-    if (!user) return [];
+    // O id vem do Supabase Auth (sempre UUID), mas validamos antes de
+    // interpolar no filtro .or(), que é montado como texto.
+    if (!user || !ehUuidValido(user.id)) return [];
 
     let query = supabase
       .from('conexoes')

@@ -281,6 +281,7 @@ app.get('/api/lembrete-diario', async (req, res) => {
 });
 
 const CORES_TAG = ['roxo', 'azul', 'verde', 'vermelho'];
+const REGEX_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const MESES = [
   'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
   'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro',
@@ -326,6 +327,9 @@ app.get('/api/relatorio-semanal', async (req, res) => {
   let enviados = 0;
 
   for (const { user_id } of preferencias ?? []) {
+    // Valida antes de interpolar no filtro .or() (montado como texto).
+    if (!REGEX_UUID.test(user_id)) continue;
+
     const { data: conexoes } = await admin
       .from('conexoes')
       .select('solicitante_id, destinatario_id')
