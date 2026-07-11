@@ -17,6 +17,7 @@ interface Contato {
   nome: string;
   relacao: string;
   telefone: string | null;
+  mindlyUsername: string | null;
   status: 'disponivel' | 'ocupado' | 'nao-perturbe';
   ultimaConversa: string;
 }
@@ -36,6 +37,7 @@ export class OitoMinutos implements OnInit {
   novoNome: string = '';
   novaRelacao: string = '';
   novoTelefone: string = '';
+  novoMindlyUsername: string = '';
   salvandoContato: boolean = false;
 
   avisoEnviado: string = '';
@@ -146,7 +148,7 @@ export class OitoMinutos implements OnInit {
   private async carregarContatos() {
     const { data, error } = await supabase
       .from('contatos')
-      .select('id, nome, relacao, telefone, status, criado_em')
+      .select('id, nome, relacao, telefone, mindly_username, status, criado_em')
       .order('criado_em', { ascending: true });
 
     if (!error && data) {
@@ -154,12 +156,13 @@ export class OitoMinutos implements OnInit {
     }
   }
 
-  private mapearContato(c: { id: string; nome: string; relacao: string; telefone: string | null; status: string; criado_em: string }): Contato {
+  private mapearContato(c: { id: string; nome: string; relacao: string; telefone: string | null; mindly_username?: string | null; status: string; criado_em: string }): Contato {
     return {
       id: c.id,
       nome: c.nome,
       relacao: c.relacao,
       telefone: c.telefone,
+      mindlyUsername: c.mindly_username ?? null,
       status: c.status as Contato['status'],
       iniciais: this.gerarIniciais(c.nome),
       ultimaConversa: tempoRelativo(new Date(c.criado_em)),
@@ -179,6 +182,7 @@ export class OitoMinutos implements OnInit {
     this.novoNome = '';
     this.novaRelacao = '';
     this.novoTelefone = '';
+    this.novoMindlyUsername = '';
     this.mostrarFormulario = true;
   }
 
@@ -187,6 +191,7 @@ export class OitoMinutos implements OnInit {
     this.novoNome = contato.nome;
     this.novaRelacao = contato.relacao;
     this.novoTelefone = contato.telefone ?? '';
+    this.novoMindlyUsername = contato.mindlyUsername ?? '';
     this.mostrarFormulario = true;
   }
 
@@ -196,13 +201,33 @@ export class OitoMinutos implements OnInit {
     this.novoNome = '';
     this.novaRelacao = '';
     this.novoTelefone = '';
+    this.novoMindlyUsername = '';
     this.erroContato = '';
+  }
+
+  /** Se o @ foi preenchido, confere que existe no Mindly e devolve normalizado (sem @). */
+  private async validarMindlyUsername(): Promise<{ ok: boolean; username: string | null }> {
+    const digitado = this.novoMindlyUsername.trim().replace(/^@/, '').toLowerCase();
+    if (!digitado) return { ok: true, username: null };
+
+    const perfil = await this.perfis.buscarPorUsername(digitado);
+    if (!perfil) {
+      this.erroContato = `Nenhum usuário @${digitado} encontrado no Mindly. Confira o @ ou deixe em branco.`;
+      return { ok: false, username: null };
+    }
+    return { ok: true, username: perfil.username };
   }
 
   async salvarContato() {
     if (!this.novoNome.trim() || !this.novaRelacao.trim() || this.salvandoContato) return;
     this.salvandoContato = true;
     this.erroContato = '';
+
+    const validacao = await this.validarMindlyUsername();
+    if (!validacao.ok) {
+      this.salvandoContato = false;
+      return;
+    }
 
     if (this.contatoEditandoId) {
       const { data, error } = await supabase
@@ -211,6 +236,7 @@ export class OitoMinutos implements OnInit {
           nome: this.novoNome,
           relacao: this.novaRelacao,
           telefone: this.novoTelefone.trim() || null,
+          mindly_username: validacao.username,
         })
         .eq('id', this.contatoEditandoId)
         .select()
@@ -241,6 +267,7 @@ export class OitoMinutos implements OnInit {
         nome: this.novoNome,
         relacao: this.novaRelacao,
         telefone: this.novoTelefone.trim() || null,
+        mindly_username: validacao.username,
         status: 'disponivel',
       })
       .select()

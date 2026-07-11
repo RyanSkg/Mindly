@@ -7,6 +7,7 @@
     <div class="cabecalho-info">
       @if (!editando) {
         <h2>{{ perfil.nome() }}</h2>
+        <p class="username-perfil">{{ '@' + (perfis.meuPerfil()?.username ?? '...') }}</p>
         <p class="email">{{ perfil.email() }}</p>
         @if (perfil.membroDesde()) {
           <p class="membro-desde">Membro desde {{ perfil.membroDesde() | date:'MMMM y' }}</p>
@@ -76,6 +77,26 @@
     <!-- Conta -->
     <div class="card">
       <p class="secao-titulo">SOBRE A CONTA</p>
+
+      <div class="bloco-username">
+        @if (!editandoUsername) {
+          <div class="info-linha">
+            <span>Usuário Mindly</span>
+            <strong>{{ '@' + (perfis.meuPerfil()?.username ?? '...') }}</strong>
+          </div>
+          <button class="btn-alterar-username" (click)="editarUsername()">Alterar usuário</button>
+          <p class="dica-username">Outras pessoas usam esse &#64;usuário pra te adicionar como contato ou psicólogo(a).</p>
+        } @else {
+          <input type="text" class="input-username" [(ngModel)]="novoUsername" name="novoUsername" placeholder="seu-usuario" />
+          @if (erroUsername) {
+            <p class="erro-username">{{ erroUsername }}</p>
+          }
+          <div class="username-botoes">
+            <button class="btn-primario" (click)="salvarUsername()" [disabled]="salvandoUsername">Salvar</button>
+            <button class="btn-cancelar" (click)="cancelarUsername()">Cancelar</button>
+          </div>
+        }
+      </div>
 
       <div class="info-linha">
         <span>Método de login</span>

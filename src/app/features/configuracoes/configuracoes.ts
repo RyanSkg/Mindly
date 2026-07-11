@@ -43,11 +43,6 @@ export class Configuracoes implements OnInit {
   excluindo = false;
   erroExclusao = '';
 
-  editandoUsername = false;
-  novoUsername = '';
-  salvandoUsername = false;
-  erroUsername = '';
-
   private router = inject(Router);
   private modal = inject(ModalService);
   private temaService = inject(TemaService);
@@ -107,31 +102,6 @@ export class Configuracoes implements OnInit {
     this.relatorioSemanalDia = dia;
     const sucesso = await this.salvar();
     if (!sucesso) this.relatorioSemanalDia = anterior;
-  }
-
-  editarUsername() {
-    this.novoUsername = this.perfis.meuPerfil()?.username ?? '';
-    this.editandoUsername = true;
-    this.erroUsername = '';
-  }
-
-  cancelarUsername() {
-    this.editandoUsername = false;
-    this.erroUsername = '';
-  }
-
-  async salvarUsername() {
-    if (this.salvandoUsername) return;
-    this.salvandoUsername = true;
-    this.erroUsername = '';
-
-    const resultado = await this.perfis.atualizarUsername(this.novoUsername);
-    if (resultado.ok) {
-      this.editandoUsername = false;
-    } else {
-      this.erroUsername = resultado.erro ?? 'Não foi possível salvar.';
-    }
-    this.salvandoUsername = false;
   }
 
   async escolherTema(tema: Tema) {

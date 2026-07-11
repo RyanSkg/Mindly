@@ -136,7 +136,12 @@
           <div class="contato-avatar">{{ contato.iniciais }}</div>
           <div class="contato-info">
             <div class="contato-nome">{{ contato.nome }}</div>
-            <div class="contato-relacao">{{ contato.relacao }}</div>
+            <div class="contato-relacao">
+              {{ contato.relacao }}
+              @if (contato.mindlyUsername) {
+                <span class="contato-arroba">{{ '· @' + contato.mindlyUsername }}</span>
+              }
+            </div>
             <div class="contato-ultima">{{ contato.ultimaConversa }}</div>
           </div>
           <div class="contato-direita">
@@ -172,6 +177,7 @@
         <input type="text" name="novoNome" [(ngModel)]="novoNome" placeholder="Nome do contato" />
         <input type="text" name="novaRelacao" [(ngModel)]="novaRelacao" placeholder="Relação (ex: Amigo, Família)" />
         <input type="tel" name="novoTelefone" [(ngModel)]="novoTelefone" placeholder="WhatsApp (opcional, ex: 5511999999999)" />
+        <input type="text" name="novoMindlyUsername" [(ngModel)]="novoMindlyUsername" placeholder="@usuario do Mindly (opcional)" />
         @if (erroContato) {
           <p class="erro-contato">{{ erroContato }}</p>
         }

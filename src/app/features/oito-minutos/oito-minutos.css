@@ -191,6 +191,11 @@ textarea:focus {
     color: var(--muted-fg);
 }
 
+.contato-arroba {
+    color: var(--brand-soft);
+    font-weight: 500;
+}
+
 .contato-ultima {
     font-size: 11px;
     color: var(--brand-muted);

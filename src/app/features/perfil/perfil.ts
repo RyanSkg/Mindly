@@ -4,6 +4,7 @@ import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { supabase } from '../../integrations/supabase/client';
 import { PerfilService } from '../../shared/perfil.service';
+import { PerfisService } from '../../shared/perfis.service';
 import { emojiDoHumor, valorDoHumor } from '../../shared/humor.util';
 import { obterUsuarioValido } from '../../shared/sessao.util';
 
@@ -22,7 +23,13 @@ interface AtividadeRecente {
 })
 export class Perfil implements OnInit {
   perfil = inject(PerfilService);
+  perfis = inject(PerfisService);
   private router = inject(Router);
+
+  editandoUsername = false;
+  novoUsername = '';
+  salvandoUsername = false;
+  erroUsername = '';
 
   metodoLogin = 'Email e senha';
 
@@ -45,6 +52,7 @@ export class Perfil implements OnInit {
 
   async ngOnInit() {
     await this.perfil.carregar();
+    await this.perfis.carregar();
 
     const user = await obterUsuarioValido();
     if (!user) {
@@ -99,6 +107,31 @@ export class Perfil implements OnInit {
       this.editando = false;
     }
     this.salvando = false;
+  }
+
+  editarUsername() {
+    this.novoUsername = this.perfis.meuPerfil()?.username ?? '';
+    this.editandoUsername = true;
+    this.erroUsername = '';
+  }
+
+  cancelarUsername() {
+    this.editandoUsername = false;
+    this.erroUsername = '';
+  }
+
+  async salvarUsername() {
+    if (this.salvandoUsername) return;
+    this.salvandoUsername = true;
+    this.erroUsername = '';
+
+    const resultado = await this.perfis.atualizarUsername(this.novoUsername);
+    if (resultado.ok) {
+      this.editandoUsername = false;
+    } else {
+      this.erroUsername = resultado.erro ?? 'Não foi possível salvar.';
+    }
+    this.salvandoUsername = false;
   }
 
   async sair() {

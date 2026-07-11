@@ -41,10 +41,77 @@
     margin-bottom: 4px;
 }
 
+.cabecalho-info .username-perfil {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--brand-soft);
+    margin-bottom: 2px;
+}
+
 .cabecalho-info .email {
     font-size: 13px;
-    color: var(--brand-soft);
+    color: var(--muted-fg);
     margin-bottom: 4px;
+}
+
+/* Usuário Mindly (card Sobre a conta) */
+
+.bloco-username {
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.btn-alterar-username {
+    background: none;
+    border: none;
+    color: var(--brand-soft);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+}
+
+.dica-username {
+    font-size: 11px;
+    color: var(--muted-fg);
+    margin-top: 6px;
+    line-height: 1.5;
+}
+
+.input-username {
+    width: 100%;
+    background-color: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 13px;
+    color: var(--foreground);
+    font-family: inherit;
+    outline: none;
+}
+
+.input-username:focus {
+    border-color: var(--brand);
+}
+
+.erro-username {
+    font-size: 12px;
+    color: #f87171;
+    margin-top: 6px;
+}
+
+.username-botoes {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.username-botoes .btn-primario,
+.username-botoes .btn-cancelar {
+    flex: 1;
+    padding: 8px 12px;
 }
 
 .cabecalho-info .membro-desde {
