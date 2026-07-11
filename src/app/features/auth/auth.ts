@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, NgZone, inject, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { supabase } from '../../integrations/supabase/client';
@@ -21,9 +21,13 @@ export class Auth implements OnInit, OnDestroy {
   mostrarPolitica: boolean = false;
 
   private router = inject(Router);
+  private zone = inject(NgZone);
+  // O callback do Supabase roda fora da zona do Angular (navigator.locks não é
+  // rastreado pelo zone.js); sem o zone.run, a navegação monta a tela sem o
+  // Angular perceber e os primeiros cliques não re-renderizam nada.
   private authSubscription = supabase.auth.onAuthStateChange((event, session) => {
     if (event === 'SIGNED_IN' && session) {
-      this.router.navigate(['/diario']);
+      this.zone.run(() => this.router.navigate(['/diario']));
     }
   });
 
