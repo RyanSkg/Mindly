@@ -6,6 +6,6 @@
   ],
   "crons": [
     { "path": "/api/lembrete-diario", "schedule": "0 20 * * *" },
-    { "path": "/api/relatorio-semanal", "schedule": "0 13 * * 1" }
+    { "path": "/api/relatorio-semanal", "schedule": "0 13 * * *" }
   ]
 }

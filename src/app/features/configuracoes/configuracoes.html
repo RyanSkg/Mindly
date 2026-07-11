@@ -32,6 +32,31 @@
         </button>
       </div>
 
+      <!-- Mindly (username) -->
+      <div class="card">
+        <div class="card-label">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          SEU USUÁRIO MINDLY
+        </div>
+        @if (!editandoUsername) {
+          <p class="username-atual">{{ '@' + (perfis.meuPerfil()?.username ?? '...') }}</p>
+          <p class="privacidade-texto">Outras pessoas usam esse @usuário pra te adicionar como contato ou psicólogo(a).</p>
+          <button class="btn-secundario" (click)="editarUsername()">Alterar usuário</button>
+        } @else {
+          <input type="text" class="input-username" [(ngModel)]="novoUsername" placeholder="seu-usuario" />
+          @if (erroUsername) {
+            <p class="erro-preferencias">{{ erroUsername }}</p>
+          }
+          <div class="form-editar-perfil-botoes" style="margin-top: 8px">
+            <button class="btn-secundario" (click)="salvarUsername()" [disabled]="salvandoUsername">Salvar</button>
+            <button class="btn-cancelar" (click)="cancelarUsername()">Cancelar</button>
+          </div>
+        }
+      </div>
+
       <!-- Notificações -->
       <div class="card">
         <div class="card-label">
@@ -48,11 +73,22 @@
           </button>
         </div>
         <div class="toggle-row">
-          <span>Relatório semanal</span>
+          <span>Relatório semanal automático</span>
           <button class="toggle" [class.toggle-ativo]="relatorioSemanal" (click)="toggle('relatorioSemanal')">
             <span class="toggle-bolinha" [class.toggle-bolinha-ativo]="relatorioSemanal"></span>
           </button>
         </div>
+        @if (relatorioSemanal) {
+          <div class="dia-relatorio">
+            <span>Enviar toda(o):</span>
+            <select [ngModel]="relatorioSemanalDia" (ngModelChange)="escolherDiaRelatorio($event)">
+              <option [ngValue]="null" disabled>Escolha o dia</option>
+              @for (dia of diasSemana; track dia; let i = $index) {
+                <option [ngValue]="i">{{ dia }}</option>
+              }
+            </select>
+          </div>
+        }
         <div class="toggle-row ultimo">
           <span>Alertas da IA</span>
           <button class="toggle" [class.toggle-ativo]="alertasIA" (click)="toggle('alertasIA')">
@@ -81,6 +117,12 @@
         <p class="privacidade-texto">
           Seus dados são criptografados e nunca compartilhados sem sua autorização.
         </p>
+        <div class="toggle-row">
+          <span>Contatos Mindly podem ver meu humor recente</span>
+          <button class="toggle" [class.toggle-ativo]="mostrarHumorRecente" (click)="toggle('mostrarHumorRecente')">
+            <span class="toggle-bolinha" [class.toggle-bolinha-ativo]="mostrarHumorRecente"></span>
+          </button>
+        </div>
         <button class="btn-secundario" style="margin-bottom: 8px" (click)="exportarDados()" [disabled]="exportando">
           <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

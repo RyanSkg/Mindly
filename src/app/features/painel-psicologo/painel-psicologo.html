@@ -1,0 +1,64 @@
+<div class="pagina-painel">
+  <h2>Painel de pacientes</h2>
+  <p class="subtitulo">Pacientes conectados e relatórios recebidos no Mindly</p>
+
+  <div class="card-link">
+    <p class="card-label">SEU LINK DE CONVITE</p>
+    <div class="link-linha">
+      <input type="text" [value]="linkConvite" readonly />
+      <button (click)="copiarLink()">{{ linkCopiado ? 'Copiado!' : 'Copiar' }}</button>
+    </div>
+    <p class="dica">Compartilhe com seus pacientes pra eles se conectarem com você.</p>
+  </div>
+
+  @if (!carregando && pendentes.length > 0) {
+    <div class="card">
+      <p class="card-label">PEDIDOS PENDENTES</p>
+      @for (p of pendentes; track p.id) {
+        <div class="linha-pedido">
+          <span>{{ '@' + p.outroPerfil.username }}</span>
+          <div class="acoes">
+            <button class="btn-aceitar" (click)="responder(p.id, true)">Aceitar</button>
+            <button class="btn-recusar" (click)="responder(p.id, false)">Recusar</button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <div class="card">
+    <p class="card-label">PACIENTES CONECTADOS ({{ pacientes.length }})</p>
+    @if (!carregando && pacientes.length === 0) {
+      <p class="vazio">Nenhum paciente conectado ainda.</p>
+    }
+    @for (p of pacientes; track p.id) {
+      <div class="linha-paciente">{{ '@' + p.outroPerfil.username }}</div>
+    }
+  </div>
+
+  <div class="card">
+    <p class="card-label">RELATÓRIOS RECEBIDOS</p>
+    @if (!carregando && relatorios.length === 0) {
+      <p class="vazio">Nenhum relatório recebido ainda.</p>
+    }
+    @for (r of relatorios; track r.id) {
+      <div class="relatorio-card">
+        <div class="relatorio-topo">
+          <div>
+            <p class="relatorio-titulo">{{ r.titulo }}</p>
+            <p class="relatorio-paciente">Paciente: {{ '@' + r.pacienteUsername }}</p>
+          </div>
+          <button (click)="baixarRelatorio(r)">Baixar PDF</button>
+        </div>
+        <p class="relatorio-detalhes">{{ r.detalhes }}</p>
+        @if (r.tags.length > 0) {
+          <div class="relatorio-tags">
+            @for (tag of r.tags; track tag.label) {
+              <span class="tag" [class]="'tag-' + tag.cor">{{ tag.label }}</span>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

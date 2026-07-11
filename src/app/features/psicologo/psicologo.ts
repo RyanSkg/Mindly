@@ -9,6 +9,7 @@ import { PerfilService } from '../../shared/perfil.service';
 import { NotificacoesService } from '../../shared/notificacoes.service';
 import { obterUsuarioValido } from '../../shared/sessao.util';
 import { ModalService } from '../../shared/modal.service';
+import { ConexoesService, ConexaoComPerfil } from '../../shared/conexoes.service';
 
 interface MensagemConversa {
   role: 'user' | 'assistant';
@@ -31,14 +32,13 @@ interface Relatorio {
   styleUrl: './psicologo.css',
 })
 export class Psicologo implements OnInit {
-  psicologa = {
-    iniciais: 'DR',
-    nome: 'Dra. Renata Souza',
-    especialidade: 'Psicóloga clínica — CRP 06/123456',
-    mensagem: 'Ótima semana, Ryan! Continue registrando seu humor diariamente.',
-    conectada: true,
-    email: 'renata.souza@mindly-exemplo.com',
-  };
+  psicologosConectados: ConexaoComPerfil[] = [];
+  pendentesEnviados: ConexaoComPerfil[] = [];
+  psicologoSelecionadoId: string | null = null;
+
+  buscaUsername = '';
+  buscandoPsicologo = false;
+  erroBuscaPsicologo = '';
 
   relatorios: Relatorio[] = [];
   enviando: boolean = false;
@@ -56,14 +56,52 @@ export class Psicologo implements OnInit {
   private perfil = inject(PerfilService);
   private notificacoes = inject(NotificacoesService);
   private modal = inject(ModalService);
+  private conexoes = inject(ConexoesService);
 
   async ngOnInit() {
     await this.perfil.carregar();
+    await this.carregarConexoes();
     await this.carregarRelatorios();
     await this.verificarConversaDisponivel();
     this.topbarActions.acoes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(acao => {
       if (acao.tipo === 'enviar-relatorio') this.enviarRelatorio();
     });
+  }
+
+  private async carregarConexoes() {
+    this.psicologosConectados = await this.conexoes.listar('psicologo', 'aceito');
+    this.pendentesEnviados = await this.conexoes.listar('psicologo', 'pendente');
+    if (this.psicologosConectados.length > 0 && !this.psicologoSelecionadoId) {
+      this.psicologoSelecionadoId = this.psicologosConectados[0].outroPerfil.user_id;
+    }
+  }
+
+  async adicionarPsicologo() {
+    if (!this.buscaUsername.trim() || this.buscandoPsicologo) return;
+    this.buscandoPsicologo = true;
+    this.erroBuscaPsicologo = '';
+
+    const resultado = await this.conexoes.solicitarPorUsername(this.buscaUsername.trim(), 'psicologo');
+    if (resultado.ok) {
+      this.buscaUsername = '';
+      await this.carregarConexoes();
+    } else {
+      this.erroBuscaPsicologo = resultado.erro ?? 'Não foi possível enviar o pedido.';
+    }
+    this.buscandoPsicologo = false;
+  }
+
+  async removerPsicologo(conexaoId: string) {
+    const confirmou = await this.modal.confirmar({
+      titulo: 'Remover psicólogo(a)',
+      mensagem: 'Vocês vão deixar de estar conectados no Mindly. Tem certeza?',
+      textoConfirmar: 'Remover',
+      perigo: true,
+    });
+    if (!confirmou) return;
+
+    const sucesso = await this.conexoes.remover(conexaoId);
+    if (sucesso) await this.carregarConexoes();
   }
 
   private async carregarRelatorios() {
@@ -97,7 +135,7 @@ export class Psicologo implements OnInit {
   }
 
   async enviarRelatorio() {
-    if (this.enviando) return;
+    if (this.enviando || !this.psicologoSelecionadoId) return;
     this.enviando = true;
 
     const user = await obterUsuarioValido();
@@ -145,7 +183,14 @@ export class Psicologo implements OnInit {
 
     const { data, error } = await supabase
       .from('relatorios')
-      .insert({ user_id: user.id, titulo, detalhes, tags, conversa_anexada: conversaAnexada })
+      .insert({
+        user_id: user.id,
+        psicologo_id: this.psicologoSelecionadoId,
+        titulo,
+        detalhes,
+        tags,
+        conversa_anexada: conversaAnexada,
+      })
       .select()
       .single();
 
@@ -159,20 +204,13 @@ export class Psicologo implements OnInit {
         conversaAnexada: data.conversa_anexada ?? [],
         principal: true,
       });
-      this.notificacoes.criar('Relatório enviado', `${data.titulo} foi enviado para ${this.psicologa.nome}.`);
+      const psicologo = this.psicologosConectados.find(p => p.outroPerfil.user_id === this.psicologoSelecionadoId);
+      this.notificacoes.criar('Relatório enviado', `${data.titulo} foi enviado para @${psicologo?.outroPerfil.username ?? 'seu(sua) psicólogo(a)'}.`);
       this.incluirConversa = false;
     } else {
       this.modal.avisar({ titulo: 'Não foi possível enviar', mensagem: 'Algo deu errado ao enviar o relatório. Tente novamente.' });
     }
     this.enviando = false;
-  }
-
-  agendarConsulta() {
-    const assunto = encodeURIComponent('Agendamento de consulta - Mindly');
-    const corpo = encodeURIComponent(
-      `Olá ${this.psicologa.nome},\n\nGostaria de agendar uma consulta. Poderia me passar os horários disponíveis?\n\nObrigado(a),\n${this.perfil.nome()}`
-    );
-    window.open(`mailto:${this.psicologa.email}?subject=${assunto}&body=${corpo}`);
   }
 
   baixarRelatorio(relatorio: Relatorio) {

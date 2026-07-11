@@ -1,0 +1,173 @@
+.pagina-painel h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--foreground);
+    margin-bottom: 4px;
+}
+
+.subtitulo {
+    font-size: 13px;
+    color: var(--brand-soft);
+    margin-bottom: 24px;
+}
+
+.card, .card-link {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 16px;
+}
+
+.card-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--brand-soft);
+    margin-bottom: 12px;
+}
+
+.link-linha {
+    display: flex;
+    gap: 8px;
+}
+
+.link-linha input {
+    flex: 1;
+    background-color: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 12px;
+    color: var(--muted-fg);
+}
+
+.link-linha button {
+    background-color: var(--brand);
+    color: var(--brand-foreground);
+    border: none;
+    border-radius: 8px;
+    padding: 9px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.dica {
+    font-size: 11px;
+    color: var(--muted-fg);
+    margin-top: 8px;
+}
+
+.linha-pedido, .linha-paciente {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--foreground);
+}
+
+.linha-pedido:last-child, .linha-paciente:last-child {
+    border-bottom: none;
+}
+
+.acoes {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-aceitar {
+    background-color: var(--brand);
+    color: var(--brand-foreground);
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.btn-recusar {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted-fg);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.vazio {
+    font-size: 13px;
+    color: var(--muted-fg);
+}
+
+.relatorio-card {
+    background-color: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+}
+
+.relatorio-card:last-child {
+    margin-bottom: 0;
+}
+
+.relatorio-topo {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.relatorio-titulo {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--foreground);
+}
+
+.relatorio-paciente {
+    font-size: 11px;
+    color: var(--brand-soft);
+    margin-top: 2px;
+}
+
+.relatorio-detalhes {
+    font-size: 12px;
+    color: var(--muted-fg);
+    margin-bottom: 10px;
+}
+
+.relatorio-topo button {
+    background-color: var(--accent);
+    border: 1px solid var(--border);
+    color: var(--brand-soft);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 11px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.relatorio-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.tag {
+    border-radius: 9999px;
+    border: 1px solid;
+    padding: 3px 12px;
+    font-size: 11px;
+}
+
+.tag-roxo  { border-color: #594C7D; background: #231640; color: var(--brand-soft); }
+.tag-verde { border-color: #065f46; background: #022c22; color: #6ee7b7; }
+.tag-azul  { border-color: #1e40af; background: #0f1f5c; color: #93c5fd; }
+.tag-vermelho { border-color: #7f1d1d; background: #3b0a0a; color: #fca5a5; }

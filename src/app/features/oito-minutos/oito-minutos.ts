@@ -7,6 +7,9 @@ import { TopbarActionsService } from '../../shared/topbar-actions.service';
 import { NotificacoesService } from '../../shared/notificacoes.service';
 import { obterUsuarioValido } from '../../shared/sessao.util';
 import { ModalService } from '../../shared/modal.service';
+import { PerfisService } from '../../shared/perfis.service';
+import { ConexoesService, ConexaoComPerfil } from '../../shared/conexoes.service';
+import { emojiDoHumor, labelDoHumor } from '../../shared/humor.util';
 
 interface Contato {
   id: string;
@@ -40,16 +43,101 @@ export class OitoMinutos implements OnInit {
   erroContato: string = '';
   excluindoContato: boolean = false;
 
+  // Contatos Mindly (conexões reais entre usuários)
+  pendentesMindly: ConexaoComPerfil[] = [];
+  contatosMindly: (ConexaoComPerfil & { humor?: string | null })[] = [];
+  buscaUsername: string = '';
+  buscandoMindly: boolean = false;
+  erroBuscaMindly: string = '';
+  meuLinkConvite: string = '';
+  linkCopiado: boolean = false;
+  emojiDoHumor = emojiDoHumor;
+  labelDoHumor = labelDoHumor;
+
   private topbarActions = inject(TopbarActionsService);
   private destroyRef = inject(DestroyRef);
   private notificacoes = inject(NotificacoesService);
   private modal = inject(ModalService);
+  private perfis = inject(PerfisService);
+  private conexoes = inject(ConexoesService);
 
   async ngOnInit() {
     await this.carregarContatos();
+    await this.carregarMindly();
     this.topbarActions.acoes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(acao => {
       if (acao.tipo === 'adicionar-contato') this.abrirFormulario();
     });
+  }
+
+  private async carregarMindly() {
+    const perfil = await this.perfis.carregar();
+    if (perfil) this.meuLinkConvite = this.conexoes.linkConvite('contato', perfil.user_id);
+
+    this.pendentesMindly = await this.conexoes.listar('contato', 'pendente');
+    const aceitos = await this.conexoes.listar('contato', 'aceito');
+
+    this.contatosMindly = await Promise.all(
+      aceitos.map(async c => {
+        const humorInfo = await this.conexoes.buscarHumorRecente(c.outroPerfil.user_id);
+        return { ...c, humor: humorInfo?.humor ?? null };
+      }),
+    );
+  }
+
+  async adicionarPorUsername() {
+    if (!this.buscaUsername.trim() || this.buscandoMindly) return;
+    this.buscandoMindly = true;
+    this.erroBuscaMindly = '';
+
+    const resultado = await this.conexoes.solicitarPorUsername(this.buscaUsername.trim(), 'contato');
+    if (resultado.ok) {
+      this.buscaUsername = '';
+      await this.carregarMindly();
+    } else {
+      this.erroBuscaMindly = resultado.erro ?? 'Não foi possível enviar o pedido.';
+    }
+    this.buscandoMindly = false;
+  }
+
+  async responderPedidoMindly(conexaoId: string, aceitar: boolean) {
+    const sucesso = await this.conexoes.responder(conexaoId, aceitar);
+    if (sucesso) await this.carregarMindly();
+  }
+
+  async removerContatoMindly(conexaoId: string) {
+    const confirmou = await this.modal.confirmar({
+      titulo: 'Remover conexão',
+      mensagem: 'Vocês vão deixar de ser contatos de confiança no Mindly. Tem certeza?',
+      textoConfirmar: 'Remover',
+      perigo: true,
+    });
+    if (!confirmou) return;
+
+    const sucesso = await this.conexoes.remover(conexaoId);
+    if (sucesso) await this.carregarMindly();
+  }
+
+  copiarLinkConvite() {
+    navigator.clipboard?.writeText(this.meuLinkConvite);
+    this.linkCopiado = true;
+    setTimeout(() => (this.linkCopiado = false), 2000);
+  }
+
+  async avisarContatoMindly(contato: ConexaoComPerfil) {
+    this.avisoEnviado = '';
+    const texto = this.mensagem.trim()
+      ? this.mensagem.trim()
+      : 'Estou passando por um momento difícil e gostaria de conversar. Você tem 8 minutos?';
+
+    const { error } = await supabase.rpc('avisar_contato', {
+      destino: contato.outroPerfil.user_id,
+      titulo: 'Um contato precisa de você',
+      mensagem: texto,
+    });
+
+    this.avisoEnviado = error
+      ? 'Não foi possível avisar esse contato agora.'
+      : `@${contato.outroPerfil.username} foi avisado(a) dentro do Mindly.`;
   }
 
   private async carregarContatos() {

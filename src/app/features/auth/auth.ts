@@ -3,6 +3,8 @@ import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { supabase } from '../../integrations/supabase/client';
 
+type TipoConta = 'usuario' | 'psicologo';
+
 @Component({
   selector: 'app-auth',
   imports: [FormsModule, RouterLink],
@@ -11,9 +13,12 @@ import { supabase } from '../../integrations/supabase/client';
 })
 export class Auth implements OnInit, OnDestroy {
   modo: 'entrar' | 'cadastro' = 'entrar';
+  tipoConta: TipoConta = 'usuario';
   nome: string = '';
   email: string = '';
   senha: string = '';
+  crp: string = '';
+  especialidade: string = '';
   carregando: boolean = false;
   erro: string = '';
   mensagem: string = '';
@@ -43,6 +48,7 @@ export class Auth implements OnInit, OnDestroy {
     this.erro = '';
     this.mensagem = '';
     this.aceitouPolitica = false;
+    this.tipoConta = 'usuario';
   }
 
   abrirPolitica() {
@@ -75,11 +81,18 @@ export class Auth implements OnInit, OnDestroy {
           email: this.email,
           password: this.senha,
           options: {
-            data: { display_name: this.nome || this.email.split('@')[0] },
+            data: {
+              display_name: this.nome || this.email.split('@')[0],
+              tipo_conta: this.tipoConta,
+              crp: this.tipoConta === 'psicologo' ? this.crp || null : null,
+              especialidade: this.tipoConta === 'psicologo' ? this.especialidade || null : null,
+            },
           },
         });
         if (error) throw error;
-        this.mensagem = 'Conta criada! Verifique seu email para confirmar.';
+        this.mensagem = this.tipoConta === 'psicologo'
+          ? 'Conta criada! Verifique seu email para confirmar. Seu cadastro de psicólogo(a) ainda precisa ser aprovado antes de liberar o acesso.'
+          : 'Conta criada! Verifique seu email para confirmar.';
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email: this.email,

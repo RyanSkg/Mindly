@@ -6,6 +6,7 @@ import { PerfilService } from '../../shared/perfil.service';
 import { ModalService } from '../../shared/modal.service';
 import { obterUsuarioValido } from '../../shared/sessao.util';
 import { TemaService, Tema } from '../../shared/tema.service';
+import { PerfisService } from '../../shared/perfis.service';
 
 interface Preferencias {
   lembrete_diario: boolean;
@@ -13,7 +14,11 @@ interface Preferencias {
   alertas_ia: boolean;
   tema: Tema;
   animacoes_reduzidas: boolean;
+  mostrar_humor_recente: boolean;
+  relatorio_semanal_dia: number | null;
 }
+
+export const DIAS_SEMANA = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
 
 @Component({
   selector: 'app-configuracoes',
@@ -27,12 +32,21 @@ export class Configuracoes implements OnInit {
   alertasIA = true;
   tema: Tema = 'escuro';
   animacoesReduzidas = false;
+  mostrarHumorRecente = false;
+  relatorioSemanalDia: number | null = null;
+  diasSemana = DIAS_SEMANA;
 
   perfil = inject(PerfilService);
+  perfis = inject(PerfisService);
 
   exportando = false;
   excluindo = false;
   erroExclusao = '';
+
+  editandoUsername = false;
+  novoUsername = '';
+  salvandoUsername = false;
+  erroUsername = '';
 
   private router = inject(Router);
   private modal = inject(ModalService);
@@ -41,6 +55,7 @@ export class Configuracoes implements OnInit {
 
   async ngOnInit() {
     await this.perfil.carregar();
+    await this.perfis.carregar();
 
     const user = await obterUsuarioValido();
     if (!user) return;
@@ -48,7 +63,7 @@ export class Configuracoes implements OnInit {
 
     const { data, error } = await supabase
       .from('preferencias')
-      .select('lembrete_diario, relatorio_semanal, alertas_ia, tema, animacoes_reduzidas')
+      .select('lembrete_diario, relatorio_semanal, alertas_ia, tema, animacoes_reduzidas, mostrar_humor_recente, relatorio_semanal_dia')
       .eq('user_id', user.id)
       .maybeSingle();
 
@@ -58,6 +73,8 @@ export class Configuracoes implements OnInit {
       this.alertasIA = data.alertas_ia;
       this.tema = (data.tema as Tema | null) ?? 'escuro';
       this.animacoesReduzidas = data.animacoes_reduzidas;
+      this.mostrarHumorRecente = data.mostrar_humor_recente ?? false;
+      this.relatorioSemanalDia = data.relatorio_semanal_dia ?? null;
     } else {
       // Primeira vez do usuário: cria a linha com os valores padrão
       await supabase.from('preferencias').insert({
@@ -67,13 +84,15 @@ export class Configuracoes implements OnInit {
         alertas_ia: this.alertasIA,
         tema: this.tema,
         animacoes_reduzidas: this.animacoesReduzidas,
+        mostrar_humor_recente: this.mostrarHumorRecente,
+        relatorio_semanal_dia: this.relatorioSemanalDia,
       });
     }
   }
 
   erroPreferencias = '';
 
-  async toggle(prop: 'lembreteDiario' | 'relatorioSemanal' | 'alertasIA' | 'animacoesReduzidas') {
+  async toggle(prop: 'lembreteDiario' | 'relatorioSemanal' | 'alertasIA' | 'animacoesReduzidas' | 'mostrarHumorRecente') {
     this[prop] = !this[prop];
     const sucesso = await this.salvar();
     if (!sucesso) {
@@ -81,6 +100,38 @@ export class Configuracoes implements OnInit {
       return;
     }
     if (prop === 'animacoesReduzidas') this.temaService.aplicarAnimacoes(this.animacoesReduzidas);
+  }
+
+  async escolherDiaRelatorio(dia: number) {
+    const anterior = this.relatorioSemanalDia;
+    this.relatorioSemanalDia = dia;
+    const sucesso = await this.salvar();
+    if (!sucesso) this.relatorioSemanalDia = anterior;
+  }
+
+  editarUsername() {
+    this.novoUsername = this.perfis.meuPerfil()?.username ?? '';
+    this.editandoUsername = true;
+    this.erroUsername = '';
+  }
+
+  cancelarUsername() {
+    this.editandoUsername = false;
+    this.erroUsername = '';
+  }
+
+  async salvarUsername() {
+    if (this.salvandoUsername) return;
+    this.salvandoUsername = true;
+    this.erroUsername = '';
+
+    const resultado = await this.perfis.atualizarUsername(this.novoUsername);
+    if (resultado.ok) {
+      this.editandoUsername = false;
+    } else {
+      this.erroUsername = resultado.erro ?? 'Não foi possível salvar.';
+    }
+    this.salvandoUsername = false;
   }
 
   async escolherTema(tema: Tema) {
@@ -106,6 +157,8 @@ export class Configuracoes implements OnInit {
       alertas_ia: this.alertasIA,
       tema: this.tema,
       animacoes_reduzidas: this.animacoesReduzidas,
+      mostrar_humor_recente: this.mostrarHumorRecente,
+      relatorio_semanal_dia: this.relatorioSemanalDia,
     };
 
     const { error } = await supabase

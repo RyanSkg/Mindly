@@ -5,6 +5,7 @@ import { filter } from 'rxjs/operators';
 import { supabase } from '../../integrations/supabase/client';
 import { TopbarActionsService } from '../../shared/topbar-actions.service';
 import { PerfilService } from '../../shared/perfil.service';
+import { PerfisService } from '../../shared/perfis.service';
 import { NotificacoesService } from '../../shared/notificacoes.service';
 import { tempoRelativo } from '../../shared/tempo.util';
 
@@ -21,18 +22,34 @@ export class AppShell implements OnInit {
 
   menuAberto = false;
   notificacoesAbertas = false;
+  ehPsicologo = false;
 
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private topbarActions = inject(TopbarActionsService);
   perfil = inject(PerfilService);
+  private perfis = inject(PerfisService);
   notificacoes = inject(NotificacoesService);
   tempoRelativo = tempoRelativo;
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.atualizarRota();
     this.perfil.carregar();
     this.notificacoes.carregar();
+
+    const meuPerfil = await this.perfis.carregar();
+    if (meuPerfil?.tipo === 'psicologo') {
+      if (!meuPerfil.aprovado) {
+        this.router.navigate(['/pendente-aprovacao']);
+        return;
+      }
+      this.ehPsicologo = true;
+      const rotasPaciente = ['diario', 'dashboard', 'oito-minutos', 'psicologos', ''];
+      if (rotasPaciente.includes(this.rotaAtual)) {
+        this.router.navigate(['/painel-psicologo']);
+      }
+    }
+
     this.router.events
       .pipe(
         filter(event => event instanceof NavigationEnd),

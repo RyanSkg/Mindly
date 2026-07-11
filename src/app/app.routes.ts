@@ -9,12 +9,30 @@ export const routes: Routes = [
     loadComponent: () => import('./features/auth/auth').then((m) => m.Auth),
   },
   {
+    path: 'pendente-aprovacao',
+    title: 'Aguardando aprovação · Mindly',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/pendente-aprovacao/pendente-aprovacao').then((m) => m.PendenteAprovacao),
+  },
+  {
     path: '',
     component: AppShell,
     canActivate: [authGuard],
     children: [
       { path: '', redirectTo: 'diario', pathMatch: 'full' },
       { path: 'home', redirectTo: 'diario', pathMatch: 'full' },
+      {
+        path: 'convite/:userId',
+        title: 'Convite · Mindly',
+        loadComponent: () => import('./features/convite/convite').then((m) => m.Convite),
+      },
+      {
+        path: 'painel-psicologo',
+        title: 'Painel de pacientes',
+        loadComponent: () =>
+          import('./features/painel-psicologo/painel-psicologo').then((m) => m.PainelPsicologo),
+      },
       {
         path: 'diario',
         title: 'Diário emocional',

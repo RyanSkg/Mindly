@@ -5,40 +5,64 @@
   <div class="grid-2">
     <!-- Coluna esquerda -->
     <div>
-      <!-- Card da psicóloga -->
-      <div class="card-psicologa">
-        <div class="psicologa-avatar">{{ psicologa.iniciais }}</div>
-        <div class="psicologa-info">
-          <div class="psicologa-nome">{{ psicologa.nome }}</div>
-          <div class="psicologa-crp">{{ psicologa.especialidade }}</div>
-          <span class="badge-conectada">Conectada</span>
-          <p class="psicologa-mensagem">"{{ psicologa.mensagem }}"</p>
+      <!-- Adicionar psicólogo(a) -->
+      <div class="card-busca-psicologo">
+        <p class="secao-titulo">ADICIONAR PSICÓLOGO(A)</p>
+        <div class="busca-psicologo">
+          <input type="text" [(ngModel)]="buscaUsername" placeholder="@usuario do(a) psicólogo(a)"
+            (keyup.enter)="adicionarPsicologo()" />
+          <button (click)="adicionarPsicologo()" [disabled]="buscandoPsicologo">Adicionar</button>
         </div>
+        @if (erroBuscaPsicologo) {
+          <p class="erro-busca">{{ erroBuscaPsicologo }}</p>
+        }
+        @if (pendentesEnviados.length > 0) {
+          <p class="pendente-envio">Aguardando aprovação de {{ pendentesEnviados.length }} pedido(s).</p>
+        }
       </div>
 
-      <!-- Botões -->
-      @if (temConversaDisponivel) {
-        <label class="check-conversa">
-          <input type="checkbox" [(ngModel)]="incluirConversa" name="incluirConversa" />
-          Incluir minha conversa mais recente com a IA no relatório
-        </label>
+      @if (psicologosConectados.length === 0) {
+        <p class="sem-relatorios">Você ainda não tem nenhum(a) psicólogo(a) conectado(a) no Mindly.</p>
       }
-      <button class="btn-primario" (click)="enviarRelatorio()" [disabled]="enviando">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>
-        </svg>
-        Enviar novo relatório
-      </button>
-      <button class="btn-secundario" (click)="agendarConsulta()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
-          <line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/>
-          <line x1="3" x2="21" y1="10" y2="10"/>
-        </svg>
-        Agendar consulta
-      </button>
+
+      @for (p of psicologosConectados; track p.id) {
+        <div class="card-psicologa">
+          <div class="psicologa-avatar">{{ p.outroPerfil.username.slice(0, 2).toUpperCase() }}</div>
+          <div class="psicologa-info">
+            <div class="psicologa-nome">{{ '@' + p.outroPerfil.username }}</div>
+            @if (p.outroPerfil.especialidade) {
+              <div class="psicologa-crp">{{ p.outroPerfil.especialidade }}</div>
+            }
+            <span class="badge-conectada">Conectado(a)</span>
+          </div>
+          <button class="btn-remover-psicologo" (click)="removerPsicologo(p.id)" title="Remover">✕</button>
+        </div>
+      }
+
+      @if (psicologosConectados.length > 0) {
+        <label class="campo-select-psicologo">
+          <span>Enviar relatório para:</span>
+          <select [(ngModel)]="psicologoSelecionadoId">
+            @for (p of psicologosConectados; track p.id) {
+              <option [ngValue]="p.outroPerfil.user_id">{{ '@' + p.outroPerfil.username }}</option>
+            }
+          </select>
+        </label>
+
+        @if (temConversaDisponivel) {
+          <label class="check-conversa">
+            <input type="checkbox" [(ngModel)]="incluirConversa" name="incluirConversa" />
+            Incluir minha conversa mais recente com a IA no relatório
+          </label>
+        }
+        <button class="btn-primario" (click)="enviarRelatorio()" [disabled]="enviando">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>
+          </svg>
+          Enviar novo relatório
+        </button>
+      }
     </div>
 
     <!-- Coluna direita -->
