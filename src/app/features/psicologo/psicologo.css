@@ -284,6 +284,45 @@
     margin-top: 8px;
 }
 
+.linha-pedido-recebido {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--foreground);
+}
+
+.linha-pedido-recebido:last-child { border-bottom: none; }
+
+.acoes-pedido {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.btn-aceitar-pedido {
+    background-color: var(--brand);
+    color: var(--brand-foreground);
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.btn-recusar-pedido {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted-fg);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
 .btn-remover-psicologo {
     background: none;
     border: 1px solid var(--border);

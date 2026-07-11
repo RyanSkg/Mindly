@@ -11,12 +11,25 @@
     margin-bottom: 24px;
 }
 
-.card, .card-link {
+.grid-painel {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+.coluna-pacientes,
+.coluna-detalhe {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.card {
     background-color: var(--card);
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 18px;
-    margin-bottom: 16px;
 }
 
 .card-label {
@@ -28,22 +41,31 @@
     margin-bottom: 12px;
 }
 
-.link-linha {
+/* Cadastro de paciente */
+
+.linha-busca {
     display: flex;
     gap: 8px;
 }
 
-.link-linha input {
+.linha-busca input {
     flex: 1;
+    min-width: 0;
     background-color: var(--background);
     border: 1px solid var(--border);
     border-radius: 8px;
     padding: 9px 12px;
-    font-size: 12px;
-    color: var(--muted-fg);
+    font-size: 13px;
+    color: var(--foreground);
+    font-family: inherit;
+    outline: none;
 }
 
-.link-linha button {
+.linha-busca input:focus {
+    border-color: var(--brand);
+}
+
+.btn-primario {
     background-color: var(--brand);
     color: var(--brand-foreground);
     border: none;
@@ -53,15 +75,52 @@
     font-weight: 500;
     cursor: pointer;
     white-space: nowrap;
+    transition: opacity 0.15s;
 }
 
-.dica {
-    font-size: 11px;
-    color: var(--muted-fg);
+.btn-primario:hover { opacity: 0.9; }
+
+.btn-primario:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.msg-erro {
+    font-size: 12px;
+    color: #f87171;
     margin-top: 8px;
 }
 
-.linha-pedido, .linha-paciente {
+.msg-ok {
+    font-size: 12px;
+    color: #4ade80;
+    margin-top: 8px;
+}
+
+.link-convite-linha {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 10px;
+    font-size: 11px;
+    color: var(--muted-fg);
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: var(--brand-soft);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: underline;
+    white-space: nowrap;
+}
+
+/* Pedidos pendentes */
+
+.linha-pedido {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -71,9 +130,7 @@
     color: var(--foreground);
 }
 
-.linha-pedido:last-child, .linha-paciente:last-child {
-    border-bottom: none;
-}
+.linha-pedido:last-child { border-bottom: none; }
 
 .acoes {
     display: flex;
@@ -100,10 +157,190 @@
     cursor: pointer;
 }
 
+.aguardando {
+    font-size: 11px;
+    color: var(--muted-fg);
+}
+
+/* Lista de pacientes */
+
+.input-filtro {
+    width: 100%;
+    background-color: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: var(--foreground);
+    font-family: inherit;
+    outline: none;
+    margin-bottom: 10px;
+}
+
+.input-filtro:focus {
+    border-color: var(--brand);
+}
+
+.paciente-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    padding: 9px 10px;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.15s, border-color 0.15s;
+}
+
+.paciente-item:hover {
+    background-color: var(--accent);
+}
+
+.paciente-item.paciente-ativo {
+    background-color: var(--accent);
+    border-color: var(--brand-muted);
+}
+
+.paciente-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand-muted), var(--brand));
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--brand-soft);
+    flex-shrink: 0;
+}
+
+.paciente-nome {
+    font-size: 13px;
+    color: var(--foreground);
+}
+
 .vazio {
     font-size: 13px;
     color: var(--muted-fg);
 }
+
+/* Detalhe do paciente */
+
+.detalhe-vazio p {
+    font-size: 13px;
+    color: var(--muted-fg);
+    line-height: 1.6;
+}
+
+.cabecalho-paciente {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.avatar-grande {
+    width: 48px;
+    height: 48px;
+    font-size: 14px;
+}
+
+.detalhe-nome {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--foreground);
+}
+
+.detalhe-sub {
+    font-size: 12px;
+    color: var(--muted-fg);
+    margin-top: 2px;
+}
+
+/* Gráfico de barras */
+
+.grafico-barras {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    height: 150px;
+    padding-top: 8px;
+}
+
+.barra-coluna {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+    height: 100%;
+    min-width: 0;
+}
+
+.barra {
+    width: 100%;
+    max-width: 42px;
+    border-radius: 6px 6px 2px 2px;
+    background: linear-gradient(180deg, var(--brand), var(--brand-muted));
+}
+
+.barra-valor {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--brand-soft);
+}
+
+.barra-label {
+    font-size: 10px;
+    color: var(--muted-fg);
+}
+
+/* Emoções mais frequentes */
+
+.emocao-linha {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.emocao-linha:last-child { margin-bottom: 0; }
+
+.emocao-label {
+    width: 100px;
+    font-size: 12px;
+    color: var(--foreground);
+    text-transform: capitalize;
+    flex-shrink: 0;
+}
+
+.emocao-trilho {
+    flex: 1;
+    height: 8px;
+    border-radius: 9999px;
+    background-color: var(--accent);
+    overflow: hidden;
+}
+
+.emocao-barra {
+    height: 100%;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, var(--brand-muted), var(--brand));
+}
+
+.emocao-percentual {
+    width: 36px;
+    text-align: right;
+    font-size: 11px;
+    color: var(--muted-fg);
+    flex-shrink: 0;
+}
+
+/* Relatórios */
 
 .relatorio-card {
     background-color: var(--background);
@@ -113,9 +350,7 @@
     margin-bottom: 10px;
 }
 
-.relatorio-card:last-child {
-    margin-bottom: 0;
-}
+.relatorio-card:last-child { margin-bottom: 0; }
 
 .relatorio-topo {
     display: flex;
@@ -131,7 +366,7 @@
     color: var(--foreground);
 }
 
-.relatorio-paciente {
+.relatorio-data {
     font-size: 11px;
     color: var(--brand-soft);
     margin-top: 2px;
@@ -171,3 +406,11 @@
 .tag-verde { border-color: #065f46; background: #022c22; color: #6ee7b7; }
 .tag-azul  { border-color: #1e40af; background: #0f1f5c; color: #93c5fd; }
 .tag-vermelho { border-color: #7f1d1d; background: #3b0a0a; color: #fca5a5; }
+
+/* Mobile */
+
+@media (max-width: 900px) {
+    .grid-painel {
+        grid-template-columns: 1fr;
+    }
+}

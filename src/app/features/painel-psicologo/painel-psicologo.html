@@ -1,64 +1,150 @@
 <div class="pagina-painel">
-  <h2>Painel de pacientes</h2>
-  <p class="subtitulo">Pacientes conectados e relatórios recebidos no Mindly</p>
+  <h2>Meus pacientes</h2>
+  <p class="subtitulo">Acompanhe seus pacientes conectados no Mindly</p>
 
-  <div class="card-link">
-    <p class="card-label">SEU LINK DE CONVITE</p>
-    <div class="link-linha">
-      <input type="text" [value]="linkConvite" readonly />
-      <button (click)="copiarLink()">{{ linkCopiado ? 'Copiado!' : 'Copiar' }}</button>
-    </div>
-    <p class="dica">Compartilhe com seus pacientes pra eles se conectarem com você.</p>
-  </div>
+  <div class="grid-painel">
 
-  @if (!carregando && pendentes.length > 0) {
-    <div class="card">
-      <p class="card-label">PEDIDOS PENDENTES</p>
-      @for (p of pendentes; track p.id) {
-        <div class="linha-pedido">
-          <span>{{ '@' + p.outroPerfil.username }}</span>
-          <div class="acoes">
-            <button class="btn-aceitar" (click)="responder(p.id, true)">Aceitar</button>
-            <button class="btn-recusar" (click)="responder(p.id, false)">Recusar</button>
-          </div>
+    <!-- Coluna esquerda: cadastro + lista de pacientes -->
+    <div class="coluna-pacientes">
+
+      <!-- Cadastrar paciente -->
+      <div class="card">
+        <p class="card-label">CADASTRAR PACIENTE</p>
+        <div class="linha-busca">
+          <input type="text" [(ngModel)]="novoPacienteUsername" placeholder="@usuario do paciente"
+            (keyup.enter)="adicionarPaciente()" />
+          <button class="btn-primario" (click)="adicionarPaciente()" [disabled]="adicionandoPaciente">Adicionar</button>
+        </div>
+        @if (erroAdicionarPaciente) {
+          <p class="msg-erro">{{ erroAdicionarPaciente }}</p>
+        }
+        @if (avisoPacienteAdicionado) {
+          <p class="msg-ok">{{ avisoPacienteAdicionado }}</p>
+        }
+        <div class="link-convite-linha">
+          <span>Ou compartilhe seu link de convite:</span>
+          <button class="btn-link" (click)="copiarLink()">{{ linkCopiado ? 'Copiado!' : 'Copiar link' }}</button>
+        </div>
+      </div>
+
+      <!-- Pedidos pendentes -->
+      @if (!carregando && pendentes.length > 0) {
+        <div class="card">
+          <p class="card-label">PEDIDOS PENDENTES</p>
+          @for (p of pendentes; track p.id) {
+            <div class="linha-pedido">
+              <span>{{ '@' + p.outroPerfil.username }}</span>
+              @if (!p.souSolicitante) {
+                <div class="acoes">
+                  <button class="btn-aceitar" (click)="responder(p.id, true)">Aceitar</button>
+                  <button class="btn-recusar" (click)="responder(p.id, false)">Recusar</button>
+                </div>
+              } @else {
+                <span class="aguardando">Aguardando</span>
+              }
+            </div>
+          }
         </div>
       }
+
+      <!-- Lista de pacientes com busca -->
+      <div class="card">
+        <p class="card-label">PACIENTES ({{ pacientes.length }})</p>
+        @if (pacientes.length > 3) {
+          <input type="text" class="input-filtro" [(ngModel)]="filtroPaciente" placeholder="Pesquisar paciente..." />
+        }
+        @if (!carregando && pacientes.length === 0) {
+          <p class="vazio">Nenhum paciente conectado ainda. Cadastre pelo &#64;usuario ou compartilhe seu link.</p>
+        }
+        @for (p of pacientesFiltrados; track p.id) {
+          <button class="paciente-item" [class.paciente-ativo]="p.outroPerfil.user_id === pacienteSelecionadoId"
+            (click)="selecionarPaciente(p.outroPerfil.user_id)">
+            <span class="paciente-avatar">{{ p.outroPerfil.username.slice(0, 2).toUpperCase() }}</span>
+            <span class="paciente-nome">{{ '@' + p.outroPerfil.username }}</span>
+          </button>
+        }
+        @if (filtroPaciente && pacientesFiltrados.length === 0 && pacientes.length > 0) {
+          <p class="vazio">Nenhum paciente encontrado com "{{ filtroPaciente }}".</p>
+        }
+      </div>
     </div>
-  }
 
-  <div class="card">
-    <p class="card-label">PACIENTES CONECTADOS ({{ pacientes.length }})</p>
-    @if (!carregando && pacientes.length === 0) {
-      <p class="vazio">Nenhum paciente conectado ainda.</p>
-    }
-    @for (p of pacientes; track p.id) {
-      <div class="linha-paciente">{{ '@' + p.outroPerfil.username }}</div>
-    }
-  </div>
-
-  <div class="card">
-    <p class="card-label">RELATÓRIOS RECEBIDOS</p>
-    @if (!carregando && relatorios.length === 0) {
-      <p class="vazio">Nenhum relatório recebido ainda.</p>
-    }
-    @for (r of relatorios; track r.id) {
-      <div class="relatorio-card">
-        <div class="relatorio-topo">
-          <div>
-            <p class="relatorio-titulo">{{ r.titulo }}</p>
-            <p class="relatorio-paciente">Paciente: {{ '@' + r.pacienteUsername }}</p>
-          </div>
-          <button (click)="baixarRelatorio(r)">Baixar PDF</button>
+    <!-- Coluna direita: visão do paciente selecionado -->
+    <div class="coluna-detalhe">
+      @if (!pacienteSelecionado) {
+        <div class="card detalhe-vazio">
+          <p>Selecione um paciente na lista para ver os gráficos e relatórios dele.</p>
         </div>
-        <p class="relatorio-detalhes">{{ r.detalhes }}</p>
-        @if (r.tags.length > 0) {
-          <div class="relatorio-tags">
-            @for (tag of r.tags; track tag.label) {
-              <span class="tag" [class]="'tag-' + tag.cor">{{ tag.label }}</span>
+      } @else {
+        <!-- Cabeçalho do paciente -->
+        <div class="card cabecalho-paciente">
+          <span class="paciente-avatar avatar-grande">{{ pacienteSelecionado.outroPerfil.username.slice(0, 2).toUpperCase() }}</span>
+          <div>
+            <p class="detalhe-nome">{{ '@' + pacienteSelecionado.outroPerfil.username }}</p>
+            <p class="detalhe-sub">{{ relatoriosDoPaciente.length }} relatório{{ relatoriosDoPaciente.length === 1 ? '' : 's' }} recebido{{ relatoriosDoPaciente.length === 1 ? '' : 's' }}</p>
+          </div>
+        </div>
+
+        @if (relatoriosDoPaciente.length === 0) {
+          <div class="card detalhe-vazio">
+            <p>Esse paciente ainda não enviou nenhum relatório. Os gráficos aparecem aqui quando o primeiro relatório chegar.</p>
+          </div>
+        } @else {
+          <!-- Gráfico: registros por relatório -->
+          <div class="card">
+            <p class="card-label">REGISTROS POR RELATÓRIO</p>
+            <div class="grafico-barras">
+              @for (barra of graficoRegistros; track barra.label) {
+                <div class="barra-coluna">
+                  <span class="barra-valor">{{ barra.valor }}</span>
+                  <div class="barra" [style.height.%]="barra.altura"></div>
+                  <span class="barra-label">{{ barra.label }}</span>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Emoções mais frequentes -->
+          @if (emocoesFrequentes.length > 0) {
+            <div class="card">
+              <p class="card-label">EMOÇÕES MAIS OBSERVADAS</p>
+              @for (emocao of emocoesFrequentes; track emocao.label) {
+                <div class="emocao-linha">
+                  <span class="emocao-label">{{ emocao.label }}</span>
+                  <div class="emocao-trilho">
+                    <div class="emocao-barra" [style.width.%]="emocao.percentual"></div>
+                  </div>
+                  <span class="emocao-percentual">{{ emocao.percentual }}%</span>
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Relatórios -->
+          <div class="card">
+            <p class="card-label">RELATÓRIOS RECEBIDOS</p>
+            @for (r of relatoriosDoPaciente; track r.id) {
+              <div class="relatorio-card">
+                <div class="relatorio-topo">
+                  <div>
+                    <p class="relatorio-titulo">{{ r.titulo }}</p>
+                    <p class="relatorio-data">{{ r.criadoEm | date:'dd/MM/yyyy' }}</p>
+                  </div>
+                  <button (click)="baixarRelatorio(r)">Baixar PDF</button>
+                </div>
+                <p class="relatorio-detalhes">{{ r.detalhes }}</p>
+                @if (r.tags.length > 0) {
+                  <div class="relatorio-tags">
+                    @for (tag of r.tags; track tag.label) {
+                      <span class="tag" [class]="'tag-' + tag.cor">{{ tag.label }}</span>
+                    }
+                  </div>
+                }
+              </div>
             }
           </div>
         }
-      </div>
-    }
+      }
+    </div>
   </div>
 </div>

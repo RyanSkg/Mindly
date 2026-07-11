@@ -34,6 +34,7 @@ interface Relatorio {
 export class Psicologo implements OnInit {
   psicologosConectados: ConexaoComPerfil[] = [];
   pendentesEnviados: ConexaoComPerfil[] = [];
+  pendentesRecebidos: ConexaoComPerfil[] = [];
   psicologoSelecionadoId: string | null = null;
 
   buscaUsername = '';
@@ -70,10 +71,17 @@ export class Psicologo implements OnInit {
 
   private async carregarConexoes() {
     this.psicologosConectados = await this.conexoes.listar('psicologo', 'aceito');
-    this.pendentesEnviados = await this.conexoes.listar('psicologo', 'pendente');
+    const pendentes = await this.conexoes.listar('psicologo', 'pendente');
+    this.pendentesEnviados = pendentes.filter(p => p.souSolicitante);
+    this.pendentesRecebidos = pendentes.filter(p => !p.souSolicitante);
     if (this.psicologosConectados.length > 0 && !this.psicologoSelecionadoId) {
       this.psicologoSelecionadoId = this.psicologosConectados[0].outroPerfil.user_id;
     }
+  }
+
+  async responderPedido(conexaoId: string, aceitar: boolean) {
+    const sucesso = await this.conexoes.responder(conexaoId, aceitar);
+    if (sucesso) await this.carregarConexoes();
   }
 
   async adicionarPsicologo() {

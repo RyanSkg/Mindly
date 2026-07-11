@@ -33,8 +33,18 @@ export class ConexoesService {
     const alvo = perfilAlvo ?? (await this.perfis.buscarPorUserId(userId));
     if (!alvo) return { ok: false, erro: 'Perfil não encontrado.' };
 
-    if (tipo === 'psicologo' && (alvo.tipo !== 'psicologo' || !alvo.aprovado)) {
-      return { ok: false, erro: 'Esse perfil não é de um(a) psicólogo(a) aprovado(a) no Mindly.' };
+    if (tipo === 'psicologo') {
+      const meuPerfil = await this.perfis.carregar();
+      const souPsicologoAprovado = meuPerfil?.tipo === 'psicologo' && meuPerfil.aprovado;
+
+      if (souPsicologoAprovado) {
+        // Psicólogo adicionando um paciente: o alvo precisa ser um usuário comum.
+        if (alvo.tipo !== 'usuario') {
+          return { ok: false, erro: 'Esse perfil não é de um paciente (usuário comum) do Mindly.' };
+        }
+      } else if (alvo.tipo !== 'psicologo' || !alvo.aprovado) {
+        return { ok: false, erro: 'Esse perfil não é de um(a) psicólogo(a) aprovado(a) no Mindly.' };
+      }
     }
 
     const { error } = await supabase.from('conexoes').insert({

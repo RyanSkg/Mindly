@@ -21,6 +21,21 @@
         }
       </div>
 
+      @if (pendentesRecebidos.length > 0) {
+        <div class="card-busca-psicologo">
+          <p class="secao-titulo">PEDIDOS RECEBIDOS</p>
+          @for (p of pendentesRecebidos; track p.id) {
+            <div class="linha-pedido-recebido">
+              <span>{{ '@' + p.outroPerfil.username }} quer ser seu(sua) psicólogo(a)</span>
+              <div class="acoes-pedido">
+                <button class="btn-aceitar-pedido" (click)="responderPedido(p.id, true)">Aceitar</button>
+                <button class="btn-recusar-pedido" (click)="responderPedido(p.id, false)">Recusar</button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+
       @if (psicologosConectados.length === 0) {
         <p class="sem-relatorios">Você ainda não tem nenhum(a) psicólogo(a) conectado(a) no Mindly.</p>
       }
