@@ -1,0 +1,416 @@
+.pagina-painel h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--foreground);
+    margin-bottom: 4px;
+}
+
+.subtitulo {
+    font-size: 13px;
+    color: var(--brand-soft);
+    margin-bottom: 24px;
+}
+
+.grid-painel {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+.coluna-pacientes,
+.coluna-detalhe {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.card {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+}
+
+.card-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--brand-soft);
+    margin-bottom: 12px;
+}
+
+/* Cadastro de paciente */
+
+.linha-busca {
+    display: flex;
+    gap: 8px;
+}
+
+.linha-busca input {
+    flex: 1;
+    min-width: 0;
+    background-color: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 13px;
+    color: var(--foreground);
+    font-family: inherit;
+    outline: none;
+}
+
+.linha-busca input:focus {
+    border-color: var(--brand);
+}
+
+.btn-primario {
+    background-color: var(--brand);
+    color: var(--brand-foreground);
+    border: none;
+    border-radius: 8px;
+    padding: 9px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.15s;
+}
+
+.btn-primario:hover { opacity: 0.9; }
+
+.btn-primario:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.msg-erro {
+    font-size: 12px;
+    color: #f87171;
+    margin-top: 8px;
+}
+
+.msg-ok {
+    font-size: 12px;
+    color: #4ade80;
+    margin-top: 8px;
+}
+
+.link-convite-linha {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 10px;
+    font-size: 11px;
+    color: var(--muted-fg);
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: var(--brand-soft);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: underline;
+    white-space: nowrap;
+}
+
+/* Pedidos pendentes */
+
+.linha-pedido {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--foreground);
+}
+
+.linha-pedido:last-child { border-bottom: none; }
+
+.acoes {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-aceitar {
+    background-color: var(--brand);
+    color: var(--brand-foreground);
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.btn-recusar {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted-fg);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.aguardando {
+    font-size: 11px;
+    color: var(--muted-fg);
+}
+
+/* Lista de pacientes */
+
+.input-filtro {
+    width: 100%;
+    background-color: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: var(--foreground);
+    font-family: inherit;
+    outline: none;
+    margin-bottom: 10px;
+}
+
+.input-filtro:focus {
+    border-color: var(--brand);
+}
+
+.paciente-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    padding: 9px 10px;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.15s, border-color 0.15s;
+}
+
+.paciente-item:hover {
+    background-color: var(--accent);
+}
+
+.paciente-item.paciente-ativo {
+    background-color: var(--accent);
+    border-color: var(--brand-muted);
+}
+
+.paciente-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand-muted), var(--brand));
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--brand-soft);
+    flex-shrink: 0;
+}
+
+.paciente-nome {
+    font-size: 13px;
+    color: var(--foreground);
+}
+
+.vazio {
+    font-size: 13px;
+    color: var(--muted-fg);
+}
+
+/* Detalhe do paciente */
+
+.detalhe-vazio p {
+    font-size: 13px;
+    color: var(--muted-fg);
+    line-height: 1.6;
+}
+
+.cabecalho-paciente {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.avatar-grande {
+    width: 48px;
+    height: 48px;
+    font-size: 14px;
+}
+
+.detalhe-nome {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--foreground);
+}
+
+.detalhe-sub {
+    font-size: 12px;
+    color: var(--muted-fg);
+    margin-top: 2px;
+}
+
+/* Gráfico de barras */
+
+.grafico-barras {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    height: 150px;
+    padding-top: 8px;
+}
+
+.barra-coluna {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+    height: 100%;
+    min-width: 0;
+}
+
+.barra {
+    width: 100%;
+    max-width: 42px;
+    border-radius: 6px 6px 2px 2px;
+    background: linear-gradient(180deg, var(--brand), var(--brand-muted));
+}
+
+.barra-valor {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--brand-soft);
+}
+
+.barra-label {
+    font-size: 10px;
+    color: var(--muted-fg);
+}
+
+/* Emoções mais frequentes */
+
+.emocao-linha {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.emocao-linha:last-child { margin-bottom: 0; }
+
+.emocao-label {
+    width: 100px;
+    font-size: 12px;
+    color: var(--foreground);
+    text-transform: capitalize;
+    flex-shrink: 0;
+}
+
+.emocao-trilho {
+    flex: 1;
+    height: 8px;
+    border-radius: 9999px;
+    background-color: var(--accent);
+    overflow: hidden;
+}
+
+.emocao-barra {
+    height: 100%;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, var(--brand-muted), var(--brand));
+}
+
+.emocao-percentual {
+    width: 36px;
+    text-align: right;
+    font-size: 11px;
+    color: var(--muted-fg);
+    flex-shrink: 0;
+}
+
+/* Relatórios */
+
+.relatorio-card {
+    background-color: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+}
+
+.relatorio-card:last-child { margin-bottom: 0; }
+
+.relatorio-topo {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.relatorio-titulo {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--foreground);
+}
+
+.relatorio-data {
+    font-size: 11px;
+    color: var(--brand-soft);
+    margin-top: 2px;
+}
+
+.relatorio-detalhes {
+    font-size: 12px;
+    color: var(--muted-fg);
+    margin-bottom: 10px;
+}
+
+.relatorio-topo button {
+    background-color: var(--accent);
+    border: 1px solid var(--border);
+    color: var(--brand-soft);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 11px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.relatorio-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.tag {
+    border-radius: 9999px;
+    border: 1px solid;
+    padding: 3px 12px;
+    font-size: 11px;
+}
+
+.tag-roxo  { border-color: #594C7D; background: #231640; color: var(--brand-soft); }
+.tag-verde { border-color: #065f46; background: #022c22; color: #6ee7b7; }
+.tag-azul  { border-color: #1e40af; background: #0f1f5c; color: #93c5fd; }
+.tag-vermelho { border-color: #7f1d1d; background: #3b0a0a; color: #fca5a5; }
+
+/* Mobile */
+
+@media (max-width: 900px) {
+    .grid-painel {
+        grid-template-columns: 1fr;
+    }
+}

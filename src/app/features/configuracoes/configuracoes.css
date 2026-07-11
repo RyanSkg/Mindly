@@ -273,6 +273,54 @@
     color: var(--brand-foreground);
 }
 
+/* Usuário Mindly */
+
+.username-atual {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--brand-soft);
+    margin-bottom: 6px;
+}
+
+.input-username {
+    width: 100%;
+    background-color: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 13px;
+    color: var(--foreground);
+    font-family: inherit;
+    outline: none;
+}
+
+.input-username:focus {
+    border-color: var(--brand);
+}
+
+/* Dia do relatório semanal */
+
+.dia-relatorio {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--muted-fg);
+    margin-bottom: 12px;
+    padding-left: 8px;
+}
+
+.dia-relatorio select {
+    background-color: var(--accent);
+    border: 1px solid var(--border);
+    color: var(--foreground);
+    border-radius: 6px;
+    padding: 5px 8px;
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+}
+
 /* Mobile */
 
 @media (max-width: 720px) {

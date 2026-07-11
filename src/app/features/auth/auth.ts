@@ -1,7 +1,9 @@
 import { Component, NgZone, inject, OnDestroy, OnInit } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { supabase } from '../../integrations/supabase/client';
+
+type TipoConta = 'usuario' | 'psicologo';
 
 @Component({
   selector: 'app-auth',
@@ -11,9 +13,12 @@ import { supabase } from '../../integrations/supabase/client';
 })
 export class Auth implements OnInit, OnDestroy {
   modo: 'entrar' | 'cadastro' = 'entrar';
+  tipoConta: TipoConta = 'usuario';
   nome: string = '';
   email: string = '';
   senha: string = '';
+  crp: string = '';
+  especialidade: string = '';
   carregando: boolean = false;
   erro: string = '';
   mensagem: string = '';
@@ -21,6 +26,7 @@ export class Auth implements OnInit, OnDestroy {
   mostrarPolitica: boolean = false;
 
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private zone = inject(NgZone);
   // O callback do Supabase roda fora da zona do Angular (navigator.locks não é
   // rastreado pelo zone.js); sem o zone.run, a navegação monta a tela sem o
@@ -32,6 +38,10 @@ export class Auth implements OnInit, OnDestroy {
   });
 
   async ngOnInit() {
+    if (this.route.snapshot.queryParamMap.get('modo') === 'cadastro') {
+      this.modo = 'cadastro';
+    }
+
     const { data } = await supabase.auth.getSession();
     if (data.session) {
       this.router.navigate(['/diario']);
@@ -47,6 +57,7 @@ export class Auth implements OnInit, OnDestroy {
     this.erro = '';
     this.mensagem = '';
     this.aceitouPolitica = false;
+    this.tipoConta = 'usuario';
   }
 
   abrirPolitica() {
@@ -79,11 +90,18 @@ export class Auth implements OnInit, OnDestroy {
           email: this.email,
           password: this.senha,
           options: {
-            data: { display_name: this.nome || this.email.split('@')[0] },
+            data: {
+              display_name: this.nome || this.email.split('@')[0],
+              tipo_conta: this.tipoConta,
+              crp: this.tipoConta === 'psicologo' ? this.crp || null : null,
+              especialidade: this.tipoConta === 'psicologo' ? this.especialidade || null : null,
+            },
           },
         });
         if (error) throw error;
-        this.mensagem = 'Conta criada! Verifique seu email para confirmar.';
+        this.mensagem = this.tipoConta === 'psicologo'
+          ? 'Conta criada! Verifique seu email para confirmar. Seu cadastro de psicólogo(a) ainda precisa ser aprovado antes de liberar o acesso.'
+          : 'Conta criada! Verifique seu email para confirmar.';
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email: this.email,

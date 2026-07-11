@@ -59,6 +59,65 @@
 
   <div class="coluna-direita">
 
+    <!-- Contatos Mindly -->
+    <p class="secao-titulo">CONTATOS MINDLY</p>
+    <div class="card-mindly">
+      <div class="busca-mindly">
+        <input type="text" [(ngModel)]="buscaUsername" placeholder="@usuario do Mindly"
+          (keyup.enter)="adicionarPorUsername()" />
+        <button (click)="adicionarPorUsername()" [disabled]="buscandoMindly">Adicionar</button>
+      </div>
+      @if (erroBuscaMindly) {
+        <p class="erro-contato">{{ erroBuscaMindly }}</p>
+      }
+      <div class="link-convite-linha">
+        <span>Ou compartilhe seu link:</span>
+        <button class="btn-copiar-link" (click)="copiarLinkConvite()">{{ linkCopiado ? 'Copiado!' : 'Copiar link' }}</button>
+      </div>
+    </div>
+
+    @if (pendentesMindly.length > 0) {
+      <div class="lista-contatos">
+        @for (p of pendentesMindly; track p.id) {
+          <div class="contato-card">
+            <div class="contato-avatar">{{ p.outroPerfil.username.slice(0, 2).toUpperCase() }}</div>
+            <div class="contato-info">
+              <div class="contato-nome">{{ '@' + p.outroPerfil.username }}</div>
+              <div class="contato-relacao">{{ p.souSolicitante ? 'Pedido enviado, aguardando' : 'Quer se conectar com você' }}</div>
+            </div>
+            @if (!p.souSolicitante) {
+              <div class="contato-acoes">
+                <button class="btn-aceitar-mindly" (click)="responderPedidoMindly(p.id, true)">Aceitar</button>
+                <button class="btn-recusar-mindly" (click)="responderPedidoMindly(p.id, false)">Recusar</button>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    @if (contatosMindly.length > 0) {
+      <div class="lista-contatos">
+        @for (c of contatosMindly; track c.id) {
+          <div class="contato-card">
+            <div class="contato-avatar">{{ c.outroPerfil.username.slice(0, 2).toUpperCase() }}</div>
+            <div class="contato-info">
+              <div class="contato-nome">{{ '@' + c.outroPerfil.username }}</div>
+              @if (c.humor) {
+                <div class="contato-relacao">{{ emojiDoHumor(c.humor) }} {{ labelDoHumor(c.humor) }} recentemente</div>
+              } @else {
+                <div class="contato-relacao">Humor recente não compartilhado</div>
+              }
+            </div>
+            <div class="contato-acoes">
+              <button class="btn-avisar" (click)="avisarContatoMindly(c)">Avisar</button>
+              <button class="btn-recusar-mindly" (click)="removerContatoMindly(c.id)" title="Remover">✕</button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
     <!-- Contatos -->
     <p class="secao-titulo">CONTATOS DE CONFIANÇA</p>
     @if (contatos.length === 0) {

@@ -4,9 +4,21 @@ import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
+    path: 'home',
+    title: 'Mindly — Diário emocional com IA',
+    loadComponent: () => import('./features/home/home').then((m) => m.Home),
+  },
+  {
     path: 'auth',
     title: 'Entrar · Mindly',
     loadComponent: () => import('./features/auth/auth').then((m) => m.Auth),
+  },
+  {
+    path: 'pendente-aprovacao',
+    title: 'Aguardando aprovação · Mindly',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/pendente-aprovacao/pendente-aprovacao').then((m) => m.PendenteAprovacao),
   },
   {
     path: '',
@@ -14,7 +26,22 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: '', redirectTo: 'diario', pathMatch: 'full' },
-      { path: 'home', redirectTo: 'diario', pathMatch: 'full' },
+      {
+        path: 'convite/:userId',
+        title: 'Convite · Mindly',
+        loadComponent: () => import('./features/convite/convite').then((m) => m.Convite),
+      },
+      {
+        path: 'painel-psicologo',
+        title: 'Painel de pacientes',
+        loadComponent: () =>
+          import('./features/painel-psicologo/painel-psicologo').then((m) => m.PainelPsicologo),
+      },
+      {
+        path: 'admin',
+        title: 'Administração',
+        loadComponent: () => import('./features/admin/admin').then((m) => m.Admin),
+      },
       {
         path: 'diario',
         title: 'Diário emocional',

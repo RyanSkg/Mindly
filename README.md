@@ -127,6 +127,7 @@ O schema (tabelas `registros`, `contatos`, `relatorios`, `preferencias`, `notifi
 - **Criptografia em trânsito**: toda comunicação entre navegador, servidor e banco usa TLS/HTTPS.
 - **Row Level Security**: cada tabela tem políticas que garantem que um usuário só consegue ler, criar ou apagar os próprios registros — mesmo que alguém tente burlar o app e chamar a API diretamente.
 - **Segredos fora do navegador**: chaves sensíveis (IA, exclusão de conta) só existem no servidor, nunca no código que roda no navegador do usuário.
+- **Proteção contra SQL injection**: nenhuma query é montada como texto SQL — todo acesso ao banco passa pelo cliente do Supabase (PostgREST), que parametriza os valores automaticamente; as funções SQL do banco usam parâmetros (nunca concatenação); e os poucos filtros montados como string (`.or(...)`) validam que o valor é um UUID antes de interpolar.
 
 ---
 

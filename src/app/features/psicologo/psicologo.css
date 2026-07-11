@@ -224,6 +224,136 @@
     padding: 8px 0 12px;
 }
 
+/* Adicionar psicólogo(a) */
+
+.card-busca-psicologo {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+}
+
+.busca-psicologo {
+    display: flex;
+    gap: 8px;
+}
+
+.busca-psicologo input {
+    flex: 1;
+    background-color: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 13px;
+    color: var(--foreground);
+    font-family: inherit;
+    outline: none;
+}
+
+.busca-psicologo input:focus {
+    border-color: var(--brand);
+}
+
+.busca-psicologo button {
+    background-color: var(--brand);
+    color: var(--brand-foreground);
+    border: none;
+    border-radius: 8px;
+    padding: 9px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.busca-psicologo button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.erro-busca {
+    font-size: 12px;
+    color: #f87171;
+    margin-top: 8px;
+}
+
+.pendente-envio {
+    font-size: 12px;
+    color: var(--brand-soft);
+    margin-top: 8px;
+}
+
+.linha-pedido-recebido {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--foreground);
+}
+
+.linha-pedido-recebido:last-child { border-bottom: none; }
+
+.acoes-pedido {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.btn-aceitar-pedido {
+    background-color: var(--brand);
+    color: var(--brand-foreground);
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.btn-recusar-pedido {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted-fg);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.btn-remover-psicologo {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted-fg);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    align-self: flex-start;
+}
+
+.campo-select-psicologo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--muted-fg);
+    margin-bottom: 12px;
+}
+
+.campo-select-psicologo select {
+    background-color: var(--accent);
+    border: 1px solid var(--border);
+    color: var(--foreground);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+}
+
 /* Mobile */
 
 @media (max-width: 720px) {

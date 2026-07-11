@@ -53,9 +53,29 @@
     <form (ngSubmit)="entrar()" class="form-auth">
       @if (modo === 'cadastro') {
         <div class="campo">
+          <label>Tipo de conta</label>
+          <div class="tipo-conta-segmentado">
+            <button type="button" [class.tipo-ativo]="tipoConta === 'usuario'" (click)="tipoConta = 'usuario'">Sou usuário</button>
+            <button type="button" [class.tipo-ativo]="tipoConta === 'psicologo'" (click)="tipoConta = 'psicologo'">Sou psicólogo(a)</button>
+          </div>
+        </div>
+        <div class="campo">
           <label for="nome">Nome</label>
           <input id="nome" type="text" name="nome" [(ngModel)]="nome" placeholder="Seu nome" />
         </div>
+      }
+      @if (modo === 'cadastro' && tipoConta === 'psicologo') {
+        <div class="campo">
+          <label for="crp">CRP</label>
+          <input id="crp" type="text" name="crp" [(ngModel)]="crp" placeholder="Ex: 06/123456" />
+        </div>
+        <div class="campo">
+          <label for="especialidade">Especialidade</label>
+          <input id="especialidade" type="text" name="especialidade" [(ngModel)]="especialidade" placeholder="Ex: Psicóloga clínica" />
+        </div>
+        <p class="aviso-psicologo">
+          Seu cadastro passa por uma aprovação antes de liberar o acesso à área de psicólogo(a).
+        </p>
       }
       <div class="campo">
         <label for="email">Email</label>
@@ -100,7 +120,7 @@
     </p>
 
     <p class="voltar">
-      <a routerLink="/diario">Voltar ao início</a>
+      <a routerLink="/home">Voltar ao início</a>
     </p>
 
   </div>

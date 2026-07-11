@@ -417,6 +417,93 @@ textarea:focus {
     cursor: not-allowed;
 }
 
+/* Contatos Mindly */
+
+.card-mindly {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 12px;
+}
+
+.busca-mindly {
+    display: flex;
+    gap: 8px;
+}
+
+.busca-mindly input {
+    flex: 1;
+    background-color: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 13px;
+    color: var(--foreground);
+    font-family: inherit;
+    outline: none;
+}
+
+.busca-mindly input:focus {
+    border-color: var(--brand);
+}
+
+.busca-mindly button {
+    background-color: var(--brand);
+    color: var(--brand-foreground);
+    border: none;
+    border-radius: 8px;
+    padding: 9px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.busca-mindly button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.link-convite-linha {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-size: 11px;
+    color: var(--muted-fg);
+}
+
+.btn-copiar-link {
+    background: none;
+    border: none;
+    color: var(--brand-soft);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.btn-aceitar-mindly {
+    background-color: var(--brand);
+    color: var(--brand-foreground);
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.btn-recusar-mindly {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted-fg);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
 /* Mobile */
 
 @media (max-width: 720px) {

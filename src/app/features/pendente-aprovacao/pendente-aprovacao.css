@@ -1,0 +1,50 @@
+.pagina-pendente {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background-color: var(--background);
+    padding: 16px;
+}
+
+.card-pendente {
+    width: 100%;
+    max-width: 420px;
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 40%);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+.icone {
+    font-size: 40px;
+    margin-bottom: 12px;
+}
+
+.card-pendente h1 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--foreground);
+    margin-bottom: 10px;
+}
+
+.card-pendente p {
+    font-size: 14px;
+    color: var(--muted-fg);
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.card-pendente button {
+    background-color: var(--accent);
+    border: 1px solid var(--border);
+    color: var(--brand-soft);
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 13px;
+    cursor: pointer;
+}
