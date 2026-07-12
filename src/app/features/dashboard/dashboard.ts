@@ -178,10 +178,10 @@ export class Dashboard implements OnInit, OnDestroy {
     const anterior = this.metaDiasSemana;
     this.metaDiasSemana = dias;
 
+    // Upsert: cria a linha de preferências se o usuário nunca abriu Configurações.
     const { error } = await supabase
       .from('preferencias')
-      .update({ meta_dias_semana: dias })
-      .eq('user_id', this.userId);
+      .upsert({ user_id: this.userId, meta_dias_semana: dias }, { onConflict: 'user_id' });
 
     if (error) this.metaDiasSemana = anterior;
     this.calcularProgressoMeta();
