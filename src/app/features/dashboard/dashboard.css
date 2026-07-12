@@ -180,6 +180,107 @@
     opacity: 0.9;
 }
 
+/* Meta semanal + resumo do mês */
+
+.linha-meta-resumo {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.meta-card,
+.resumo-card {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+}
+
+.meta-topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.meta-titulo {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--brand-soft);
+}
+
+.meta-topo select {
+    background-color: var(--accent);
+    border: 1px solid var(--border);
+    color: var(--foreground);
+    border-radius: 6px;
+    padding: 5px 8px;
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.meta-progresso-trilho {
+    height: 10px;
+    border-radius: 9999px;
+    background-color: var(--accent);
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.meta-progresso-barra {
+    height: 100%;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, var(--brand-muted), var(--brand));
+    transition: width 0.4s ease;
+}
+
+.meta-texto {
+    font-size: 12px;
+    color: var(--muted-fg);
+    line-height: 1.5;
+}
+
+.btn-resumo {
+    background-color: var(--brand);
+    color: var(--brand-foreground);
+    border: none;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.15s;
+}
+
+.btn-resumo:hover { opacity: 0.9; }
+
+.btn-resumo:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.resumo-texto {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--foreground);
+}
+
+.resumo-erro {
+    font-size: 12px;
+    color: #fbbf24;
+}
+
+@media (max-width: 720px) {
+    .linha-meta-resumo {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Carrossel do card do gráfico */
 
 .carrossel {

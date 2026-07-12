@@ -98,6 +98,45 @@
           }
         </div>
 
+        <!-- Mensagem pro paciente -->
+        <div class="card">
+          <p class="card-label">ENVIAR MENSAGEM PRO PACIENTE</p>
+          <div class="linha-mensagem">
+            <input type="text" [(ngModel)]="mensagemConteudo" maxlength="200"
+              placeholder="Ex: Vi seu relatório, ótima semana! Continue registrando."
+              (keyup.enter)="enviarMensagem()" />
+            <button class="btn-primario" (click)="enviarMensagem()" [disabled]="enviandoMensagem">
+              {{ enviandoMensagem ? 'Enviando...' : 'Enviar' }}
+            </button>
+          </div>
+          @if (mensagemEnviada) {
+            <p class="msg-ok">Mensagem enviada ✓ (chega no sino e na aba Psicólogo do paciente)</p>
+          }
+        </div>
+
+        <!-- Linha do tempo do humor -->
+        @if (pontosHumor.length >= 2) {
+          <div class="card">
+            <p class="card-label">LINHA DO TEMPO DO HUMOR</p>
+            <svg class="grafico-humor-linha" [attr.viewBox]="'0 0 ' + larguraLinha + ' ' + alturaLinha"
+              preserveAspectRatio="xMidYMid meet" role="img" aria-label="Evolução do humor do paciente">
+              <path [attr.d]="caminhoHumor" fill="none" stroke="#A78BFA" stroke-width="2" stroke-linecap="round" />
+              @for (ponto of pontosHumor; track $index; let i = $index) {
+                <circle [attr.cx]="ponto.x" [attr.cy]="ponto.y"
+                  [attr.r]="pontoHumorAtivo === i ? 6 : 3.5"
+                  fill="#A78BFA" class="ponto-humor"
+                  (mouseenter)="pontoHumorAtivo = i" (mouseleave)="pontoHumorAtivo = null" />
+                @if (pontoHumorAtivo === i) {
+                  <text [attr.x]="ponto.x" [attr.y]="ponto.y - 12" text-anchor="middle" class="tooltip-humor">
+                    {{ emojiDoHumor(ponto.humor) }} {{ labelDoHumor(ponto.humor) }} · {{ ponto.data.toLocaleDateString('pt-BR') }}
+                  </text>
+                }
+              }
+            </svg>
+            <p class="legenda-humor">Cada ponto é um registro do diário (só o humor — o texto continua privado). Quanto mais alto, melhor o humor.</p>
+          </div>
+        }
+
         <!-- Notas privadas -->
         <div class="card">
           <p class="card-label">MINHAS ANOTAÇÕES (SÓ VOCÊ VÊ)</p>
@@ -167,6 +206,21 @@
                       <span class="tag" [class]="'tag-' + tag.cor">{{ tag.label }}</span>
                     }
                   </div>
+                }
+                @if (r.conversaAnexada.length > 0) {
+                  <button class="btn-ver-conversa" (click)="toggleConversa(r.id)">
+                    {{ conversaExpandidaId === r.id ? 'Ocultar conversa com a IA' : 'Ver conversa com a IA (' + r.conversaAnexada.length + ' mensagens)' }}
+                  </button>
+                  @if (conversaExpandidaId === r.id) {
+                    <div class="conversa-anexada">
+                      @for (msg of r.conversaAnexada; track $index) {
+                        <div class="mensagem-conversa" [class.mensagem-paciente]="msg.role === 'user'">
+                          <span class="autor-conversa">{{ msg.role === 'user' ? 'Paciente' : 'IA' }}</span>
+                          <p>{{ msg.content }}</p>
+                        </div>
+                      }
+                    </div>
+                  }
                 }
               </div>
             }

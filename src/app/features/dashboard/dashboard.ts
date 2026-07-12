@@ -1,5 +1,6 @@
 import { Component, DestroyRef, inject, OnDestroy, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
 import jsPDF from 'jspdf';
 import { supabase } from '../../integrations/supabase/client';
 import { valorDoHumor, labelDoHumor } from '../../shared/humor.util';
@@ -46,7 +47,7 @@ interface DistribuicaoHumor {
 
 @Component({
   selector: 'app-dashboard',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
@@ -90,6 +91,17 @@ export class Dashboard implements OnInit, OnDestroy {
   distribuicaoConicGradient = 'conic-gradient(var(--accent) 0% 100%)';
   diasSequencia = 0;
 
+  /* ==== Meta semanal ==== */
+  metaDiasSemana: number | null = null;
+  diasRegistradosSemana = 0;
+  salvandoMeta = false;
+
+  /* ==== Resumo mensal com IA ==== */
+  resumoMensal: string | null = null;
+  gerandoResumo = false;
+  erroResumo = '';
+
+  private userId: string | null = null;
   private readonly coresTag = ['roxo', 'azul', 'verde', 'vermelho'];
   private readonly coresDistribuicao = ['#7C3AED', '#3b82f6', '#22c55e', '#ef4444', '#eab308'];
   private topbarActions = inject(TopbarActionsService);
@@ -108,6 +120,7 @@ export class Dashboard implements OnInit, OnDestroy {
 
     const user = await obterUsuarioValido();
     if (!user) return;
+    this.userId = user.id;
 
     const { data, error } = await supabase
       .from('registros')
@@ -128,6 +141,93 @@ export class Dashboard implements OnInit, OnDestroy {
     this.aplicarFiltroMes();
     this.recalcularGrafico();
     this.iniciarAutoRotacao();
+    await this.carregarMeta();
+  }
+
+  /* ==== Meta semanal ==== */
+
+  private async carregarMeta() {
+    if (!this.userId) return;
+
+    const { data } = await supabase
+      .from('preferencias')
+      .select('meta_dias_semana')
+      .eq('user_id', this.userId)
+      .maybeSingle();
+
+    this.metaDiasSemana = data?.meta_dias_semana ?? null;
+    this.calcularProgressoMeta();
+  }
+
+  private calcularProgressoMeta() {
+    const inicioSemana = this.inicioDaSemana(new Date());
+    this.diasRegistradosSemana = new Set(
+      this.registrosTodos.filter(r => r.data >= inicioSemana).map(r => r.data.toDateString())
+    ).size;
+  }
+
+  get progressoMeta(): number {
+    if (!this.metaDiasSemana) return 0;
+    return Math.min(100, Math.round((this.diasRegistradosSemana / this.metaDiasSemana) * 100));
+  }
+
+  async escolherMeta(dias: number | null) {
+    if (this.salvandoMeta || !this.userId) return;
+    this.salvandoMeta = true;
+
+    const anterior = this.metaDiasSemana;
+    this.metaDiasSemana = dias;
+
+    const { error } = await supabase
+      .from('preferencias')
+      .update({ meta_dias_semana: dias })
+      .eq('user_id', this.userId);
+
+    if (error) this.metaDiasSemana = anterior;
+    this.calcularProgressoMeta();
+    this.salvandoMeta = false;
+  }
+
+  /* ==== Resumo mensal com IA ==== */
+
+  async gerarResumoMensal() {
+    if (this.gerandoResumo) return;
+    this.gerandoResumo = true;
+    this.erroResumo = '';
+    this.resumoMensal = null;
+
+    const [ano, mes] = this.mesFiltro.split('-').map(Number);
+    const inicioMes = new Date(ano, mes - 1, 1);
+    const fimMes = new Date(ano, mes, 1);
+    const registrosDoMes = this.registrosTodos
+      .filter(r => r.data >= inicioMes && r.data < fimMes)
+      .map(r => ({
+        dia: r.data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', weekday: 'short' }),
+        humor: labelDoHumor(r.humor),
+      }));
+
+    if (registrosDoMes.length < 3) {
+      this.erroResumo = 'Poucos registros nesse mês pra gerar um resumo (mínimo 3).';
+      this.gerandoResumo = false;
+      return;
+    }
+
+    try {
+      const resposta = await fetch('/api/resumo-mensal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ registros: registrosDoMes, mes: this.mesFiltro }),
+      });
+
+      if (!resposta.ok) throw new Error('Não foi possível gerar o resumo agora.');
+
+      const dados: { resumo: string } = await resposta.json();
+      this.resumoMensal = dados.resumo;
+    } catch (err) {
+      this.erroResumo = err instanceof Error ? err.message : 'Erro ao gerar resumo';
+    } finally {
+      this.gerandoResumo = false;
+    }
   }
 
   ngOnDestroy(): void {

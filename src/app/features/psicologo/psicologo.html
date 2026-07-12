@@ -49,6 +49,9 @@
               <div class="psicologa-crp">{{ p.outroPerfil.especialidade }}</div>
             }
             <span class="badge-conectada">Conectado(a)</span>
+            @if (ultimasMensagens.get(p.outroPerfil.user_id)) {
+              <p class="psicologa-mensagem">"{{ ultimasMensagens.get(p.outroPerfil.user_id) }}"</p>
+            }
           </div>
           <button class="btn-remover-psicologo" (click)="removerPsicologo(p.id)" title="Remover">✕</button>
         </div>

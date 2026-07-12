@@ -36,6 +36,7 @@ export class Psicologo implements OnInit {
   pendentesEnviados: ConexaoComPerfil[] = [];
   pendentesRecebidos: ConexaoComPerfil[] = [];
   psicologoSelecionadoId: string | null = null;
+  ultimasMensagens = new Map<string, string>();
 
   buscaUsername = '';
   buscandoPsicologo = false;
@@ -76,6 +77,25 @@ export class Psicologo implements OnInit {
     this.pendentesRecebidos = pendentes.filter(p => !p.souSolicitante);
     if (this.psicologosConectados.length > 0 && !this.psicologoSelecionadoId) {
       this.psicologoSelecionadoId = this.psicologosConectados[0].outroPerfil.user_id;
+    }
+    await this.carregarUltimasMensagens();
+  }
+
+  /** Última mensagem que cada psicólogo(a) conectado(a) mandou (aparece no card). */
+  private async carregarUltimasMensagens() {
+    this.ultimasMensagens.clear();
+    if (this.psicologosConectados.length === 0) return;
+
+    const { data } = await supabase
+      .from('mensagens_psicologo')
+      .select('psicologo_id, conteudo, criado_em')
+      .order('criado_em', { ascending: false })
+      .limit(30);
+
+    for (const m of data ?? []) {
+      if (!this.ultimasMensagens.has(m.psicologo_id)) {
+        this.ultimasMensagens.set(m.psicologo_id, m.conteudo);
+      }
     }
   }
 

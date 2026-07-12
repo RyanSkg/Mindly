@@ -6,6 +6,12 @@ import { supabase } from '../../integrations/supabase/client';
 import { PerfisService } from '../../shared/perfis.service';
 import { ConexoesService, ConexaoComPerfil } from '../../shared/conexoes.service';
 import { obterUsuarioValido } from '../../shared/sessao.util';
+import { emojiDoHumor, labelDoHumor, valorDoHumor } from '../../shared/humor.util';
+
+interface MensagemConversa {
+  role: 'user' | 'assistant';
+  content: string;
+}
 
 interface RelatorioRecebido {
   id: string;
@@ -15,6 +21,14 @@ interface RelatorioRecebido {
   criadoEm: Date;
   pacienteId: string;
   registros: number;
+  conversaAnexada: MensagemConversa[];
+}
+
+interface PontoHumor {
+  x: number;
+  y: number;
+  humor: string;
+  data: Date;
 }
 
 interface BarraGrafico {
@@ -56,6 +70,23 @@ export class PainelPsicologo implements OnInit {
   linkConvite = '';
   linkCopiado = false;
 
+  // Mensagem pro paciente selecionado
+  mensagemConteudo = '';
+  enviandoMensagem = false;
+  mensagemEnviada = false;
+
+  // Linha do tempo do humor do paciente selecionado
+  pontosHumor: PontoHumor[] = [];
+  caminhoHumor = '';
+  pontoHumorAtivo: number | null = null;
+  readonly larguraLinha = 600;
+  readonly alturaLinha = 150;
+  emojiDoHumor = emojiDoHumor;
+  labelDoHumor = labelDoHumor;
+
+  // Conversa com a IA anexada (expandida por relatório)
+  conversaExpandidaId: string | null = null;
+
   // Notas privadas sobre o paciente selecionado
   notaConteudo = '';
   salvandoNota = false;
@@ -68,6 +99,7 @@ export class PainelPsicologo implements OnInit {
     }
     await this.carregarTudo();
     await this.carregarNota();
+    await this.carregarLinhaHumor();
     this.carregando = false;
   }
 
@@ -87,7 +119,7 @@ export class PainelPsicologo implements OnInit {
 
     const { data } = await supabase
       .from('relatorios')
-      .select('id, titulo, detalhes, tags, criado_em, user_id')
+      .select('id, titulo, detalhes, tags, conversa_anexada, criado_em, user_id')
       .eq('psicologo_id', user.id)
       .order('criado_em', { ascending: true });
 
@@ -96,6 +128,7 @@ export class PainelPsicologo implements OnInit {
       titulo: r.titulo,
       detalhes: r.detalhes ?? '',
       tags: r.tags ?? [],
+      conversaAnexada: r.conversa_anexada ?? [],
       criadoEm: new Date(r.criado_em),
       pacienteId: r.user_id,
       registros: parseInt((r.detalhes ?? '').match(/^(\d+) registros/)?.[1] ?? '0', 10),
@@ -112,7 +145,79 @@ export class PainelPsicologo implements OnInit {
 
   selecionarPaciente(userId: string) {
     this.pacienteSelecionadoId = userId;
+    this.mensagemConteudo = '';
+    this.mensagemEnviada = false;
+    this.conversaExpandidaId = null;
     this.carregarNota();
+    this.carregarLinhaHumor();
+  }
+
+  /* ==== Mensagem pro paciente ==== */
+
+  async enviarMensagem() {
+    if (!this.mensagemConteudo.trim() || this.enviandoMensagem || !this.pacienteSelecionadoId) return;
+    this.enviandoMensagem = true;
+    this.mensagemEnviada = false;
+
+    const user = await obterUsuarioValido();
+    if (user) {
+      const conteudo = this.mensagemConteudo.trim();
+      const { error } = await supabase.from('mensagens_psicologo').insert({
+        psicologo_id: user.id,
+        paciente_id: this.pacienteSelecionadoId,
+        conteudo,
+      });
+
+      if (!error) {
+        const meuUsername = this.perfis.meuPerfil()?.username ?? 'psicologo';
+        await supabase.rpc('notificar_conexao', {
+          destino: this.pacienteSelecionadoId,
+          titulo: `Mensagem de @${meuUsername}`,
+          mensagem: conteudo,
+        });
+        this.mensagemConteudo = '';
+        this.mensagemEnviada = true;
+        setTimeout(() => (this.mensagemEnviada = false), 2500);
+      }
+    }
+    this.enviandoMensagem = false;
+  }
+
+  /* ==== Linha do tempo do humor ==== */
+
+  private async carregarLinhaHumor() {
+    this.pontosHumor = [];
+    this.caminhoHumor = '';
+    this.pontoHumorAtivo = null;
+    if (!this.pacienteSelecionadoId) return;
+
+    const { data } = await supabase.rpc('humor_do_paciente', { paciente: this.pacienteSelecionadoId });
+    const registros: { humor: string; criado_em: string }[] = data ?? [];
+    if (registros.length < 2) return;
+
+    const margem = { esquerda: 16, direita: 16, topo: 18, baixo: 24 };
+    const larguraUtil = this.larguraLinha - margem.esquerda - margem.direita;
+    const alturaUtil = this.alturaLinha - margem.topo - margem.baixo;
+
+    this.pontosHumor = registros.map((r, i) => {
+      const valor = valorDoHumor(r.humor); // 1 (ruim) a 9 (ótimo)
+      return {
+        x: margem.esquerda + (i / (registros.length - 1)) * larguraUtil,
+        y: margem.topo + (1 - (valor - 1) / 8) * alturaUtil,
+        humor: r.humor,
+        data: new Date(r.criado_em),
+      };
+    });
+
+    this.caminhoHumor = this.pontosHumor
+      .map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`)
+      .join(' ');
+  }
+
+  /* ==== Conversa com a IA anexada ==== */
+
+  toggleConversa(relatorioId: string) {
+    this.conversaExpandidaId = this.conversaExpandidaId === relatorioId ? null : relatorioId;
   }
 
   /* ==== Notas privadas do psicólogo ==== */

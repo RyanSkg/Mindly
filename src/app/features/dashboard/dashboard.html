@@ -13,6 +13,51 @@
       </div>
     }
   </div>
+
+  <div class="linha-meta-resumo">
+    <!-- Meta semanal -->
+    <div class="meta-card">
+      <div class="meta-topo">
+        <span class="meta-titulo">🎯 META SEMANAL</span>
+        <select [ngModel]="metaDiasSemana" (ngModelChange)="escolherMeta($event)" [disabled]="salvandoMeta">
+          <option [ngValue]="null">Sem meta</option>
+          @for (d of [1,2,3,4,5,6,7]; track d) {
+            <option [ngValue]="d">{{ d }} dia{{ d > 1 ? 's' : '' }}/semana</option>
+          }
+        </select>
+      </div>
+      @if (metaDiasSemana) {
+        <div class="meta-progresso-trilho">
+          <div class="meta-progresso-barra" [style.width.%]="progressoMeta"></div>
+        </div>
+        <p class="meta-texto">
+          {{ diasRegistradosSemana }} de {{ metaDiasSemana }} dia{{ metaDiasSemana > 1 ? 's' : '' }} registrado{{ diasRegistradosSemana === 1 ? '' : 's' }} essa semana
+          @if (progressoMeta >= 100) { — meta batida! 🎉 }
+        </p>
+      } @else {
+        <p class="meta-texto">Escolha quantos dias por semana você quer registrar seu humor.</p>
+      }
+    </div>
+
+    <!-- Resumo do mês com IA -->
+    <div class="resumo-card">
+      <div class="meta-topo">
+        <span class="meta-titulo">✨ RESUMO DO MÊS COM IA</span>
+        <button class="btn-resumo" (click)="gerarResumoMensal()" [disabled]="gerandoResumo">
+          {{ gerandoResumo ? 'Gerando...' : (resumoMensal ? 'Gerar de novo' : 'Gerar resumo') }}
+        </button>
+      </div>
+      @if (erroResumo) {
+        <p class="resumo-erro">{{ erroResumo }}</p>
+      }
+      @if (resumoMensal) {
+        <p class="resumo-texto">{{ resumoMensal }}</p>
+      } @else if (!erroResumo && !gerandoResumo) {
+        <p class="meta-texto">A IA analisa seus humores do mês e escreve um resumo com os padrões que encontrar.</p>
+      }
+    </div>
+  </div>
+
   <div class="grafico">
     <div class="grafico-card carrossel">
       <div class="carrossel-viewport">
