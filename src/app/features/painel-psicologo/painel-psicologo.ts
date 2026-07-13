@@ -89,6 +89,9 @@ export class PainelPsicologo implements OnInit {
 
   // Notas privadas sobre o paciente selecionado
   notaConteudo = '';
+  notaRascunho = '';
+  notaAtualizadaEm: Date | null = null;
+  editandoNota = false;
   salvandoNota = false;
   notaSalva = false;
   erroNota = '';
@@ -229,7 +232,10 @@ export class PainelPsicologo implements OnInit {
 
   private async carregarNota() {
     this.notaConteudo = '';
+    this.notaAtualizadaEm = null;
+    this.editandoNota = false;
     this.notaSalva = false;
+    this.erroNota = '';
     if (!this.pacienteSelecionadoId) return;
 
     const user = await obterUsuarioValido();
@@ -237,12 +243,24 @@ export class PainelPsicologo implements OnInit {
 
     const { data } = await supabase
       .from('notas_psicologo')
-      .select('conteudo')
+      .select('conteudo, atualizado_em')
       .eq('psicologo_id', user.id)
       .eq('paciente_id', this.pacienteSelecionadoId)
       .maybeSingle();
 
     this.notaConteudo = data?.conteudo ?? '';
+    this.notaAtualizadaEm = data?.atualizado_em ? new Date(data.atualizado_em) : null;
+  }
+
+  editarNota() {
+    this.notaRascunho = this.notaConteudo;
+    this.editandoNota = true;
+    this.erroNota = '';
+  }
+
+  cancelarNota() {
+    this.editandoNota = false;
+    this.erroNota = '';
   }
 
   async salvarNota() {
@@ -253,16 +271,20 @@ export class PainelPsicologo implements OnInit {
 
     const user = await obterUsuarioValido();
     if (user) {
+      const agora = new Date();
       const { error } = await supabase.from('notas_psicologo').upsert(
         {
           psicologo_id: user.id,
           paciente_id: this.pacienteSelecionadoId,
-          conteudo: this.notaConteudo,
-          atualizado_em: new Date().toISOString(),
+          conteudo: this.notaRascunho,
+          atualizado_em: agora.toISOString(),
         },
         { onConflict: 'psicologo_id,paciente_id' },
       );
       if (!error) {
+        this.notaConteudo = this.notaRascunho;
+        this.notaAtualizadaEm = agora;
+        this.editandoNota = false;
         this.notaSalva = true;
         setTimeout(() => (this.notaSalva = false), 2500);
       } else {

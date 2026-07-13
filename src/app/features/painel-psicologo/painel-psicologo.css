@@ -395,8 +395,85 @@
 
 /* Notas privadas */
 
+.nota-cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.nota-cabecalho .card-label {
+    margin-bottom: 0;
+}
+
+.btn-editar-nota {
+    background: none;
+    border: none;
+    color: var(--brand-soft);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+    white-space: nowrap;
+}
+
+.nota-exibicao {
+    position: relative;
+    background-color: var(--accent);
+    border: 1px solid var(--brand-muted);
+    border-left: 3px solid var(--brand);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-top: 12px;
+}
+
+.nota-icone {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    color: var(--brand-soft);
+    opacity: 0.7;
+}
+
+.nota-texto {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--foreground);
+    white-space: pre-wrap;
+    padding-right: 24px;
+}
+
+.nota-data {
+    font-size: 11px;
+    color: var(--muted-fg);
+    margin-top: 10px;
+}
+
+.nota-vazia {
+    font-size: 13px;
+    color: var(--muted-fg);
+    margin-top: 10px;
+}
+
+.btn-cancelar-nota {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted-fg);
+    border-radius: 8px;
+    padding: 9px 16px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
+
+.btn-cancelar-nota:hover {
+    background-color: var(--surface-2);
+}
+
 .nota-textarea {
     width: 100%;
+    margin-top: 12px;
     resize: vertical;
     min-height: 80px;
     background-color: var(--background);

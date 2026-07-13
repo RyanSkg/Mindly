@@ -143,20 +143,47 @@
 
         <!-- Notas privadas -->
         <div class="card">
-          <p class="card-label">MINHAS ANOTAÇÕES (SÓ VOCÊ VÊ)</p>
-          <textarea class="nota-textarea" [(ngModel)]="notaConteudo" rows="4"
-            placeholder="Anote observações sobre este paciente..."></textarea>
-          @if (erroNota) {
-            <p class="msg-erro">{{ erroNota }}</p>
-          }
-          <div class="nota-rodape">
-            @if (notaSalva) {
-              <span class="nota-salva">Salvo ✓</span>
+          <div class="nota-cabecalho">
+            <p class="card-label">MINHAS ANOTAÇÕES (SÓ VOCÊ VÊ)</p>
+            @if (!editandoNota) {
+              <button class="btn-editar-nota" (click)="editarNota()">
+                {{ notaConteudo ? 'Editar' : 'Adicionar anotação' }}
+              </button>
             }
-            <button class="btn-primario" (click)="salvarNota()" [disabled]="salvandoNota">
-              {{ salvandoNota ? 'Salvando...' : 'Salvar anotações' }}
-            </button>
           </div>
+
+          @if (!editandoNota) {
+            @if (notaConteudo) {
+              <div class="nota-exibicao">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nota-icone">
+                  <path d="M13 21h8"/><path d="m15 5 4 4"/>
+                  <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                </svg>
+                <p class="nota-texto">{{ notaConteudo }}</p>
+                @if (notaAtualizadaEm) {
+                  <p class="nota-data">Atualizado em {{ notaAtualizadaEm | date:'dd/MM/yyyy, HH:mm' }}</p>
+                }
+                @if (notaSalva) {
+                  <span class="nota-salva">Salvo ✓</span>
+                }
+              </div>
+            } @else {
+              <p class="nota-vazia">Nenhuma anotação sobre este paciente ainda.</p>
+            }
+          } @else {
+            <textarea class="nota-textarea" [(ngModel)]="notaRascunho" rows="4"
+              placeholder="Anote observações sobre este paciente..."></textarea>
+            @if (erroNota) {
+              <p class="msg-erro">{{ erroNota }}</p>
+            }
+            <div class="nota-rodape">
+              <button class="btn-cancelar-nota" (click)="cancelarNota()">Cancelar</button>
+              <button class="btn-primario" (click)="salvarNota()" [disabled]="salvandoNota">
+                {{ salvandoNota ? 'Salvando...' : 'Salvar' }}
+              </button>
+            </div>
+          }
         </div>
 
         @if (relatoriosDoPaciente.length === 0) {
