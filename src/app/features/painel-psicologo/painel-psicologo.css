@@ -299,6 +299,7 @@
 .grafico-humor-linha {
     width: 100%;
     height: auto;
+    max-height: 200px;
     display: block;
 }
 
@@ -307,10 +308,25 @@
     transition: r 0.15s;
 }
 
-.tooltip-humor {
-    font-size: 11px;
-    fill: var(--foreground);
-    font-family: inherit;
+/* Detalhe do ponto sob o mouse — fica FORA do SVG pra nunca ser cortado */
+.humor-hover {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--foreground);
+    background-color: var(--accent);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 12px;
+    margin-bottom: 10px;
+    width: fit-content;
+    max-width: 100%;
+}
+
+.humor-hover-vazio {
+    color: var(--muted-fg);
+    font-weight: 400;
+    background: none;
+    border-style: dashed;
 }
 
 .legenda-humor {

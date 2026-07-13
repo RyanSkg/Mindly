@@ -118,6 +118,15 @@
         @if (pontosHumor.length >= 2) {
           <div class="card">
             <p class="card-label">LINHA DO TEMPO DO HUMOR</p>
+            <p class="humor-hover" [class.humor-hover-vazio]="pontoHumorAtivo === null">
+              @if (pontoHumorAtivo !== null) {
+                {{ emojiDoHumor(pontosHumor[pontoHumorAtivo].humor) }}
+                {{ labelDoHumor(pontosHumor[pontoHumorAtivo].humor) }}
+                · {{ pontosHumor[pontoHumorAtivo].data.toLocaleDateString('pt-BR') }}
+              } @else {
+                Passe o mouse sobre um ponto pra ver o detalhe
+              }
+            </p>
             <svg class="grafico-humor-linha" [attr.viewBox]="'0 0 ' + larguraLinha + ' ' + alturaLinha"
               preserveAspectRatio="xMidYMid meet" role="img" aria-label="Evolução do humor do paciente">
               <path [attr.d]="caminhoHumor" fill="none" stroke="#A78BFA" stroke-width="2" stroke-linecap="round" />
@@ -126,11 +135,6 @@
                   [attr.r]="pontoHumorAtivo === i ? 6 : 3.5"
                   fill="#A78BFA" class="ponto-humor"
                   (mouseenter)="pontoHumorAtivo = i" (mouseleave)="pontoHumorAtivo = null" />
-                @if (pontoHumorAtivo === i) {
-                  <text [attr.x]="ponto.x" [attr.y]="ponto.y - 12" text-anchor="middle" class="tooltip-humor">
-                    {{ emojiDoHumor(ponto.humor) }} {{ labelDoHumor(ponto.humor) }} · {{ ponto.data.toLocaleDateString('pt-BR') }}
-                  </text>
-                }
               }
             </svg>
             <p class="legenda-humor">Cada ponto é um registro do diário (só o humor — o texto continua privado). Quanto mais alto, melhor o humor.</p>
