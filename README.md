@@ -78,11 +78,10 @@ src/server.ts               # Servidor Express (mesmas rotas, usado em dev local
 npm install
 ```
 
-Crie um arquivo `.env` na raiz com:
+Copie o `.env.example` para `.env` e preencha as chaves (o arquivo explica onde conseguir cada uma — a Groq é gratuita e é a única obrigatória pra IA funcionar):
 
-```
-GROQ_API_KEY=sua_chave_gratuita_do_console_groq_com
-SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key_do_supabase
+```bash
+cp .env.example .env
 ```
 
 ```bash

@@ -46,10 +46,6 @@ export class AppShell implements OnInit {
         return;
       }
       this.ehPsicologo = true;
-      const rotasPaciente = ['diario', 'dashboard', 'oito-minutos', 'psicologos', ''];
-      if (rotasPaciente.includes(this.rotaAtual)) {
-        this.router.navigate(['/painel-psicologo']);
-      }
     }
 
     this.router.events
