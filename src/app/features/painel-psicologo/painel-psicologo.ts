@@ -91,6 +91,7 @@ export class PainelPsicologo implements OnInit {
   notaConteudo = '';
   salvandoNota = false;
   notaSalva = false;
+  erroNota = '';
 
   async ngOnInit() {
     const perfil = await this.perfis.carregar();
@@ -104,8 +105,12 @@ export class PainelPsicologo implements OnInit {
   }
 
   private async carregarTudo() {
-    this.pendentes = await this.conexoes.listar('psicologo', 'pendente');
-    this.pacientes = await this.conexoes.listar('psicologo', 'aceito');
+    // Só usuários comuns são pacientes: se este psicólogo também tiver o
+    // próprio psicólogo, a conexão entre eles não deve aparecer aqui.
+    this.pendentes = (await this.conexoes.listar('psicologo', 'pendente'))
+      .filter(c => c.outroPerfil.tipo === 'usuario');
+    this.pacientes = (await this.conexoes.listar('psicologo', 'aceito'))
+      .filter(c => c.outroPerfil.tipo === 'usuario');
     await this.carregarRelatorios();
 
     if (!this.pacienteSelecionadoId && this.pacientes.length > 0) {
@@ -244,18 +249,26 @@ export class PainelPsicologo implements OnInit {
     if (this.salvandoNota || !this.pacienteSelecionadoId) return;
     this.salvandoNota = true;
     this.notaSalva = false;
+    this.erroNota = '';
 
     const user = await obterUsuarioValido();
     if (user) {
-      const { error } = await supabase.from('notas_psicologo').upsert({
-        psicologo_id: user.id,
-        paciente_id: this.pacienteSelecionadoId,
-        conteudo: this.notaConteudo,
-        atualizado_em: new Date().toISOString(),
-      });
+      const { error } = await supabase.from('notas_psicologo').upsert(
+        {
+          psicologo_id: user.id,
+          paciente_id: this.pacienteSelecionadoId,
+          conteudo: this.notaConteudo,
+          atualizado_em: new Date().toISOString(),
+        },
+        { onConflict: 'psicologo_id,paciente_id' },
+      );
       if (!error) {
         this.notaSalva = true;
         setTimeout(() => (this.notaSalva = false), 2500);
+      } else {
+        this.erroNota = error.message.includes('relation')
+          ? 'A tabela de notas ainda não existe no banco — rode a migração de notas no Supabase.'
+          : `Não foi possível salvar: ${error.message}`;
       }
     }
     this.salvandoNota = false;

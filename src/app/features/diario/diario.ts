@@ -36,6 +36,7 @@ interface AnaliseIA {
 interface RegistroRecente {
     id: string;
     humor: string;
+    humores: string[];
     texto: string;
     data: Date;
     comentarioIA: string | null;
@@ -77,7 +78,7 @@ export class Diario implements OnInit {
 
   saudacao: string = this.definirSaudacao();
   dropdownAberto: boolean = false;
-  humorSelecionado: string = 'ansioso';
+  humoresSelecionados: string[] = ['ansioso'];
   textoRegistro: string = '';
   registrosRecentes: RegistroRecente[] = [];
   salvando: boolean = false;
@@ -151,7 +152,7 @@ export class Diario implements OnInit {
 
     let query = supabase
       .from('registros')
-      .select('id, humor, texto, criado_em, comentario_ia, sugestao_ia, conteudos_ia, tags_ia, conversa_ia')
+      .select('id, humor, humores, texto, criado_em, comentario_ia, sugestao_ia, conteudos_ia, tags_ia, conversa_ia')
       .order('criado_em', { ascending: false });
 
     if (this.filtroData) {
@@ -169,6 +170,7 @@ export class Diario implements OnInit {
       this.registrosRecentes = data.map(r => ({
         id: r.id,
         humor: r.humor,
+        humores: r.humores ?? [r.humor],
         texto: r.texto ?? '',
         data: new Date(r.criado_em),
         comentarioIA: r.comentario_ia,
@@ -209,7 +211,12 @@ export class Diario implements OnInit {
 
     const { data, error } = await supabase
       .from('registros')
-      .insert({ user_id: user.id, humor: this.humorSelecionado, texto: this.textoRegistro })
+      .insert({
+        user_id: user.id,
+        humor: this.humoresSelecionados[0],
+        humores: this.humoresSelecionados,
+        texto: this.textoRegistro,
+      })
       .select()
       .single();
 
@@ -234,7 +241,7 @@ export class Diario implements OnInit {
   }
 
   async registrarHumor() {
-    if (!this.humorSelecionado || this.salvando) return;
+    if (this.humoresSelecionados.length === 0 || this.salvando) return;
     this.salvando = true;
 
     const registro = await this.inserirRegistro();
@@ -242,6 +249,7 @@ export class Diario implements OnInit {
       this.registrosRecentes.unshift({
         id: registro.id,
         humor: registro.humor,
+        humores: registro.humores ?? [registro.humor],
         texto: registro.texto ?? '',
         data: new Date(registro.criado_em),
         comentarioIA: null,
@@ -258,7 +266,7 @@ export class Diario implements OnInit {
   }
 
   async registrarHumoreAnalisar() {
-    if (!this.humorSelecionado || this.salvando || this.analisando) return;
+    if (this.humoresSelecionados.length === 0 || this.salvando || this.analisando) return;
     this.salvando = true;
     this.analisando = true;
     this.erroAnalise = '';
@@ -273,6 +281,7 @@ export class Diario implements OnInit {
     const novoRegistro: RegistroRecente = {
       id: registro.id,
       humor: registro.humor,
+      humores: registro.humores ?? [registro.humor],
       texto: registro.texto ?? '',
       data: new Date(registro.criado_em),
       comentarioIA: null,
@@ -290,8 +299,8 @@ export class Diario implements OnInit {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          humor: registro.humor,
-          emoji: emojiDoHumor(registro.humor),
+          humor: (registro.humores ?? [registro.humor]).join(', '),
+          emoji: (registro.humores ?? [registro.humor]).map((h: string) => emojiDoHumor(h)).join(' '),
           texto: registro.texto,
         }),
       });
@@ -396,8 +405,16 @@ export class Diario implements OnInit {
   }
 
   toggleHumor(id: string) {
-    this.humorSelecionado = this.humorSelecionado === id ? '' : id;
+    if (this.humoresSelecionados.includes(id)) {
+      this.humoresSelecionados = this.humoresSelecionados.filter(h => h !== id);
+    } else {
+      this.humoresSelecionados = [...this.humoresSelecionados, id];
+    }
     this.dropdownAberto = false;
+  }
+
+  humorEstaSelecionado(id: string): boolean {
+    return this.humoresSelecionados.includes(id);
   }
 
   async excluirRegistro(registro: RegistroRecente) {

@@ -71,8 +71,13 @@ export class Psicologo implements OnInit {
   }
 
   private async carregarConexoes() {
-    this.psicologosConectados = await this.conexoes.listar('psicologo', 'aceito');
-    const pendentes = await this.conexoes.listar('psicologo', 'pendente');
+    // Só perfis de psicólogo entram aqui: um psicólogo usando esta aba tem
+    // conexões tipo "psicologo" com os próprios pacientes, que não devem
+    // aparecer como se fossem psicólogos dele.
+    const aceitos = await this.conexoes.listar('psicologo', 'aceito');
+    this.psicologosConectados = aceitos.filter(c => c.outroPerfil.tipo === 'psicologo');
+    const pendentes = (await this.conexoes.listar('psicologo', 'pendente'))
+      .filter(c => c.outroPerfil.tipo === 'psicologo');
     this.pendentesEnviados = pendentes.filter(p => p.souSolicitante);
     this.pendentesRecebidos = pendentes.filter(p => !p.souSolicitante);
     if (this.psicologosConectados.length > 0 && !this.psicologoSelecionadoId) {

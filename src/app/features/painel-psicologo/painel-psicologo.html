@@ -142,6 +142,9 @@
           <p class="card-label">MINHAS ANOTAÇÕES (SÓ VOCÊ VÊ)</p>
           <textarea class="nota-textarea" [(ngModel)]="notaConteudo" rows="4"
             placeholder="Anote observações sobre este paciente..."></textarea>
+          @if (erroNota) {
+            <p class="msg-erro">{{ erroNota }}</p>
+          }
           <div class="nota-rodape">
             @if (notaSalva) {
               <span class="nota-salva">Salvo ✓</span>
