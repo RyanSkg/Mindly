@@ -1,527 +1,529 @@
 .pagina-oito {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    align-items: start;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
 }
 
 /* Coluna esquerda */
 
 .card-explicativo {
-    background-color: var(--accent);
-    border: 1px solid var(--brand-muted);
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 16px;
+  background-color: var(--accent);
+  border: 1px solid var(--brand-muted);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
 }
 
 .icone-coracao {
-    color: var(--brand-soft);
-    margin-bottom: 12px;
+  color: var(--brand-soft);
+  margin-bottom: 12px;
 }
 
 .card-explicativo h3 {
-    font-size: 17px;
-    font-weight: 500;
-    color: var(--foreground);
-    margin-bottom: 8px;
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--foreground);
+  margin-bottom: 8px;
 }
 
 .card-explicativo p {
-    font-size: 13px;
-    line-height: 1.6;
-    color: var(--brand-soft);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--brand-soft);
 }
 
 .card-mensagem {
-    background-color: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 18px;
-    margin-bottom: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .card-texto {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--brand-soft);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--brand-soft);
 }
 
 .card-texto svg {
-    width: 15px;
-    height: 15px;
-    flex-shrink: 0;
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
 }
 
 textarea {
-    width: 100%;
-    min-height: 90px;
-    resize: none;
-    background-color: var(--accent);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 14px;
-    font-size: 14px;
-    color: var(--foreground);
-    font-family: inherit;
-    outline: none;
+  width: 100%;
+  min-height: 90px;
+  resize: none;
+  background-color: var(--accent);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 14px;
+  color: var(--foreground);
+  font-family: inherit;
+  outline: none;
 }
 
 textarea::placeholder {
-    color: var(--muted-fg);
+  color: var(--muted-fg);
 }
 
 textarea:focus {
-    border-color: var(--brand);
+  border-color: var(--brand);
 }
 
 /* Emergência */
 
 .emergencia {
-    background-color: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 18px;
-    margin-bottom: 16px;
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 16px;
 }
 
 .emergencia-titulo {
-    font-size: 12px;
-    color: var(--muted-fg);
-    margin-bottom: 12px;
+  font-size: 12px;
+  color: var(--muted-fg);
+  margin-bottom: 12px;
 }
 
 .emergencia-botoes {
-    display: flex;
-    gap: 10px;
+  display: flex;
+  gap: 10px;
 }
 
-.btn-cvv, .btn-samu {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: opacity 0.15s;
+.btn-cvv,
+.btn-samu {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
 }
 
 .btn-cvv {
-    background-color: #22c55e22;
-    border: 1px solid #22c55e55;
-    color: #4ade80;
+  background-color: #22c55e22;
+  border: 1px solid #22c55e55;
+  color: #4ade80;
 }
 
 .btn-samu {
-    background-color: #ef444422;
-    border: 1px solid #ef444455;
-    color: #f87171;
+  background-color: #ef444422;
+  border: 1px solid #ef444455;
+  color: #f87171;
 }
 
-.btn-cvv:hover, .btn-samu:hover {
-    opacity: 0.8;
+.btn-cvv:hover,
+.btn-samu:hover {
+  opacity: 0.8;
 }
 
 /* Coluna direita */
 
 .secao-titulo {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--brand-muted);
-    margin-bottom: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--brand-muted);
+  margin-bottom: 12px;
 }
 
 .lista-contatos {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 12px;
 }
 
 .contato-card {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    background-color: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
 }
 
 .contato-avatar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--brand-muted), var(--brand));
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--brand-soft);
-    flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--brand-muted), var(--brand));
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--brand-soft);
+  flex-shrink: 0;
 }
 
 .contato-info {
-    flex: 1;
+  flex: 1;
 }
 
 .contato-nome {
-    font-size: 14px;
-    color: var(--foreground);
-    margin-bottom: 2px;
+  font-size: 14px;
+  color: var(--foreground);
+  margin-bottom: 2px;
 }
 
 .contato-relacao {
-    font-size: 12px;
-    color: var(--muted-fg);
+  font-size: 12px;
+  color: var(--muted-fg);
 }
 
 .contato-arroba {
-    color: var(--brand-soft);
-    font-weight: 500;
+  color: var(--brand-soft);
+  font-weight: 500;
 }
 
 .contato-ultima {
-    font-size: 11px;
-    color: var(--brand-muted);
-    margin-top: 2px;
+  font-size: 11px;
+  color: var(--brand-muted);
+  margin-top: 2px;
 }
 
 .contato-direita {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
 }
 
 .status-badge {
-    font-size: 11px;
-    font-weight: 500;
-    padding: 2px 10px;
-    border-radius: 9999px;
-    border: 1px solid;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 10px;
+  border-radius: 9999px;
+  border: 1px solid;
 }
 
 .status-disponivel {
-    background-color: #22c55e22;
-    border-color: #22c55e55;
-    color: #4ade80;
+  background-color: #22c55e22;
+  border-color: #22c55e55;
+  color: #4ade80;
 }
 
 .status-ocupado {
-    background-color: #eab30822;
-    border-color: #eab30855;
-    color: #fbbf24;
+  background-color: #eab30822;
+  border-color: #eab30855;
+  color: #fbbf24;
 }
 
 .status-nao-perturbe {
-    background-color: #ef444422;
-    border-color: #ef444455;
-    color: #f87171;
+  background-color: #ef444422;
+  border-color: #ef444455;
+  color: #f87171;
 }
 
 .contato-acoes {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .btn-editar-contato {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--accent);
-    border: 1px solid var(--border);
-    color: var(--brand-soft);
-    border-radius: 6px;
-    padding: 6px;
-    cursor: pointer;
-    transition: background-color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--accent);
+  border: 1px solid var(--border);
+  color: var(--brand-soft);
+  border-radius: 6px;
+  padding: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s;
 }
 
 .btn-editar-contato:hover {
-    background-color: var(--surface-2);
+  background-color: var(--surface-2);
 }
 
 .btn-avisar {
-    background-color: var(--brand);
-    color: var(--brand-foreground);
-    border: none;
-    border-radius: 6px;
-    padding: 6px 14px;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: opacity 0.15s;
+  background-color: var(--brand);
+  color: var(--brand-foreground);
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s;
 }
 
 .btn-avisar:hover {
-    opacity: 0.9;
+  opacity: 0.9;
 }
 
 .btn-adicionar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    background-color: var(--accent);
-    border: 1px solid var(--border);
-    color: var(--brand-soft);
-    border-radius: 8px;
-    padding: 11px 16px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background-color: var(--accent);
+  border: 1px solid var(--border);
+  color: var(--brand-soft);
+  border-radius: 8px;
+  padding: 11px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.15s;
 }
 
 .btn-adicionar:hover {
-    background-color: var(--surface-2);
+  background-color: var(--surface-2);
 }
 
 .sem-contatos {
-    font-size: 13px;
-    color: var(--muted-fg);
-    padding: 8px 0 12px;
+  font-size: 13px;
+  color: var(--muted-fg);
+  padding: 8px 0 12px;
 }
 
 .aviso-mensagem {
-    font-size: 12px;
-    color: #fbbf24;
-    background-color: #eab30822;
-    border: 1px solid #eab30855;
-    border-radius: 8px;
-    padding: 8px 12px;
-    margin-bottom: 10px;
+  font-size: 12px;
+  color: #fbbf24;
+  background-color: #eab30822;
+  border: 1px solid #eab30855;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 10px;
 }
 
 .form-contato {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    background-color: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
 }
 
 .form-contato input {
-    width: 100%;
-    background-color: var(--background);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 9px 12px;
-    font-size: 13px;
-    color: var(--foreground);
-    font-family: inherit;
-    outline: none;
-    transition: border-color 0.15s;
+  width: 100%;
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 13px;
+  color: var(--foreground);
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
 }
 
 .form-contato input::placeholder {
-    color: var(--muted-fg);
+  color: var(--muted-fg);
 }
 
 .form-contato input:focus {
-    border-color: var(--brand);
+  border-color: var(--brand);
 }
 
 .form-contato-botoes {
-    display: flex;
-    gap: 8px;
-    margin-top: 4px;
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
 }
 
 .form-contato-titulo {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--brand-soft);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--brand-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .form-contato-botoes .btn-avisar {
-    flex: 1;
-    text-align: center;
+  flex: 1;
+  text-align: center;
 }
 
 .btn-enviar-mensagem {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    background-color: var(--brand);
-    color: var(--brand-foreground);
-    border: none;
-    border-radius: 8px;
-    padding: 10px 16px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: opacity 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background-color: var(--brand);
+  color: var(--brand-foreground);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s;
 }
 
 .btn-enviar-mensagem:hover {
-    opacity: 0.9;
+  opacity: 0.9;
 }
 
 .btn-enviar-mensagem:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .btn-cancelar {
-    flex: 1;
-    background-color: transparent;
-    border: 1px solid var(--border);
-    color: var(--muted-fg);
-    border-radius: 6px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: background-color 0.15s;
+  flex: 1;
+  background-color: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted-fg);
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.15s;
 }
 
 .btn-cancelar:hover {
-    background-color: var(--surface-2);
+  background-color: var(--surface-2);
 }
 
 .btn-excluir-contato {
-    background-color: #ef444422;
-    border: 1px solid #ef444455;
-    color: #f87171;
-    border-radius: 6px;
-    padding: 9px 14px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: opacity 0.15s;
+  background-color: #ef444422;
+  border: 1px solid #ef444455;
+  color: #f87171;
+  border-radius: 6px;
+  padding: 9px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s;
 }
 
 .btn-excluir-contato:hover {
-    opacity: 0.8;
+  opacity: 0.8;
 }
 
 .btn-excluir-contato:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Contatos Mindly */
 
 .card-mindly {
-    background-color: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px;
-    margin-bottom: 12px;
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 12px;
 }
 
 .busca-mindly {
-    display: flex;
-    gap: 8px;
+  display: flex;
+  gap: 8px;
 }
 
 .busca-mindly input {
-    flex: 1;
-    background-color: var(--background);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 9px 12px;
-    font-size: 13px;
-    color: var(--foreground);
-    font-family: inherit;
-    outline: none;
+  flex: 1;
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 13px;
+  color: var(--foreground);
+  font-family: inherit;
+  outline: none;
 }
 
 .busca-mindly input:focus {
-    border-color: var(--brand);
+  border-color: var(--brand);
 }
 
 .busca-mindly button {
-    background-color: var(--brand);
-    color: var(--brand-foreground);
-    border: none;
-    border-radius: 8px;
-    padding: 9px 16px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    white-space: nowrap;
+  background-color: var(--brand);
+  color: var(--brand-foreground);
+  border: none;
+  border-radius: 8px;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
 .busca-mindly button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .link-convite-linha {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 10px;
-    font-size: 11px;
-    color: var(--muted-fg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 11px;
+  color: var(--muted-fg);
 }
 
 .btn-copiar-link {
-    background: none;
-    border: none;
-    color: var(--brand-soft);
-    font-size: 11px;
-    font-weight: 500;
-    cursor: pointer;
-    text-decoration: underline;
+  background: none;
+  border: none;
+  color: var(--brand-soft);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .btn-aceitar-mindly {
-    background-color: var(--brand);
-    color: var(--brand-foreground);
-    border: none;
-    border-radius: 6px;
-    padding: 6px 12px;
-    font-size: 12px;
-    cursor: pointer;
+  background-color: var(--brand);
+  color: var(--brand-foreground);
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
 }
 
 .btn-recusar-mindly {
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--muted-fg);
-    border-radius: 6px;
-    padding: 6px 10px;
-    font-size: 12px;
-    cursor: pointer;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted-fg);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
+  cursor: pointer;
 }
 
 /* Mobile */
 
 @media (max-width: 720px) {
-    .pagina-oito {
-        grid-template-columns: 1fr;
-    }
+  .pagina-oito {
+    grid-template-columns: 1fr;
+  }
 }
 
 .erro-contato {
-    font-size: 12px;
-    color: #f87171;
-    background-color: #7f1d1d22;
-    border: 1px solid #7f1d1d55;
-    border-radius: 6px;
-    padding: 6px 10px;
+  font-size: 12px;
+  color: #f87171;
+  background-color: #7f1d1d22;
+  border: 1px solid #7f1d1d55;
+  border-radius: 6px;
+  padding: 6px 10px;
 }

@@ -29,7 +29,11 @@ export default async function handler(req, res) {
 
   try {
     const formData = new FormData();
-    formData.append('file', new Blob([new Uint8Array(audioBuffer)], { type: 'audio/webm' }), 'gravacao.webm');
+    formData.append(
+      'file',
+      new Blob([new Uint8Array(audioBuffer)], { type: 'audio/webm' }),
+      'gravacao.webm',
+    );
     formData.append('model', 'whisper-large-v3-turbo');
     formData.append('language', 'pt');
 

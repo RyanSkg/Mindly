@@ -22,14 +22,17 @@ export class PerfisService {
   async carregar(force = false): Promise<Perfil | null> {
     if (this.carregado && !force) return this.meuPerfil();
 
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
     const user = session?.user;
     if (!user) return null;
 
     let { data } = await supabase.from('perfis').select('*').eq('user_id', user.id).maybeSingle();
 
     if (!data) {
-      const tipo: TipoConta = user.user_metadata?.['tipo_conta'] === 'psicologo' ? 'psicologo' : 'usuario';
+      const tipo: TipoConta =
+        user.user_metadata?.['tipo_conta'] === 'psicologo' ? 'psicologo' : 'usuario';
       const nomeBase = user.user_metadata?.['display_name'] ?? user.email ?? 'usuario';
       data = await this.criarPerfil(user.id, nomeBase, tipo, {
         crp: user.user_metadata?.['crp'] ?? null,
@@ -52,7 +55,10 @@ export class PerfisService {
     const usernameBase = this.normalizarUsername(baseNome);
 
     for (let tentativa = 0; tentativa < 5; tentativa++) {
-      const username = tentativa === 0 ? usernameBase : `${usernameBase}${Math.floor(1000 + Math.random() * 9000)}`;
+      const username =
+        tentativa === 0
+          ? usernameBase
+          : `${usernameBase}${Math.floor(1000 + Math.random() * 9000)}`;
 
       const { data, error } = await supabase
         .from('perfis')
@@ -103,7 +109,10 @@ export class PerfisService {
       .single();
 
     if (error) {
-      const erro = error.code === '23505' ? 'Esse nome de usuário já está em uso.' : 'Não foi possível salvar.';
+      const erro =
+        error.code === '23505'
+          ? 'Esse nome de usuário já está em uso.'
+          : 'Não foi possível salvar.';
       return { ok: false, erro };
     }
 
@@ -112,11 +121,13 @@ export class PerfisService {
   }
 
   private normalizarUsername(texto: string): string {
-    return texto
-      .normalize('NFD')
-      .replace(/[̀-ͯ]/g, '')
-      .toLowerCase()
-      .replace(/[^a-z0-9._]/g, '')
-      .slice(0, 20) || 'usuario';
+    return (
+      texto
+        .normalize('NFD')
+        .replace(/[̀-ͯ]/g, '')
+        .toLowerCase()
+        .replace(/[^a-z0-9._]/g, '')
+        .slice(0, 20) || 'usuario'
+    );
   }
 }

@@ -1,561 +1,584 @@
 .boas-vindas {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
 }
 
 .boa-noite {
-    font-size: 14px;
-    color: var(--brand-muted);
+  font-size: 14px;
+  color: var(--brand-muted);
 }
 
 .nome-usuario {
-    font-size: 24px;
-    font-weight: 600;
-    color: var(--foreground);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--foreground);
 }
 
 .cards {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 20px;
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
 }
 
 .card {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    background-color: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 18px;
-    gap: 14px;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  gap: 14px;
 }
 
 .card-texto {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--brand-soft);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--brand-soft);
 }
 
 .card-texto svg {
-    width: 16px;
-    height: 16px;
-    flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
 }
 
 .card-button {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .card-button button {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    border: 1px solid var(--border);
-    background-color: var(--accent);
-    color: var(--brand-soft);
-    border-radius: 9999px;
-    padding: 9px 18px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid var(--border);
+  background-color: var(--accent);
+  color: var(--brand-soft);
+  border-radius: 9999px;
+  padding: 9px 18px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.15s;
 }
 
 .card-button button:hover {
-    background-color: var(--surface-2) !important;
+  background-color: var(--surface-2) !important;
 }
 
 .card-button button.ativo {
-    border-color: var(--brand);
-    background-color: var(--brand);
-    color: var(--foreground);
+  border-color: var(--brand);
+  background-color: var(--brand);
+  color: var(--foreground);
 }
 
 textarea {
-    width: 100%;
-    min-height: 90px;
-    resize: none;
-    background-color: var(--accent);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 14px;
-    font-size: 14px;
-    color: var(--foreground);
-    font-family: inherit;
-    outline: none;
+  width: 100%;
+  min-height: 90px;
+  resize: none;
+  background-color: var(--accent);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 14px;
+  color: var(--foreground);
+  font-family: inherit;
+  outline: none;
 }
 
 textarea:focus {
-    border-color: var(--brand);
+  border-color: var(--brand);
 }
 
 .card-acoes {
-    display: flex;
-    gap: 8px;
+  display: flex;
+  gap: 8px;
 }
 
 .card-acoes button {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background-color: var(--brand);
-    color: var(--foreground);
-    border: none;
-    border-radius: 8px;
-    padding: 9px 18px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: opacity 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--brand);
+  color: var(--foreground);
+  border: none;
+  border-radius: 8px;
+  padding: 9px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s;
 }
 
 .card-acoes button:hover {
-    opacity: 0.9;
+  opacity: 0.9;
 }
 
 .card-acoes button:last-child {
-    background-color: var(--accent);
-    border: 1px solid var(--border);
-    color: var(--brand-soft);
+  background-color: var(--accent);
+  border: 1px solid var(--border);
+  color: var(--brand-soft);
 }
 
 .card-acoes button:last-child:hover {
-    background-color: var(--surface-2);
-    opacity: 1;
+  background-color: var(--surface-2);
+  opacity: 1;
 }
 
 .card-acoes button.gravando {
-    background-color: #7f1d1d55 !important;
-    border-color: #7f1d1d !important;
-    color: #fca5a5 !important;
-    animation: pulsar 1.2s ease-in-out infinite;
+  background-color: #7f1d1d55 !important;
+  border-color: #7f1d1d !important;
+  color: #fca5a5 !important;
+  animation: pulsar 1.2s ease-in-out infinite;
 }
 
 @keyframes pulsar {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.6; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
 }
 
 /* Seções abaixo dos cards */
 
 .registros-analisados {
-    background-color: var(--accent);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 18px;
-    margin-bottom: 20px;
+  background-color: var(--accent);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 20px;
 }
 
 .registros-analisados p {
-    font-size: 14px;
-    color: var(--brand-soft);
-    line-height: 1.6;
-    margin-bottom: 12px;
+  font-size: 14px;
+  color: var(--brand-soft);
+  line-height: 1.6;
+  margin-bottom: 12px;
 }
 
 .registros-analisados p.erro-analise {
-    color: #f87171;
+  color: #f87171;
 }
 
 .registros-analisados p.sugestao-ia {
-    background-color: var(--accent);
-    border: 1px solid var(--brand-muted);
-    border-radius: 8px;
-    padding: 10px 12px;
-    color: var(--foreground);
-    font-size: 13px;
+  background-color: var(--accent);
+  border: 1px solid var(--brand-muted);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: var(--foreground);
+  font-size: 13px;
 }
 
 .registros-analisados p.sugestao-ia strong {
-    color: var(--brand-soft);
+  color: var(--brand-soft);
 }
 
 /* Conteúdos sugeridos (ler/assistir/ouvir) */
 
 .conteudos-ia {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
 }
 
 .conteudos-ia-titulo {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--brand-muted);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--brand-muted);
 }
 
 .conteudo-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    font-size: 13px;
-    color: var(--foreground);
-    line-height: 1.5;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--foreground);
+  line-height: 1.5;
 }
 
 .conteudo-icone {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 22px;
-    height: 22px;
-    flex-shrink: 0;
-    border-radius: 50%;
-    background-color: var(--accent);
-    color: var(--brand-soft);
-    margin-top: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background-color: var(--accent);
+  color: var(--brand-soft);
+  margin-top: 1px;
 }
 
 .conteudo-texto strong {
-    color: var(--brand-soft);
+  color: var(--brand-soft);
 }
 
 /* Responder / conversa com a IA */
 
 .btn-responder {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background-color: var(--accent);
-    border: 1px solid var(--border);
-    color: var(--brand-soft);
-    border-radius: 8px;
-    padding: 8px 14px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: background-color 0.15s;
-    margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--accent);
+  border: 1px solid var(--border);
+  color: var(--brand-soft);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  margin-top: 4px;
 }
 
 .btn-responder:hover {
-    background-color: var(--surface-2);
+  background-color: var(--surface-2);
 }
 
 .conversa-ia {
-    margin-top: 8px;
-    background-color: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  margin-top: 8px;
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .conversa-mensagens {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    max-height: 260px;
-    overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 260px;
+  overflow-y: auto;
 }
 
 .msg {
-    max-width: 80%;
-    padding: 8px 12px;
-    border-radius: 12px;
-    font-size: 13px;
-    line-height: 1.5;
+  max-width: 80%;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.5;
 }
 
 .msg-ia {
-    align-self: flex-start;
-    background-color: var(--accent);
-    color: var(--foreground);
-    border-bottom-left-radius: 4px;
+  align-self: flex-start;
+  background-color: var(--accent);
+  color: var(--foreground);
+  border-bottom-left-radius: 4px;
 }
 
 .msg-usuario {
-    align-self: flex-end;
-    background-color: var(--brand);
-    color: var(--brand-foreground);
-    border-bottom-right-radius: 4px;
+  align-self: flex-end;
+  background-color: var(--brand);
+  color: var(--brand-foreground);
+  border-bottom-right-radius: 4px;
 }
 
 .msg-digitando {
-    opacity: 0.6;
-    font-style: italic;
+  opacity: 0.6;
+  font-style: italic;
 }
 
 .conversa-input {
-    display: flex;
-    gap: 8px;
+  display: flex;
+  gap: 8px;
 }
 
 .conversa-input input {
-    flex: 1;
-    min-width: 0;
-    background-color: var(--background);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 9px 12px;
-    font-size: 13px;
-    color: var(--foreground);
-    font-family: inherit;
-    outline: none;
-    transition: border-color 0.15s;
+  flex: 1;
+  min-width: 0;
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 13px;
+  color: var(--foreground);
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
 }
 
 .conversa-input input:focus {
-    border-color: var(--brand);
+  border-color: var(--brand);
 }
 
 .conversa-input button {
-    background-color: var(--brand);
-    color: var(--brand-foreground);
-    border: none;
-    border-radius: 8px;
-    padding: 9px 16px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: opacity 0.15s;
-    flex-shrink: 0;
+  background-color: var(--brand);
+  color: var(--brand-foreground);
+  border: none;
+  border-radius: 8px;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
 }
 
 .conversa-input button:hover {
-    opacity: 0.9;
+  opacity: 0.9;
 }
 
 .conversa-input button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .btn-fechar-conversa {
-    background: none;
-    border: none;
-    color: var(--muted-fg);
-    font-size: 12px;
-    cursor: pointer;
-    align-self: flex-start;
-    padding: 0;
+  background: none;
+  border: none;
+  color: var(--muted-fg);
+  font-size: 12px;
+  cursor: pointer;
+  align-self: flex-start;
+  padding: 0;
 }
 
 .btn-fechar-conversa:hover {
-    color: var(--brand-soft);
-    text-decoration: underline;
+  color: var(--brand-soft);
+  text-decoration: underline;
 }
 
 .registros-analisados h3 {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--brand-soft);
-    margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--brand-soft);
+  margin-bottom: 8px;
 }
 
 .registros-cabecalho {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 
 .registros-recentes h3 {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--brand-muted);
-    margin-bottom: 0;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--brand-muted);
+  margin-bottom: 0;
 }
 
 .btn-selecionar {
-    background-color: var(--accent);
-    border: 1px solid var(--border);
-    color: var(--brand-soft);
-    border-radius: 6px;
-    padding: 5px 12px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: background-color 0.15s;
+  background-color: var(--accent);
+  border: 1px solid var(--border);
+  color: var(--brand-soft);
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.15s;
 }
 
 .btn-selecionar:hover {
-    background-color: var(--surface-2);
+  background-color: var(--surface-2);
 }
 
 .acoes-selecao {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .btn-selecionar-todos,
 .btn-cancelar-selecao {
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--muted-fg);
-    border-radius: 6px;
-    padding: 5px 12px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: background-color 0.15s;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted-fg);
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.15s;
 }
 
 .btn-selecionar-todos:hover,
 .btn-cancelar-selecao:hover {
-    background-color: var(--surface-2);
+  background-color: var(--surface-2);
 }
 
 .btn-excluir-selecionados {
-    background-color: #7f1d1d;
-    border: 1px solid #7f1d1d;
-    color: #fca5a5;
-    border-radius: 6px;
-    padding: 5px 12px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: opacity 0.15s;
+  background-color: #7f1d1d;
+  border: 1px solid #7f1d1d;
+  color: #fca5a5;
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: opacity 0.15s;
 }
 
 .btn-excluir-selecionados:hover {
-    opacity: 0.85;
+  opacity: 0.85;
 }
 
 .btn-excluir-selecionados:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .registros-recentes li.selecionavel {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .checkbox-registro {
-    width: 16px;
-    height: 16px;
-    flex-shrink: 0;
-    accent-color: var(--brand);
-    cursor: pointer;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  accent-color: var(--brand);
+  cursor: pointer;
 }
 
 .registros-recentes ul {
-    list-style: none;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
 
 .registros-recentes li {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background-color: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 14px 16px;
-    font-size: 14px;
-    color: var(--foreground);
-    min-width: 0;
-    max-width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-size: 14px;
+  color: var(--foreground);
+  min-width: 0;
+  max-width: 100%;
 }
 
 .registros-recentes li strong {
-    color: var(--brand-soft);
+  color: var(--brand-soft);
 }
 
 .registros-recentes li .ponto {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    margin-left: auto;
-    flex-shrink: 0;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-left: auto;
+  flex-shrink: 0;
 }
 
 .registros-recentes li .emoji {
-    font-size: 22px;
+  font-size: 22px;
 }
 
 .registros-recentes li .data {
-    font-size: 12px;
-    color: var(--muted-fg);
+  font-size: 12px;
+  color: var(--muted-fg);
 }
 
 .registro-texto {
-    flex: 1;
-    min-width: 0;
+  flex: 1;
+  min-width: 0;
 }
 
 .registro-texto > div:first-child {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .btn-excluir-registro {
-    background: none;
-    border: none;
-    color: var(--muted-fg);
-    cursor: pointer;
-    padding: 4px;
-    border-radius: 6px;
-    flex-shrink: 0;
-    display: flex;
-    transition: color 0.15s, background-color 0.15s;
+  background: none;
+  border: none;
+  color: var(--muted-fg);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  display: flex;
+  transition:
+    color 0.15s,
+    background-color 0.15s;
 }
 
 .btn-excluir-registro:hover {
-    color: #f87171;
-    background-color: #7f1d1d22;
+  color: #f87171;
+  background-color: #7f1d1d22;
 }
 
 .tag {
-    border-radius: 9999px;
-    border: 1px solid;
-    padding: 3px 12px;
-    font-size: 12px;
+  border-radius: 9999px;
+  border: 1px solid;
+  padding: 3px 12px;
+  font-size: 12px;
 }
 
 .tags-emocoes {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
-.tag-roxo { border-color: #594C7D; background: #231640; color: var(--brand-soft); }
-.tag-verde { border-color: #065f46; background: #022c22; color: #6ee7b7; }
-.tag-azul  { border-color: #1e40af; background: #0f1f5c; color: #93c5fd; }
-.sem-registros { font-size: 14px; color: var(--muted-fg); padding: 12px 0; }
+.tag-roxo {
+  border-color: #594c7d;
+  background: #231640;
+  color: var(--brand-soft);
+}
+.tag-verde {
+  border-color: #065f46;
+  background: #022c22;
+  color: #6ee7b7;
+}
+.tag-azul {
+  border-color: #1e40af;
+  background: #0f1f5c;
+  color: #93c5fd;
+}
+.sem-registros {
+  font-size: 14px;
+  color: var(--muted-fg);
+  padding: 12px 0;
+}
 
 /* Mobile */
 
 @media (max-width: 720px) {
-    .cards {
-        flex-direction: column;
-    }
+  .cards {
+    flex-direction: column;
+  }
 
-    .registros-recentes ul {
-        grid-template-columns: 1fr;
-    }
+  .registros-recentes ul {
+    grid-template-columns: 1fr;
+  }
 
-    .nome-usuario {
-        font-size: 20px;
-    }
+  .nome-usuario {
+    font-size: 20px;
+  }
 
-    .registros-cabecalho {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+  .registros-cabecalho {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-    .acoes-selecao {
-        width: 100%;
-        flex-wrap: wrap;
-    }
+  .acoes-selecao {
+    width: 100%;
+    flex-wrap: wrap;
+  }
 }

@@ -22,7 +22,7 @@ export default async function handler(req, res) {
 
   const lista = registros
     .slice(0, 120)
-    .map(r => `${r.dia}: ${r.humor}`)
+    .map((r) => `${r.dia}: ${r.humor}`)
     .join('\n');
 
   try {

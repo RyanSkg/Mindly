@@ -1,33 +1,67 @@
 <div class="pagina-oito">
   <div class="coluna-esquerda">
-
     <!-- Card explicativo -->
     <div class="card-explicativo">
-      <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24"
-        fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-        stroke-linejoin="round" class="icone-coracao">
-        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
-        <path d="M3.22 12H9.5l.5-1 2 4 .5-4 1.5 2h5.27"/>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="36"
+        height="36"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="icone-coracao"
+      >
+        <path
+          d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+        />
+        <path d="M3.22 12H9.5l.5-1 2 4 .5-4 1.5 2h5.27" />
       </svg>
       <h3>Precisa ser ouvido?</h3>
-      <p>Às vezes tudo que precisamos é de alguém que nos escute sem julgamentos. Avise um contato de confiança agora.</p>
+      <p>
+        Às vezes tudo que precisamos é de alguém que nos escute sem julgamentos. Avise um contato de
+        confiança agora.
+      </p>
     </div>
 
     <!-- Campo de mensagem -->
     <div class="card-mensagem">
       <div class="card-texto">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
         </svg>
         <span>COMO VOCÊ ESTÁ SE SENTINDO?</span>
       </div>
-      <textarea [(ngModel)]="mensagem" placeholder="Escreva o que está sentindo antes de avisar seu contato..."></textarea>
+      <textarea
+        [(ngModel)]="mensagem"
+        placeholder="Escreva o que está sentindo antes de avisar seu contato..."
+      ></textarea>
       <button class="btn-enviar-mensagem" (click)="enviarMensagem()" [disabled]="enviandoMensagem">
-        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
-          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="m22 2-7 20-4-9-9-4Z" />
+          <path d="M22 2 11 13" />
         </svg>
         Enviar
       </button>
@@ -38,18 +72,38 @@
       <p class="emergencia-titulo">Precisa de ajuda profissional agora?</p>
       <div class="emergencia-botoes">
         <button class="btn-cvv" (click)="ligarCVV()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round">
-            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.64 3.5 2 2 0 0 1 3.62 1.36h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6.09 6.09l1.38-1.38a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.64 3.5 2 2 0 0 1 3.62 1.36h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6.09 6.09l1.38-1.38a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
+            />
           </svg>
           CVV — 188
         </button>
         <button class="btn-samu" (click)="ligarSAMU()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round">
-            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.64 3.5 2 2 0 0 1 3.62 1.36h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6.09 6.09l1.38-1.38a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.64 3.5 2 2 0 0 1 3.62 1.36h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6.09 6.09l1.38-1.38a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
+            />
           </svg>
           SAMU — 192
         </button>
@@ -58,13 +112,16 @@
   </div>
 
   <div class="coluna-direita">
-
     <!-- Contatos Mindly -->
     <p class="secao-titulo">CONTATOS MINDLY</p>
     <div class="card-mindly">
       <div class="busca-mindly">
-        <input type="text" [(ngModel)]="buscaUsername" placeholder="@usuario do Mindly"
-          (keyup.enter)="adicionarPorUsername()" />
+        <input
+          type="text"
+          [(ngModel)]="buscaUsername"
+          placeholder="@usuario do Mindly"
+          (keyup.enter)="adicionarPorUsername()"
+        />
         <button (click)="adicionarPorUsername()" [disabled]="buscandoMindly">Adicionar</button>
       </div>
       @if (erroBuscaMindly) {
@@ -72,7 +129,9 @@
       }
       <div class="link-convite-linha">
         <span>Ou compartilhe seu link:</span>
-        <button class="btn-copiar-link" (click)="copiarLinkConvite()">{{ linkCopiado ? 'Copiado!' : 'Copiar link' }}</button>
+        <button class="btn-copiar-link" (click)="copiarLinkConvite()">
+          {{ linkCopiado ? 'Copiado!' : 'Copiar link' }}
+        </button>
       </div>
     </div>
 
@@ -83,12 +142,18 @@
             <div class="contato-avatar">{{ p.outroPerfil.username.slice(0, 2).toUpperCase() }}</div>
             <div class="contato-info">
               <div class="contato-nome">{{ '@' + p.outroPerfil.username }}</div>
-              <div class="contato-relacao">{{ p.souSolicitante ? 'Pedido enviado, aguardando' : 'Quer se conectar com você' }}</div>
+              <div class="contato-relacao">
+                {{ p.souSolicitante ? 'Pedido enviado, aguardando' : 'Quer se conectar com você' }}
+              </div>
             </div>
             @if (!p.souSolicitante) {
               <div class="contato-acoes">
-                <button class="btn-aceitar-mindly" (click)="responderPedidoMindly(p.id, true)">Aceitar</button>
-                <button class="btn-recusar-mindly" (click)="responderPedidoMindly(p.id, false)">Recusar</button>
+                <button class="btn-aceitar-mindly" (click)="responderPedidoMindly(p.id, true)">
+                  Aceitar
+                </button>
+                <button class="btn-recusar-mindly" (click)="responderPedidoMindly(p.id, false)">
+                  Recusar
+                </button>
               </div>
             }
           </div>
@@ -104,14 +169,22 @@
             <div class="contato-info">
               <div class="contato-nome">{{ '@' + c.outroPerfil.username }}</div>
               @if (c.humor) {
-                <div class="contato-relacao">{{ emojiDoHumor(c.humor) }} {{ labelDoHumor(c.humor) }} recentemente</div>
+                <div class="contato-relacao">
+                  {{ emojiDoHumor(c.humor) }} {{ labelDoHumor(c.humor) }} recentemente
+                </div>
               } @else {
                 <div class="contato-relacao">Humor recente não compartilhado</div>
               }
             </div>
             <div class="contato-acoes">
               <button class="btn-avisar" (click)="avisarContatoMindly(c)">Avisar</button>
-              <button class="btn-recusar-mindly" (click)="removerContatoMindly(c.id)" title="Remover">✕</button>
+              <button
+                class="btn-recusar-mindly"
+                (click)="removerContatoMindly(c.id)"
+                title="Remover"
+              >
+                ✕
+              </button>
             </div>
           </div>
         }
@@ -146,16 +219,37 @@
           </div>
           <div class="contato-direita">
             <span class="status-badge" [class]="'status-' + contato.status">
-              {{ contato.status === 'disponivel' ? 'Disponível' : contato.status === 'ocupado' ? 'Ocupado' : 'Não perturbe' }}
+              {{
+                contato.status === 'disponivel'
+                  ? 'Disponível'
+                  : contato.status === 'ocupado'
+                    ? 'Ocupado'
+                    : 'Não perturbe'
+              }}
             </span>
             <div class="contato-acoes">
-              <button class="btn-editar-contato" (click)="editarContato(contato)" title="Editar contato">
-                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
-                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+              <button
+                class="btn-editar-contato"
+                (click)="editarContato(contato)"
+                title="Editar contato"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="13"
+                  height="13"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
                 </svg>
               </button>
-              <button class="btn-avisar" (click)="avisar(contato)" title="Avisar por WhatsApp">Avisar</button>
+              <button class="btn-avisar" (click)="avisar(contato)" title="Avisar por WhatsApp">
+                Avisar
+              </button>
             </div>
           </div>
         </div>
@@ -164,32 +258,65 @@
 
     @if (!mostrarFormulario) {
       <button class="btn-adicionar" (click)="abrirFormulario()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
-          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round">
-          <path d="M5 12h14"/><path d="M12 5v14"/>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M5 12h14" />
+          <path d="M12 5v14" />
         </svg>
         Adicionar contato
       </button>
     } @else {
       <div class="form-contato">
-        <p class="form-contato-titulo">{{ contatoEditandoId ? 'Editar contato' : 'Novo contato' }}</p>
+        <p class="form-contato-titulo">
+          {{ contatoEditandoId ? 'Editar contato' : 'Novo contato' }}
+        </p>
         <input type="text" name="novoNome" [(ngModel)]="novoNome" placeholder="Nome do contato" />
-        <input type="text" name="novaRelacao" [(ngModel)]="novaRelacao" placeholder="Relação (ex: Amigo, Família)" />
-        <input type="tel" name="novoTelefone" [(ngModel)]="novoTelefone" placeholder="WhatsApp (opcional, ex: 5511999999999)" />
-        <input type="text" name="novoMindlyUsername" [(ngModel)]="novoMindlyUsername" placeholder="@usuario do Mindly (opcional)" />
+        <input
+          type="text"
+          name="novaRelacao"
+          [(ngModel)]="novaRelacao"
+          placeholder="Relação (ex: Amigo, Família)"
+        />
+        <input
+          type="tel"
+          name="novoTelefone"
+          [(ngModel)]="novoTelefone"
+          placeholder="WhatsApp (opcional, ex: 5511999999999)"
+        />
+        <input
+          type="text"
+          name="novoMindlyUsername"
+          [(ngModel)]="novoMindlyUsername"
+          placeholder="@usuario do Mindly (opcional)"
+        />
         @if (erroContato) {
           <p class="erro-contato">{{ erroContato }}</p>
         }
         <div class="form-contato-botoes">
-          <button class="btn-avisar" (click)="salvarContato()" [disabled]="salvandoContato">Salvar</button>
+          <button class="btn-avisar" (click)="salvarContato()" [disabled]="salvandoContato">
+            Salvar
+          </button>
           <button class="btn-cancelar" (click)="cancelarFormulario()">Cancelar</button>
           @if (contatoEditandoId) {
-            <button class="btn-excluir-contato" (click)="excluirContato()" [disabled]="excluindoContato">Excluir</button>
+            <button
+              class="btn-excluir-contato"
+              (click)="excluirContato()"
+              [disabled]="excluindoContato"
+            >
+              Excluir
+            </button>
           }
         </div>
       </div>
     }
-
   </div>
 </div>

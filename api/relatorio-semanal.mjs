@@ -3,16 +3,37 @@ import { createClient } from '@supabase/supabase-js';
 const SUPABASE_URL = 'https://dmrevpsqqavzxcavsjvd.supabase.co';
 
 const LABEL_HUMOR = {
-  bem: 'Bem', ansioso: 'Ansioso', neutro: 'Neutro', triste: 'Triste', motivado: 'Motivado',
-  receioso: 'Receioso', irritado: 'Irritado', inseguro: 'Inseguro', otimista: 'Otimista',
-  pessimista: 'Pessimista', envergonhado: 'Envergonhado', cansado: 'Cansado', confuso: 'Confuso', frustrado: 'Frustrado',
+  bem: 'Bem',
+  ansioso: 'Ansioso',
+  neutro: 'Neutro',
+  triste: 'Triste',
+  motivado: 'Motivado',
+  receioso: 'Receioso',
+  irritado: 'Irritado',
+  inseguro: 'Inseguro',
+  otimista: 'Otimista',
+  pessimista: 'Pessimista',
+  envergonhado: 'Envergonhado',
+  cansado: 'Cansado',
+  confuso: 'Confuso',
+  frustrado: 'Frustrado',
 };
 
 const CORES_TAG = ['roxo', 'azul', 'verde', 'vermelho'];
 const REGEX_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const MESES = [
-  'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-  'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro',
+  'Janeiro',
+  'Fevereiro',
+  'Março',
+  'Abril',
+  'Maio',
+  'Junho',
+  'Julho',
+  'Agosto',
+  'Setembro',
+  'Outubro',
+  'Novembro',
+  'Dezembro',
 ];
 
 /**
@@ -65,7 +86,9 @@ export default async function handler(req, res) {
       .eq('status', 'aceito')
       .or(`solicitante_id.eq.${user_id},destinatario_id.eq.${user_id}`);
 
-    const psicologoIds = (conexoes ?? []).map(c => (c.solicitante_id === user_id ? c.destinatario_id : c.solicitante_id));
+    const psicologoIds = (conexoes ?? []).map((c) =>
+      c.solicitante_id === user_id ? c.destinatario_id : c.solicitante_id,
+    );
     if (psicologoIds.length === 0) continue;
 
     const { data: registros } = await admin
@@ -75,15 +98,18 @@ export default async function handler(req, res) {
       .gte('criado_em', seteDiasAtras.toISOString());
 
     const lista = registros ?? [];
-    const diasUnicos = new Set(lista.map(r => new Date(r.criado_em).toDateString())).size;
+    const diasUnicos = new Set(lista.map((r) => new Date(r.criado_em).toDateString())).size;
     const semanas = Math.max(1, Math.ceil(diasUnicos / 7));
 
     const contagem = new Map();
-    lista.forEach(r => contagem.set(r.humor, (contagem.get(r.humor) ?? 0) + 1));
+    lista.forEach((r) => contagem.set(r.humor, (contagem.get(r.humor) ?? 0) + 1));
     const tags = [...contagem.entries()]
       .sort((a, b) => b[1] - a[1])
       .slice(0, 2)
-      .map(([humor], i) => ({ label: (LABEL_HUMOR[humor] ?? humor).toLowerCase(), cor: CORES_TAG[i % CORES_TAG.length] }));
+      .map(([humor], i) => ({
+        label: (LABEL_HUMOR[humor] ?? humor).toLowerCase(),
+        cor: CORES_TAG[i % CORES_TAG.length],
+      }));
 
     const hoje = new Date();
     const titulo = `Relatório — ${MESES[hoje.getUTCMonth()]} ${hoje.getUTCFullYear()}`;
@@ -109,7 +135,10 @@ export default async function handler(req, res) {
       const emailPsicologo = psicologo?.user?.email;
       if (!emailPsicologo) continue;
 
-      const nomePaciente = paciente?.user?.user_metadata?.display_name || paciente?.user?.email?.split('@')[0] || 'paciente';
+      const nomePaciente =
+        paciente?.user?.user_metadata?.display_name ||
+        paciente?.user?.email?.split('@')[0] ||
+        'paciente';
       const urlApp = process.env.APP_URL || 'https://mindly.vercel.app';
 
       await fetch('https://api.resend.com/emails', {

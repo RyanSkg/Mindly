@@ -1,11 +1,17 @@
 @if (modal.aberto()) {
   <div class="modal-backdrop" (click)="responder(false)">
-    <div class="modal-card" [class.modal-perigo]="modal.estado().perigo" (click)="$event.stopPropagation()">
+    <div
+      class="modal-card"
+      [class.modal-perigo]="modal.estado().perigo"
+      (click)="$event.stopPropagation()"
+    >
       <h3>{{ modal.estado().titulo }}</h3>
       <p>{{ modal.estado().mensagem }}</p>
       <div class="modal-botoes">
         @if (!modal.estado().somenteAviso) {
-          <button class="btn-cancelar" (click)="responder(false)">{{ modal.estado().textoCancelar }}</button>
+          <button class="btn-cancelar" (click)="responder(false)">
+            {{ modal.estado().textoCancelar }}
+          </button>
         }
         <button
           class="btn-confirmar"

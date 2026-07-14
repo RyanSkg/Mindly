@@ -69,7 +69,7 @@ export class OitoMinutos implements OnInit {
     await this.carregarContatos();
     await this.carregarMindly();
     this.carregandoContatos = false;
-    this.topbarActions.acoes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(acao => {
+    this.topbarActions.acoes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((acao) => {
       if (acao.tipo === 'adicionar-contato') this.abrirFormulario();
     });
   }
@@ -82,7 +82,7 @@ export class OitoMinutos implements OnInit {
     const aceitos = await this.conexoes.listar('contato', 'aceito');
 
     this.contatosMindly = await Promise.all(
-      aceitos.map(async c => {
+      aceitos.map(async (c) => {
         const humorInfo = await this.conexoes.buscarHumorRecente(c.outroPerfil.user_id);
         return { ...c, humor: humorInfo?.humor ?? null };
       }),
@@ -94,7 +94,10 @@ export class OitoMinutos implements OnInit {
     this.buscandoMindly = true;
     this.erroBuscaMindly = '';
 
-    const resultado = await this.conexoes.solicitarPorUsername(this.buscaUsername.trim(), 'contato');
+    const resultado = await this.conexoes.solicitarPorUsername(
+      this.buscaUsername.trim(),
+      'contato',
+    );
     if (resultado.ok) {
       this.buscaUsername = '';
       await this.carregarMindly();
@@ -152,11 +155,19 @@ export class OitoMinutos implements OnInit {
       .order('criado_em', { ascending: true });
 
     if (!error && data) {
-      this.contatos = data.map(c => this.mapearContato(c));
+      this.contatos = data.map((c) => this.mapearContato(c));
     }
   }
 
-  private mapearContato(c: { id: string; nome: string; relacao: string; telefone: string | null; mindly_username?: string | null; status: string; criado_em: string }): Contato {
+  private mapearContato(c: {
+    id: string;
+    nome: string;
+    relacao: string;
+    telefone: string | null;
+    mindly_username?: string | null;
+    status: string;
+    criado_em: string;
+  }): Contato {
     return {
       id: c.id,
       nome: c.nome,
@@ -171,9 +182,8 @@ export class OitoMinutos implements OnInit {
 
   private gerarIniciais(nome: string): string {
     const partes = nome.trim().split(/\s+/);
-    const iniciais = partes.length > 1
-      ? partes[0][0] + partes[partes.length - 1][0]
-      : partes[0].slice(0, 2);
+    const iniciais =
+      partes.length > 1 ? partes[0][0] + partes[partes.length - 1][0] : partes[0].slice(0, 2);
     return iniciais.toUpperCase();
   }
 
@@ -244,7 +254,7 @@ export class OitoMinutos implements OnInit {
 
       if (!error && data) {
         const atualizado = this.mapearContato(data);
-        this.contatos = this.contatos.map(c => (c.id === atualizado.id ? atualizado : c));
+        this.contatos = this.contatos.map((c) => (c.id === atualizado.id ? atualizado : c));
         this.cancelarFormulario();
       } else {
         this.erroContato = error?.message || 'Não foi possível salvar. Tente novamente.';
@@ -276,7 +286,10 @@ export class OitoMinutos implements OnInit {
     if (!error && data) {
       this.contatos.push(this.mapearContato(data));
       this.cancelarFormulario();
-      this.notificacoes.criar('Novo contato adicionado', `${data.nome} agora faz parte da sua rede de apoio.`);
+      this.notificacoes.criar(
+        'Novo contato adicionado',
+        `${data.nome} agora faz parte da sua rede de apoio.`,
+      );
     } else {
       this.erroContato = error?.message || 'Não foi possível salvar. Tente novamente.';
     }
@@ -286,7 +299,7 @@ export class OitoMinutos implements OnInit {
   async excluirContato() {
     if (!this.contatoEditandoId || this.excluindoContato) return;
 
-    const contato = this.contatos.find(c => c.id === this.contatoEditandoId);
+    const contato = this.contatos.find((c) => c.id === this.contatoEditandoId);
     const confirmou = await this.modal.confirmar({
       titulo: 'Excluir contato',
       mensagem: `Tem certeza que deseja excluir ${contato?.nome ?? 'este contato'}? Essa ação não pode ser desfeita.`,
@@ -296,13 +309,10 @@ export class OitoMinutos implements OnInit {
     if (!confirmou) return;
 
     this.excluindoContato = true;
-    const { error } = await supabase
-      .from('contatos')
-      .delete()
-      .eq('id', this.contatoEditandoId);
+    const { error } = await supabase.from('contatos').delete().eq('id', this.contatoEditandoId);
 
     if (!error) {
-      this.contatos = this.contatos.filter(c => c.id !== this.contatoEditandoId);
+      this.contatos = this.contatos.filter((c) => c.id !== this.contatoEditandoId);
       this.cancelarFormulario();
     } else {
       this.erroContato = error.message || 'Não foi possível excluir. Tente novamente.';
@@ -333,11 +343,13 @@ export class OitoMinutos implements OnInit {
       return;
     }
 
-    const disponivel = this.contatos.find(c => c.status === 'disponivel' && c.telefone)
-      ?? this.contatos.find(c => c.telefone);
+    const disponivel =
+      this.contatos.find((c) => c.status === 'disponivel' && c.telefone) ??
+      this.contatos.find((c) => c.telefone);
 
     if (!disponivel) {
-      this.avisoEnviado = 'Nenhum contato com telefone cadastrado ainda. Adicione um contato de confiança primeiro.';
+      this.avisoEnviado =
+        'Nenhum contato com telefone cadastrado ainda. Adicione um contato de confiança primeiro.';
       return;
     }
 

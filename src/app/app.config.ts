@@ -14,5 +14,5 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
     { provide: LOCALE_ID, useValue: 'pt' },
-  ]
+  ],
 };

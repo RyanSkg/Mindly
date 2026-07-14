@@ -11,44 +11,44 @@ import { ModalService } from '../../shared/modal.service';
 import { obterUsuarioValido } from '../../shared/sessao.util';
 
 interface Humor {
-    id: string;
-    label: string;
-    emoji: string;
+  id: string;
+  label: string;
+  emoji: string;
 }
 
 interface TagEmocao {
-    label: string;
-    cor: string;
+  label: string;
+  cor: string;
 }
 
 interface ConteudoSugerido {
-    tipo: 'ler' | 'assistir' | 'ouvir';
-    sugestao: string;
+  tipo: 'ler' | 'assistir' | 'ouvir';
+  sugestao: string;
 }
 
 interface AnaliseIA {
-    comentario: string;
-    sugestao: string;
-    conteudos: ConteudoSugerido[];
-    tags: TagEmocao[];
+  comentario: string;
+  sugestao: string;
+  conteudos: ConteudoSugerido[];
+  tags: TagEmocao[];
 }
 
 interface RegistroRecente {
-    id: string;
-    humor: string;
-    humores: string[];
-    texto: string;
-    data: Date;
-    comentarioIA: string | null;
-    sugestaoIA: string | null;
-    conteudosIA: ConteudoSugerido[];
-    tagsIA: TagEmocao[];
-    conversaIA: MensagemConversa[];
+  id: string;
+  humor: string;
+  humores: string[];
+  texto: string;
+  data: Date;
+  comentarioIA: string | null;
+  sugestaoIA: string | null;
+  conteudosIA: ConteudoSugerido[];
+  tagsIA: TagEmocao[];
+  conversaIA: MensagemConversa[];
 }
 
 interface MensagemConversa {
-    role: 'user' | 'assistant';
-    content: string;
+  role: 'user' | 'assistant';
+  content: string;
 }
 
 @Component({
@@ -57,7 +57,6 @@ interface MensagemConversa {
   templateUrl: './diario.html',
   styleUrl: './diario.css',
 })
-
 export class Diario implements OnInit {
   listaHumor: Humor[] = [
     { id: 'bem', label: 'Bem', emoji: '😊' },
@@ -119,7 +118,7 @@ export class Diario implements OnInit {
     await this.perfil.carregar();
     await this.carregarRegistros();
     this.carregarPreferenciaAlertasIA();
-    this.topbarActions.acoes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(acao => {
+    this.topbarActions.acoes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((acao) => {
       if (acao.tipo === 'analisar-ia') this.registrarHumoreAnalisar();
       if (acao.tipo === 'filtrar-data' && acao.valor) this.filtrarPorData(acao.valor);
     });
@@ -152,7 +151,9 @@ export class Diario implements OnInit {
 
     let query = supabase
       .from('registros')
-      .select('id, humor, humores, texto, criado_em, comentario_ia, sugestao_ia, conteudos_ia, tags_ia, conversa_ia')
+      .select(
+        'id, humor, humores, texto, criado_em, comentario_ia, sugestao_ia, conteudos_ia, tags_ia, conversa_ia',
+      )
       .order('criado_em', { ascending: false });
 
     if (this.filtroData) {
@@ -167,7 +168,7 @@ export class Diario implements OnInit {
     const { data, error } = await query;
 
     if (!error && data) {
-      this.registrosRecentes = data.map(r => ({
+      this.registrosRecentes = data.map((r) => ({
         id: r.id,
         humor: r.humor,
         humores: r.humores ?? [r.humor],
@@ -236,7 +237,10 @@ export class Diario implements OnInit {
       .eq('user_id', userId);
 
     if (count && count % 5 === 0) {
-      this.notificacoes.criar('Parabéns! 🎉', `Você já tem ${count} registros no seu Diário. Continue assim!`);
+      this.notificacoes.criar(
+        'Parabéns! 🎉',
+        `Você já tem ${count} registros no seu Diário. Continue assim!`,
+      );
     }
   }
 
@@ -300,7 +304,9 @@ export class Diario implements OnInit {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           humor: (registro.humores ?? [registro.humor]).join(', '),
-          emoji: (registro.humores ?? [registro.humor]).map((h: string) => emojiDoHumor(h)).join(' '),
+          emoji: (registro.humores ?? [registro.humor])
+            .map((h: string) => emojiDoHumor(h))
+            .join(' '),
           texto: registro.texto,
         }),
       });
@@ -309,7 +315,12 @@ export class Diario implements OnInit {
         throw new Error('Não foi possível analisar agora.');
       }
 
-      const dados: { comentario: string; sugestao: string; conteudos: ConteudoSugerido[]; tags: string[] } = await resposta.json();
+      const dados: {
+        comentario: string;
+        sugestao: string;
+        conteudos: ConteudoSugerido[];
+        tags: string[];
+      } = await resposta.json();
       const tags: TagEmocao[] = (dados.tags ?? []).map((label, i) => ({
         label,
         cor: this.coresTag[i % this.coresTag.length],
@@ -320,7 +331,12 @@ export class Diario implements OnInit {
       novoRegistro.sugestaoIA = dados.sugestao ?? null;
       novoRegistro.conteudosIA = conteudos;
       novoRegistro.tagsIA = tags;
-      this.ultimaAnalise = { comentario: dados.comentario, sugestao: dados.sugestao ?? '', conteudos, tags };
+      this.ultimaAnalise = {
+        comentario: dados.comentario,
+        sugestao: dados.sugestao ?? '',
+        conteudos,
+        tags,
+      };
       this.ultimaAnaliseRegistroId = registro.id;
       this.mensagensConversa = [];
       this.conversaAberta = false;
@@ -336,7 +352,10 @@ export class Diario implements OnInit {
         .eq('id', registro.id);
 
       if (this.alertasIAHabilitado) {
-        this.notificacoes.criar('Análise da IA pronta', 'A reflexão sobre o seu registro mais recente já está disponível no Diário.');
+        this.notificacoes.criar(
+          'Análise da IA pronta',
+          'A reflexão sobre o seu registro mais recente já está disponível no Diário.',
+        );
       }
     } catch (err) {
       this.erroAnalise = err instanceof Error ? err.message : 'Erro ao analisar';
@@ -361,7 +380,7 @@ export class Diario implements OnInit {
       };
 
       this.mediaRecorder.onstop = async () => {
-        stream.getTracks().forEach(track => track.stop());
+        stream.getTracks().forEach((track) => track.stop());
         this.gravando = false;
         await this.transcreverAudio();
       };
@@ -370,7 +389,8 @@ export class Diario implements OnInit {
       this.gravando = true;
       this.erroAnalise = '';
     } catch {
-      this.erroAnalise = 'Não foi possível acessar o microfone. Verifique as permissões do navegador.';
+      this.erroAnalise =
+        'Não foi possível acessar o microfone. Verifique as permissões do navegador.';
     }
   }
 
@@ -406,7 +426,7 @@ export class Diario implements OnInit {
 
   toggleHumor(id: string) {
     if (this.humoresSelecionados.includes(id)) {
-      this.humoresSelecionados = this.humoresSelecionados.filter(h => h !== id);
+      this.humoresSelecionados = this.humoresSelecionados.filter((h) => h !== id);
     } else {
       this.humoresSelecionados = [...this.humoresSelecionados, id];
     }
@@ -428,7 +448,7 @@ export class Diario implements OnInit {
 
     const { error } = await supabase.from('registros').delete().eq('id', registro.id);
     if (!error) {
-      this.registrosRecentes = this.registrosRecentes.filter(r => r.id !== registro.id);
+      this.registrosRecentes = this.registrosRecentes.filter((r) => r.id !== registro.id);
       this.atualizarAnaliseAposExclusao(new Set([registro.id]));
     }
   }
@@ -450,12 +470,16 @@ export class Diario implements OnInit {
     if (this.selecionados.size === this.registrosRecentes.length) {
       this.selecionados.clear();
     } else {
-      this.registrosRecentes.forEach(r => this.selecionados.add(r.id));
+      this.registrosRecentes.forEach((r) => this.selecionados.add(r.id));
     }
   }
 
   private atualizarAnaliseAposExclusao(idsExcluidos: Set<string>) {
-    if (this.ultimaAnalise && this.ultimaAnaliseRegistroId && idsExcluidos.has(this.ultimaAnaliseRegistroId)) {
+    if (
+      this.ultimaAnalise &&
+      this.ultimaAnaliseRegistroId &&
+      idsExcluidos.has(this.ultimaAnaliseRegistroId)
+    ) {
       const proximo = this.registrosRecentes[0];
       this.ultimaAnalise = proximo?.comentarioIA
         ? {
@@ -489,7 +513,7 @@ export class Diario implements OnInit {
     const { error } = await supabase.from('registros').delete().in('id', ids);
     if (!error) {
       const idsExcluidos = new Set(ids);
-      this.registrosRecentes = this.registrosRecentes.filter(r => !idsExcluidos.has(r.id));
+      this.registrosRecentes = this.registrosRecentes.filter((r) => !idsExcluidos.has(r.id));
       this.atualizarAnaliseAposExclusao(idsExcluidos);
       this.selecionados.clear();
       this.modoSelecao = false;
@@ -552,7 +576,7 @@ export class Diario implements OnInit {
       .update({ conversa_ia: this.mensagensConversa })
       .eq('id', this.ultimaAnaliseRegistroId);
 
-    const registro = this.registrosRecentes.find(r => r.id === this.ultimaAnaliseRegistroId);
+    const registro = this.registrosRecentes.find((r) => r.id === this.ultimaAnaliseRegistroId);
     if (registro) registro.conversaIA = this.mensagensConversa;
   }
 }

@@ -25,7 +25,8 @@ export class Convite implements OnInit {
 
   async ngOnInit() {
     const userId = this.route.snapshot.paramMap.get('userId');
-    this.tipo = this.route.snapshot.queryParamMap.get('tipo') === 'psicologo' ? 'psicologo' : 'contato';
+    this.tipo =
+      this.route.snapshot.queryParamMap.get('tipo') === 'psicologo' ? 'psicologo' : 'contato';
 
     if (ehUuidValido(userId)) {
       this.perfilAlvo = await this.perfis.buscarPorUserId(userId);
@@ -38,7 +39,11 @@ export class Convite implements OnInit {
     this.enviando = true;
     this.erro = '';
 
-    const resultado = await this.conexoes.solicitarPorUserId(this.perfilAlvo.user_id, this.tipo, this.perfilAlvo);
+    const resultado = await this.conexoes.solicitarPorUserId(
+      this.perfilAlvo.user_id,
+      this.tipo,
+      this.perfilAlvo,
+    );
     if (resultado.ok) {
       this.enviado = true;
     } else {

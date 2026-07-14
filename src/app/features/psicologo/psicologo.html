@@ -9,15 +9,21 @@
       <div class="card-busca-psicologo">
         <p class="secao-titulo">ADICIONAR PSICÓLOGO(A)</p>
         <div class="busca-psicologo">
-          <input type="text" [(ngModel)]="buscaUsername" placeholder="@usuario do(a) psicólogo(a)"
-            (keyup.enter)="adicionarPsicologo()" />
+          <input
+            type="text"
+            [(ngModel)]="buscaUsername"
+            placeholder="@usuario do(a) psicólogo(a)"
+            (keyup.enter)="adicionarPsicologo()"
+          />
           <button (click)="adicionarPsicologo()" [disabled]="buscandoPsicologo">Adicionar</button>
         </div>
         @if (erroBuscaPsicologo) {
           <p class="erro-busca">{{ erroBuscaPsicologo }}</p>
         }
         @if (pendentesEnviados.length > 0) {
-          <p class="pendente-envio">Aguardando aprovação de {{ pendentesEnviados.length }} pedido(s).</p>
+          <p class="pendente-envio">
+            Aguardando aprovação de {{ pendentesEnviados.length }} pedido(s).
+          </p>
         }
       </div>
 
@@ -28,8 +34,12 @@
             <div class="linha-pedido-recebido">
               <span>{{ '@' + p.outroPerfil.username }} quer ser seu(sua) psicólogo(a)</span>
               <div class="acoes-pedido">
-                <button class="btn-aceitar-pedido" (click)="responderPedido(p.id, true)">Aceitar</button>
-                <button class="btn-recusar-pedido" (click)="responderPedido(p.id, false)">Recusar</button>
+                <button class="btn-aceitar-pedido" (click)="responderPedido(p.id, true)">
+                  Aceitar
+                </button>
+                <button class="btn-recusar-pedido" (click)="responderPedido(p.id, false)">
+                  Recusar
+                </button>
               </div>
             </div>
           }
@@ -37,7 +47,9 @@
       }
 
       @if (psicologosConectados.length === 0) {
-        <p class="sem-relatorios">Você ainda não tem nenhum(a) psicólogo(a) conectado(a) no Mindly.</p>
+        <p class="sem-relatorios">
+          Você ainda não tem nenhum(a) psicólogo(a) conectado(a) no Mindly.
+        </p>
       }
 
       @for (p of psicologosConectados; track p.id) {
@@ -53,7 +65,9 @@
               <p class="psicologa-mensagem">"{{ ultimasMensagens.get(p.outroPerfil.user_id) }}"</p>
             }
           </div>
-          <button class="btn-remover-psicologo" (click)="removerPsicologo(p.id)" title="Remover">✕</button>
+          <button class="btn-remover-psicologo" (click)="removerPsicologo(p.id)" title="Remover">
+            ✕
+          </button>
         </div>
       }
 
@@ -74,9 +88,19 @@
           </label>
         }
         <button class="btn-primario" (click)="enviarRelatorio()" [disabled]="enviando">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="m22 2-7 20-4-9-9-4Z" />
+            <path d="M22 2 11 13" />
           </svg>
           Enviar novo relatório
         </button>
@@ -105,30 +129,62 @@
             }
             @if (relatorio.conversaAnexada.length > 0) {
               <div class="conversa-anexada-badge">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
                 Conversa com a IA anexada
               </div>
             }
           </div>
           <div class="relatorio-icone">
             @if (relatorio.principal) {
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                <path d="m9 11 3 3L22 4"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="28"
+                height="28"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <path d="m9 11 3 3L22 4" />
               </svg>
             } @else {
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                (click)="baixarRelatorio(relatorio)" style="cursor:pointer">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                (click)="baixarRelatorio(relatorio)"
+                style="cursor: pointer"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" x2="12" y1="15" y2="3" />
               </svg>
             }
           </div>
         </div>
         @if (relatorio.principal) {
-          <p class="secao-titulo" style="margin-top: 20px;">HISTÓRICO DE RELATÓRIOS</p>
+          <p class="secao-titulo" style="margin-top: 20px">HISTÓRICO DE RELATÓRIOS</p>
         }
       }
     </div>

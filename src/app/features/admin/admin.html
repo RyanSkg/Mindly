@@ -30,12 +30,18 @@
           <p class="perfil-username">{{ '@' + p.username }}</p>
           <p class="perfil-detalhe">
             {{ p.crp ? 'CRP ' + p.crp : 'CRP não informado' }}
-            @if (p.especialidade) { · {{ p.especialidade }} }
+            @if (p.especialidade) {
+              · {{ p.especialidade }}
+            }
           </p>
         </div>
         <div class="acoes">
-          <button class="btn-aprovar" (click)="aprovar(p)" [disabled]="processandoId === p.user_id">Aprovar</button>
-          <button class="btn-recusar" (click)="recusar(p)" [disabled]="processandoId === p.user_id">Recusar</button>
+          <button class="btn-aprovar" (click)="aprovar(p)" [disabled]="processandoId === p.user_id">
+            Aprovar
+          </button>
+          <button class="btn-recusar" (click)="recusar(p)" [disabled]="processandoId === p.user_id">
+            Recusar
+          </button>
         </div>
       </div>
     }
@@ -54,10 +60,14 @@
           <p class="perfil-username">{{ '@' + p.username }}</p>
           <p class="perfil-detalhe">
             {{ p.crp ? 'CRP ' + p.crp : 'CRP não informado' }}
-            @if (p.especialidade) { · {{ p.especialidade }} }
+            @if (p.especialidade) {
+              · {{ p.especialidade }}
+            }
           </p>
         </div>
-        <button class="btn-revogar" (click)="revogar(p)" [disabled]="processandoId === p.user_id">Revogar</button>
+        <button class="btn-revogar" (click)="revogar(p)" [disabled]="processandoId === p.user_id">
+          Revogar
+        </button>
       </div>
     }
   </div>

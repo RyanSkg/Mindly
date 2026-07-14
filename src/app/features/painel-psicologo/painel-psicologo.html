@@ -3,17 +3,25 @@
   <p class="subtitulo">Acompanhe seus pacientes conectados no Mindly</p>
 
   <div class="grid-painel">
-
     <!-- Coluna esquerda: cadastro + lista de pacientes -->
     <div class="coluna-pacientes">
-
       <!-- Cadastrar paciente -->
       <div class="card">
         <p class="card-label">CADASTRAR PACIENTE</p>
         <div class="linha-busca">
-          <input type="text" [(ngModel)]="novoPacienteUsername" placeholder="@usuario do paciente"
-            (keyup.enter)="adicionarPaciente()" />
-          <button class="btn-primario" (click)="adicionarPaciente()" [disabled]="adicionandoPaciente">Adicionar</button>
+          <input
+            type="text"
+            [(ngModel)]="novoPacienteUsername"
+            placeholder="@usuario do paciente"
+            (keyup.enter)="adicionarPaciente()"
+          />
+          <button
+            class="btn-primario"
+            (click)="adicionarPaciente()"
+            [disabled]="adicionandoPaciente"
+          >
+            Adicionar
+          </button>
         </div>
         @if (erroAdicionarPaciente) {
           <p class="msg-erro">{{ erroAdicionarPaciente }}</p>
@@ -23,7 +31,9 @@
         }
         <div class="link-convite-linha">
           <span>Ou compartilhe seu link de convite:</span>
-          <button class="btn-link" (click)="copiarLink()">{{ linkCopiado ? 'Copiado!' : 'Copiar link' }}</button>
+          <button class="btn-link" (click)="copiarLink()">
+            {{ linkCopiado ? 'Copiado!' : 'Copiar link' }}
+          </button>
         </div>
       </div>
 
@@ -51,19 +61,31 @@
       <div class="card">
         <p class="card-label">PACIENTES ({{ pacientes.length }})</p>
         @if (pacientes.length > 3) {
-          <input type="text" class="input-filtro" [(ngModel)]="filtroPaciente" placeholder="Pesquisar paciente..." />
+          <input
+            type="text"
+            class="input-filtro"
+            [(ngModel)]="filtroPaciente"
+            placeholder="Pesquisar paciente..."
+          />
         }
         @if (carregando) {
           <div class="skeleton skeleton-linha"></div>
           <div class="skeleton skeleton-linha curta"></div>
         }
         @if (!carregando && pacientes.length === 0) {
-          <p class="vazio">Nenhum paciente conectado ainda. Cadastre pelo &#64;usuario ou compartilhe seu link.</p>
+          <p class="vazio">
+            Nenhum paciente conectado ainda. Cadastre pelo &#64;usuario ou compartilhe seu link.
+          </p>
         }
         @for (p of pacientesFiltrados; track p.id) {
-          <button class="paciente-item" [class.paciente-ativo]="p.outroPerfil.user_id === pacienteSelecionadoId"
-            (click)="selecionarPaciente(p.outroPerfil.user_id)">
-            <span class="paciente-avatar">{{ p.outroPerfil.username.slice(0, 2).toUpperCase() }}</span>
+          <button
+            class="paciente-item"
+            [class.paciente-ativo]="p.outroPerfil.user_id === pacienteSelecionadoId"
+            (click)="selecionarPaciente(p.outroPerfil.user_id)"
+          >
+            <span class="paciente-avatar">{{
+              p.outroPerfil.username.slice(0, 2).toUpperCase()
+            }}</span>
             <span class="paciente-nome">{{ '@' + p.outroPerfil.username }}</span>
           </button>
         }
@@ -88,13 +110,22 @@
       } @else {
         <!-- Cabeçalho do paciente -->
         <div class="card cabecalho-paciente">
-          <span class="paciente-avatar avatar-grande">{{ pacienteSelecionado.outroPerfil.username.slice(0, 2).toUpperCase() }}</span>
+          <span class="paciente-avatar avatar-grande">{{
+            pacienteSelecionado.outroPerfil.username.slice(0, 2).toUpperCase()
+          }}</span>
           <div class="cabecalho-info">
             <p class="detalhe-nome">{{ '@' + pacienteSelecionado.outroPerfil.username }}</p>
-            <p class="detalhe-sub">{{ relatoriosDoPaciente.length }} relatório{{ relatoriosDoPaciente.length === 1 ? '' : 's' }} recebido{{ relatoriosDoPaciente.length === 1 ? '' : 's' }}</p>
+            <p class="detalhe-sub">
+              {{ relatoriosDoPaciente.length }} relatório{{
+                relatoriosDoPaciente.length === 1 ? '' : 's'
+              }}
+              recebido{{ relatoriosDoPaciente.length === 1 ? '' : 's' }}
+            </p>
           </div>
           @if (relatoriosDoPaciente.length > 0) {
-            <button class="btn-exportar" (click)="exportarResumoPaciente()">Exportar resumo (PDF)</button>
+            <button class="btn-exportar" (click)="exportarResumoPaciente()">
+              Exportar resumo (PDF)
+            </button>
           }
         </div>
 
@@ -102,9 +133,13 @@
         <div class="card">
           <p class="card-label">ENVIAR MENSAGEM PRO PACIENTE</p>
           <div class="linha-mensagem">
-            <input type="text" [(ngModel)]="mensagemConteudo" maxlength="200"
+            <input
+              type="text"
+              [(ngModel)]="mensagemConteudo"
+              maxlength="200"
               placeholder="Ex: Vi seu relatório, ótima semana! Continue registrando."
-              (keyup.enter)="enviarMensagem()" />
+              (keyup.enter)="enviarMensagem()"
+            />
             <button class="btn-primario" (click)="enviarMensagem()" [disabled]="enviandoMensagem">
               {{ enviandoMensagem ? 'Enviando...' : 'Enviar' }}
             </button>
@@ -127,17 +162,36 @@
                 Passe o mouse sobre um ponto pra ver o detalhe
               }
             </p>
-            <svg class="grafico-humor-linha" [attr.viewBox]="'0 0 ' + larguraLinha + ' ' + alturaLinha"
-              preserveAspectRatio="xMidYMid meet" role="img" aria-label="Evolução do humor do paciente">
-              <path [attr.d]="caminhoHumor" fill="none" stroke="#A78BFA" stroke-width="2" stroke-linecap="round" />
+            <svg
+              class="grafico-humor-linha"
+              [attr.viewBox]="'0 0 ' + larguraLinha + ' ' + alturaLinha"
+              preserveAspectRatio="xMidYMid meet"
+              role="img"
+              aria-label="Evolução do humor do paciente"
+            >
+              <path
+                [attr.d]="caminhoHumor"
+                fill="none"
+                stroke="#A78BFA"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
               @for (ponto of pontosHumor; track $index; let i = $index) {
-                <circle [attr.cx]="ponto.x" [attr.cy]="ponto.y"
+                <circle
+                  [attr.cx]="ponto.x"
+                  [attr.cy]="ponto.y"
                   [attr.r]="pontoHumorAtivo === i ? 6 : 3.5"
-                  fill="#A78BFA" class="ponto-humor"
-                  (mouseenter)="pontoHumorAtivo = i" (mouseleave)="pontoHumorAtivo = null" />
+                  fill="#A78BFA"
+                  class="ponto-humor"
+                  (mouseenter)="pontoHumorAtivo = i"
+                  (mouseleave)="pontoHumorAtivo = null"
+                />
               }
             </svg>
-            <p class="legenda-humor">Cada ponto é um registro do diário (só o humor — o texto continua privado). Quanto mais alto, melhor o humor.</p>
+            <p class="legenda-humor">
+              Cada ponto é um registro do diário (só o humor — o texto continua privado). Quanto
+              mais alto, melhor o humor.
+            </p>
           </div>
         }
 
@@ -145,24 +199,38 @@
         <div class="card">
           <div class="nota-cabecalho">
             <p class="card-label">MINHAS ANOTAÇÕES (SÓ VOCÊ VÊ)</p>
-            @if (!editandoNota) {
-              <button class="btn-editar-nota" (click)="editarNota()">
-                {{ notaConteudo ? 'Editar' : 'Adicionar anotação' }}
-              </button>
+            @if (!editandoNota && !notaConteudo) {
+              <button class="btn-editar-nota" (click)="editarNota()">Adicionar anotação</button>
             }
           </div>
 
           @if (!editandoNota) {
             @if (notaConteudo) {
               <div class="nota-exibicao">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nota-icone">
-                  <path d="M13 21h8"/><path d="m15 5 4 4"/>
-                  <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
-                </svg>
+                <button class="btn-lapis" (click)="editarNota()" title="Editar anotações">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M13 21h8" />
+                    <path d="m15 5 4 4" />
+                    <path
+                      d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"
+                    />
+                  </svg>
+                </button>
                 <p class="nota-texto">{{ notaConteudo }}</p>
                 @if (notaAtualizadaEm) {
-                  <p class="nota-data">Atualizado em {{ notaAtualizadaEm | date:'dd/MM/yyyy, HH:mm' }}</p>
+                  <p class="nota-data">
+                    Atualizado em {{ notaAtualizadaEm | date: 'dd/MM/yyyy, HH:mm' }}
+                  </p>
                 }
                 @if (notaSalva) {
                   <span class="nota-salva">Salvo ✓</span>
@@ -172,8 +240,12 @@
               <p class="nota-vazia">Nenhuma anotação sobre este paciente ainda.</p>
             }
           } @else {
-            <textarea class="nota-textarea" [(ngModel)]="notaRascunho" rows="4"
-              placeholder="Anote observações sobre este paciente..."></textarea>
+            <textarea
+              class="nota-textarea"
+              [(ngModel)]="notaRascunho"
+              rows="4"
+              placeholder="Anote observações sobre este paciente..."
+            ></textarea>
             @if (erroNota) {
               <p class="msg-erro">{{ erroNota }}</p>
             }
@@ -188,7 +260,10 @@
 
         @if (relatoriosDoPaciente.length === 0) {
           <div class="card detalhe-vazio">
-            <p>Esse paciente ainda não enviou nenhum relatório. Os gráficos aparecem aqui quando o primeiro relatório chegar.</p>
+            <p>
+              Esse paciente ainda não enviou nenhum relatório. Os gráficos aparecem aqui quando o
+              primeiro relatório chegar.
+            </p>
           </div>
         } @else {
           <!-- Gráfico: registros por relatório -->
@@ -229,7 +304,7 @@
                 <div class="relatorio-topo">
                   <div>
                     <p class="relatorio-titulo">{{ r.titulo }}</p>
-                    <p class="relatorio-data">{{ r.criadoEm | date:'dd/MM/yyyy' }}</p>
+                    <p class="relatorio-data">{{ r.criadoEm | date: 'dd/MM/yyyy' }}</p>
                   </div>
                   <button (click)="baixarRelatorio(r)">Baixar PDF</button>
                 </div>
@@ -243,13 +318,22 @@
                 }
                 @if (r.conversaAnexada.length > 0) {
                   <button class="btn-ver-conversa" (click)="toggleConversa(r.id)">
-                    {{ conversaExpandidaId === r.id ? 'Ocultar conversa com a IA' : 'Ver conversa com a IA (' + r.conversaAnexada.length + ' mensagens)' }}
+                    {{
+                      conversaExpandidaId === r.id
+                        ? 'Ocultar conversa com a IA'
+                        : 'Ver conversa com a IA (' + r.conversaAnexada.length + ' mensagens)'
+                    }}
                   </button>
                   @if (conversaExpandidaId === r.id) {
                     <div class="conversa-anexada">
                       @for (msg of r.conversaAnexada; track $index) {
-                        <div class="mensagem-conversa" [class.mensagem-paciente]="msg.role === 'user'">
-                          <span class="autor-conversa">{{ msg.role === 'user' ? 'Paciente' : 'IA' }}</span>
+                        <div
+                          class="mensagem-conversa"
+                          [class.mensagem-paciente]="msg.role === 'user'"
+                        >
+                          <span class="autor-conversa">{{
+                            msg.role === 'user' ? 'Paciente' : 'IA'
+                          }}</span>
                           <p>{{ msg.content }}</p>
                         </div>
                       }

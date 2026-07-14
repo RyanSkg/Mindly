@@ -1,5 +1,12 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterOutlet } from '@angular/router';
+import {
+  NavigationCancel,
+  NavigationEnd,
+  NavigationError,
+  NavigationStart,
+  Router,
+  RouterOutlet,
+} from '@angular/router';
 import { Modal } from './shared/modal/modal';
 import { TemaService } from './shared/tema.service';
 import { PerfisService } from './shared/perfis.service';
@@ -9,7 +16,7 @@ import { CarregamentoService } from './shared/carregamento.service';
   selector: 'app-root',
   imports: [RouterOutlet, Modal],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
 })
 export class App implements OnInit {
   protected readonly title = signal('Mindly');
@@ -24,7 +31,7 @@ export class App implements OnInit {
 
     // Roda de carregamento durante a troca de rotas (inclui o download
     // do chunk lazy da página e a checagem de sessão do guard).
-    this.router.events.subscribe(evento => {
+    this.router.events.subscribe((evento) => {
       if (evento instanceof NavigationStart) {
         this.carregamento.mostrar();
       } else if (

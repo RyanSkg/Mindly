@@ -12,7 +12,9 @@ export default async function handler(req, res) {
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const resendKey = process.env.RESEND_API_KEY;
   if (!serviceKey || !resendKey) {
-    res.status(500).json({ error: 'SUPABASE_SERVICE_ROLE_KEY ou RESEND_API_KEY não configurada no servidor.' });
+    res
+      .status(500)
+      .json({ error: 'SUPABASE_SERVICE_ROLE_KEY ou RESEND_API_KEY não configurada no servidor.' });
     return;
   }
 

@@ -9,15 +9,21 @@
       <div class="icone">✅</div>
       <h1>Pedido enviado!</h1>
       <p>Assim que {{ '@' + perfilAlvo.username }} aceitar, vocês estarão conectados no Mindly.</p>
-      <a [routerLink]="tipo === 'psicologo' ? '/psicologos' : '/oito-minutos'" class="btn-voltar">Voltar</a>
+      <a [routerLink]="tipo === 'psicologo' ? '/psicologos' : '/oito-minutos'" class="btn-voltar"
+        >Voltar</a
+      >
     } @else {
       <div class="avatar">{{ perfilAlvo.username.slice(0, 2).toUpperCase() }}</div>
       <h1>{{ '@' + perfilAlvo.username }}</h1>
-      <p class="tipo-label">{{ perfilAlvo.tipo === 'psicologo' ? 'Psicólogo(a) no Mindly' : 'Usuário do Mindly' }}</p>
+      <p class="tipo-label">
+        {{ perfilAlvo.tipo === 'psicologo' ? 'Psicólogo(a) no Mindly' : 'Usuário do Mindly' }}
+      </p>
       <p class="msg">
-        {{ tipo === 'psicologo'
-          ? 'Enviar pedido para se conectar como seu(sua) psicólogo(a)?'
-          : 'Enviar pedido de conexão como contato de confiança?' }}
+        {{
+          tipo === 'psicologo'
+            ? 'Enviar pedido para se conectar como seu(sua) psicólogo(a)?'
+            : 'Enviar pedido de conexão como contato de confiança?'
+        }}
       </p>
       @if (erro) {
         <p class="erro">{{ erro }}</p>

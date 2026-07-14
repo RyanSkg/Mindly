@@ -1,5 +1,4 @@
 <div class="pagina-perfil">
-
   <!-- Cabeçalho -->
   <div class="card-cabecalho">
     <div class="avatar-grande">{{ perfil.iniciais() }}</div>
@@ -10,13 +9,20 @@
         <p class="username-perfil">{{ '@' + (perfis.meuPerfil()?.username ?? '...') }}</p>
         <p class="email">{{ perfil.email() }}</p>
         @if (perfil.membroDesde()) {
-          <p class="membro-desde">Membro desde {{ perfil.membroDesde() | date:'MMMM y' }}</p>
+          <p class="membro-desde">Membro desde {{ perfil.membroDesde() | date: 'MMMM y' }}</p>
         }
       } @else {
         <div class="form-editar">
-          <input type="text" name="nomeEmEdicao" [(ngModel)]="nomeEmEdicao" placeholder="Seu nome" />
+          <input
+            type="text"
+            name="nomeEmEdicao"
+            [(ngModel)]="nomeEmEdicao"
+            placeholder="Seu nome"
+          />
           <div class="form-editar-botoes">
-            <button class="btn-primario" (click)="salvarPerfil()" [disabled]="salvando">Salvar</button>
+            <button class="btn-primario" (click)="salvarPerfil()" [disabled]="salvando">
+              Salvar
+            </button>
             <button class="btn-cancelar" (click)="cancelarEdicao()">Cancelar</button>
           </div>
         </div>
@@ -25,9 +31,18 @@
 
     @if (!editando) {
       <button class="btn-secundario" (click)="editarPerfil()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
-          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
         </svg>
         Editar
       </button>
@@ -67,7 +82,7 @@
             <span class="emoji">{{ emojiDoHumor(item.humor) }}</span>
             <div class="atividade-info">
               <div class="atividade-texto">{{ item.texto || item.humor }}</div>
-              <div class="atividade-data">{{ item.data | date:'dd/MM, HH:mm' }}</div>
+              <div class="atividade-data">{{ item.data | date: 'dd/MM, HH:mm' }}</div>
             </div>
           </div>
         }
@@ -85,14 +100,24 @@
             <strong>{{ '@' + (perfis.meuPerfil()?.username ?? '...') }}</strong>
           </div>
           <button class="btn-alterar-username" (click)="editarUsername()">Alterar usuário</button>
-          <p class="dica-username">Outras pessoas usam esse &#64;usuário pra te adicionar como contato ou psicólogo(a).</p>
+          <p class="dica-username">
+            Outras pessoas usam esse &#64;usuário pra te adicionar como contato ou psicólogo(a).
+          </p>
         } @else {
-          <input type="text" class="input-username" [(ngModel)]="novoUsername" name="novoUsername" placeholder="seu-usuario" />
+          <input
+            type="text"
+            class="input-username"
+            [(ngModel)]="novoUsername"
+            name="novoUsername"
+            placeholder="seu-usuario"
+          />
           @if (erroUsername) {
             <p class="erro-username">{{ erroUsername }}</p>
           }
           <div class="username-botoes">
-            <button class="btn-primario" (click)="salvarUsername()" [disabled]="salvandoUsername">Salvar</button>
+            <button class="btn-primario" (click)="salvarUsername()" [disabled]="salvandoUsername">
+              Salvar
+            </button>
             <button class="btn-cancelar" (click)="cancelarUsername()">Cancelar</button>
           </div>
         }
@@ -112,13 +137,23 @@
       </div>
 
       <button class="btn-sair" (click)="sair()" [disabled]="saindo">
-        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
-          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+          <polyline points="16 17 21 12 16 7" />
+          <line x1="21" x2="9" y1="12" y2="12" />
         </svg>
         Sair da conta
       </button>
     </div>
   </div>
-
 </div>

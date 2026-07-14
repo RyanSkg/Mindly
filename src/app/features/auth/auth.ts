@@ -99,9 +99,10 @@ export class Auth implements OnInit, OnDestroy {
           },
         });
         if (error) throw error;
-        this.mensagem = this.tipoConta === 'psicologo'
-          ? 'Conta criada! Verifique seu email para confirmar. Seu cadastro de psicólogo(a) ainda precisa ser aprovado antes de liberar o acesso.'
-          : 'Conta criada! Verifique seu email para confirmar.';
+        this.mensagem =
+          this.tipoConta === 'psicologo'
+            ? 'Conta criada! Verifique seu email para confirmar. Seu cadastro de psicólogo(a) ainda precisa ser aprovado antes de liberar o acesso.'
+            : 'Conta criada! Verifique seu email para confirmar.';
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email: this.email,

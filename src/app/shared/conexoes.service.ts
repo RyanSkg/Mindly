@@ -20,13 +20,20 @@ export interface ConexaoComPerfil {
 export class ConexoesService {
   private perfis = inject(PerfisService);
 
-  async solicitarPorUsername(username: string, tipo: TipoConexao): Promise<{ ok: boolean; erro?: string }> {
+  async solicitarPorUsername(
+    username: string,
+    tipo: TipoConexao,
+  ): Promise<{ ok: boolean; erro?: string }> {
     const alvo = await this.perfis.buscarPorUsername(username);
     if (!alvo) return { ok: false, erro: 'Nenhum usuário do Mindly encontrado com esse nome.' };
     return this.solicitarPorUserId(alvo.user_id, tipo, alvo);
   }
 
-  async solicitarPorUserId(userId: string, tipo: TipoConexao, perfilAlvo?: Perfil): Promise<{ ok: boolean; erro?: string }> {
+  async solicitarPorUserId(
+    userId: string,
+    tipo: TipoConexao,
+    perfilAlvo?: Perfil,
+  ): Promise<{ ok: boolean; erro?: string }> {
     if (!ehUuidValido(userId)) return { ok: false, erro: 'Identificador de usuário inválido.' };
 
     const user = await obterUsuarioValido();
@@ -46,7 +53,10 @@ export class ConexoesService {
           return { ok: false, erro: 'Esse perfil não é de um paciente (usuário comum) do Mindly.' };
         }
       } else if (alvo.tipo !== 'psicologo' || !alvo.aprovado) {
-        return { ok: false, erro: 'Esse perfil não é de um(a) psicólogo(a) aprovado(a) no Mindly.' };
+        return {
+          ok: false,
+          erro: 'Esse perfil não é de um(a) psicólogo(a) aprovado(a) no Mindly.',
+        };
       }
     }
 
@@ -58,17 +68,21 @@ export class ConexoesService {
     });
 
     if (error) {
-      const erro = error.code === '23505' ? 'Vocês já têm uma conexão ou pedido em andamento.' : 'Não foi possível enviar o pedido.';
+      const erro =
+        error.code === '23505'
+          ? 'Vocês já têm uma conexão ou pedido em andamento.'
+          : 'Não foi possível enviar o pedido.';
       return { ok: false, erro };
     }
 
     // Avisa o destinatário no sino dele (falha silenciosa: o pedido já foi criado).
     const meuUsername = (await this.perfis.carregar())?.username ?? 'alguém';
-    const mensagem = tipo === 'psicologo'
-      ? (alvo.tipo === 'psicologo'
-        ? `@${meuUsername} quer se conectar com você como paciente.`
-        : `@${meuUsername} quer ser seu(sua) psicólogo(a) no Mindly.`)
-      : `@${meuUsername} quer te adicionar como contato de confiança no 8 Minutos.`;
+    const mensagem =
+      tipo === 'psicologo'
+        ? alvo.tipo === 'psicologo'
+          ? `@${meuUsername} quer se conectar com você como paciente.`
+          : `@${meuUsername} quer ser seu(sua) psicólogo(a) no Mindly.`
+        : `@${meuUsername} quer te adicionar como contato de confiança no 8 Minutos.`;
     await supabase.rpc('notificar_conexao', {
       destino: userId,
       titulo: 'Novo pedido de conexão',
@@ -78,7 +92,10 @@ export class ConexoesService {
     return { ok: true };
   }
 
-  async listar(tipo: TipoConexao, status?: 'pendente' | 'aceito' | 'recusado'): Promise<ConexaoComPerfil[]> {
+  async listar(
+    tipo: TipoConexao,
+    status?: 'pendente' | 'aceito' | 'recusado',
+  ): Promise<ConexaoComPerfil[]> {
     const user = await obterUsuarioValido();
     // O id vem do Supabase Auth (sempre UUID), mas validamos antes de
     // interpolar no filtro .or(), que é montado como texto.
@@ -96,12 +113,16 @@ export class ConexoesService {
     const { data, error } = await query;
     if (error || !data || data.length === 0) return [];
 
-    const outrosIds = [...new Set(data.map(c => (c.solicitante_id === user.id ? c.destinatario_id : c.solicitante_id)))];
+    const outrosIds = [
+      ...new Set(
+        data.map((c) => (c.solicitante_id === user.id ? c.destinatario_id : c.solicitante_id)),
+      ),
+    ];
     const { data: perfis } = await supabase.from('perfis').select('*').in('user_id', outrosIds);
-    const mapaPerfis = new Map((perfis ?? []).map(p => [p.user_id, p as Perfil]));
+    const mapaPerfis = new Map((perfis ?? []).map((p) => [p.user_id, p as Perfil]));
 
     return data
-      .map(c => {
+      .map((c) => {
         const outroId = c.solicitante_id === user.id ? c.destinatario_id : c.solicitante_id;
         const outroPerfil = mapaPerfis.get(outroId);
         if (!outroPerfil) return null;
@@ -147,7 +168,9 @@ export class ConexoesService {
     return !error;
   }
 
-  async buscarHumorRecente(userId: string): Promise<{ humor: string; atualizadoEm: string } | null> {
+  async buscarHumorRecente(
+    userId: string,
+  ): Promise<{ humor: string; atualizadoEm: string } | null> {
     const { data } = await supabase
       .from('humor_recente')
       .select('humor, atualizado_em')

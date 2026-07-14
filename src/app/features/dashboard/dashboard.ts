@@ -54,18 +54,18 @@ interface DistribuicaoHumor {
 export class Dashboard implements OnInit, OnDestroy {
   semana: DiaDaSemana[] = [
     { id: 'segunda', label: 'Seg', v: 0 },
-    { id: 'terca',   label: 'Ter', v: 0 },
-    { id: 'quarta',  label: 'Qua', v: 0 },
-    { id: 'quinta',  label: 'Qui', v: 0 },
-    { id: 'sexta',   label: 'Sex', v: 0 },
-    { id: 'sabado',  label: 'Sáb', v: 0 },
+    { id: 'terca', label: 'Ter', v: 0 },
+    { id: 'quarta', label: 'Qua', v: 0 },
+    { id: 'quinta', label: 'Qui', v: 0 },
+    { id: 'sexta', label: 'Sex', v: 0 },
+    { id: 'sabado', label: 'Sáb', v: 0 },
     { id: 'domingo', label: 'Dom', v: 0 },
   ];
 
   estatisticas: Estatistica[] = [
     { valor: '0', label: 'Registros totais', delta: '—', positivo: true },
-    { valor: '0', label: 'Humor médio',      delta: '—', positivo: true },
-    { valor: '0', label: 'Dias ativo',       delta: '—', positivo: true },
+    { valor: '0', label: 'Humor médio', delta: '—', positivo: true },
+    { valor: '0', label: 'Dias ativo', delta: '—', positivo: true },
   ];
 
   emocoesFrequentes: TagEmocao[] = [];
@@ -110,7 +110,7 @@ export class Dashboard implements OnInit, OnDestroy {
   private intervaloCarrossel: ReturnType<typeof setInterval> | null = null;
 
   async ngOnInit() {
-    this.topbarActions.acoes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(acao => {
+    this.topbarActions.acoes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((acao) => {
       if (acao.tipo === 'gerar-pdf') this.gerarRelatorio();
       if (acao.tipo === 'filtrar-mes' && acao.valor) {
         this.mesFiltro = acao.valor;
@@ -132,7 +132,7 @@ export class Dashboard implements OnInit, OnDestroy {
       return;
     }
 
-    this.registrosTodos = data.map(r => ({ humor: r.humor, data: new Date(r.criado_em) }));
+    this.registrosTodos = data.map((r) => ({ humor: r.humor, data: new Date(r.criado_em) }));
     this.totalRegistrosGeral = this.registrosTodos.length;
 
     this.calcularSemana(this.registrosTodos);
@@ -162,7 +162,7 @@ export class Dashboard implements OnInit, OnDestroy {
   private calcularProgressoMeta() {
     const inicioSemana = this.inicioDaSemana(new Date());
     this.diasRegistradosSemana = new Set(
-      this.registrosTodos.filter(r => r.data >= inicioSemana).map(r => r.data.toDateString())
+      this.registrosTodos.filter((r) => r.data >= inicioSemana).map((r) => r.data.toDateString()),
     ).size;
   }
 
@@ -200,9 +200,13 @@ export class Dashboard implements OnInit, OnDestroy {
     const inicioMes = new Date(ano, mes - 1, 1);
     const fimMes = new Date(ano, mes, 1);
     const registrosDoMes = this.registrosTodos
-      .filter(r => r.data >= inicioMes && r.data < fimMes)
-      .map(r => ({
-        dia: r.data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', weekday: 'short' }),
+      .filter((r) => r.data >= inicioMes && r.data < fimMes)
+      .map((r) => ({
+        dia: r.data.toLocaleDateString('pt-BR', {
+          day: '2-digit',
+          month: '2-digit',
+          weekday: 'short',
+        }),
         humor: labelDoHumor(r.humor),
       }));
 
@@ -259,7 +263,7 @@ export class Dashboard implements OnInit, OnDestroy {
 
   private calcularDistribuicaoHumor(registros: RegistroBasico[]): void {
     const contagem = new Map<string, number>();
-    registros.forEach(r => contagem.set(r.humor, (contagem.get(r.humor) ?? 0) + 1));
+    registros.forEach((r) => contagem.set(r.humor, (contagem.get(r.humor) ?? 0) + 1));
     const total = registros.length;
 
     const entradas = [...contagem.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5);
@@ -277,7 +281,7 @@ export class Dashboard implements OnInit, OnDestroy {
     }
 
     let acumulado = 0;
-    const partes = this.distribuicaoHumor.map(d => {
+    const partes = this.distribuicaoHumor.map((d) => {
       const inicio = acumulado;
       acumulado += d.percentual;
       return `${d.cor} ${inicio}% ${acumulado}%`;
@@ -289,7 +293,7 @@ export class Dashboard implements OnInit, OnDestroy {
   }
 
   private calcularSequencia(registros: RegistroBasico[]): void {
-    const dias = new Set(registros.map(r => r.data.toDateString()));
+    const dias = new Set(registros.map((r) => r.data.toDateString()));
     let contador = 0;
     const cursor = new Date();
 
@@ -307,7 +311,9 @@ export class Dashboard implements OnInit, OnDestroy {
     const [ano, mes] = this.mesFiltro.split('-').map(Number);
     const inicioMes = new Date(ano, mes - 1, 1);
     const fimMes = new Date(ano, mes, 1);
-    const registrosDoMes = this.registrosTodos.filter(r => r.data >= inicioMes && r.data < fimMes);
+    const registrosDoMes = this.registrosTodos.filter(
+      (r) => r.data >= inicioMes && r.data < fimMes,
+    );
 
     const hoje = new Date();
     const ehMesAtual = ano === hoje.getFullYear() && mes - 1 === hoje.getMonth();
@@ -326,7 +332,11 @@ export class Dashboard implements OnInit, OnDestroy {
   }
 
   private mesmoDia(a: Date, b: Date): boolean {
-    return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+    return (
+      a.getFullYear() === b.getFullYear() &&
+      a.getMonth() === b.getMonth() &&
+      a.getDate() === b.getDate()
+    );
   }
 
   private calcularSemana(registros: RegistroBasico[]): void {
@@ -336,7 +346,7 @@ export class Dashboard implements OnInit, OnDestroy {
     this.semana = labels.map((label, i) => {
       const dia = new Date(segunda);
       dia.setDate(segunda.getDate() + i);
-      const doDia = registros.filter(r => this.mesmoDia(r.data, dia));
+      const doDia = registros.filter((r) => this.mesmoDia(r.data, dia));
       const media = doDia.length
         ? doDia.reduce((soma, r) => soma + valorDoHumor(r.humor), 0) / doDia.length
         : 0;
@@ -344,7 +354,11 @@ export class Dashboard implements OnInit, OnDestroy {
     });
   }
 
-  private calcularDelta(atual: number, anterior: number, percentual = false): { texto: string; positivo: boolean } {
+  private calcularDelta(
+    atual: number,
+    anterior: number,
+    percentual = false,
+  ): { texto: string; positivo: boolean } {
     if (anterior === 0) return { texto: atual > 0 ? 'novo' : '—', positivo: true };
     const diff = atual - anterior;
     const sinal = diff >= 0 ? '+' : '';
@@ -361,7 +375,7 @@ export class Dashboard implements OnInit, OnDestroy {
     const humorMedio = totalRegistros
       ? registros.reduce((soma, r) => soma + valorDoHumor(r.humor), 0) / totalRegistros
       : 0;
-    const diasUnicos = new Set(registros.map(r => r.data.toDateString()));
+    const diasUnicos = new Set(registros.map((r) => r.data.toDateString()));
 
     let deltaRegistros = { texto: '—', positivo: true };
     let deltaHumor = { texto: '—', positivo: true };
@@ -373,8 +387,10 @@ export class Dashboard implements OnInit, OnDestroy {
       const inicioSemanaPassada = new Date(inicioSemanaAtual);
       inicioSemanaPassada.setDate(inicioSemanaAtual.getDate() - 7);
 
-      const estaSemana = this.registrosTodos.filter(r => r.data >= inicioSemanaAtual);
-      const semanaPassada = this.registrosTodos.filter(r => r.data >= inicioSemanaPassada && r.data < inicioSemanaAtual);
+      const estaSemana = this.registrosTodos.filter((r) => r.data >= inicioSemanaAtual);
+      const semanaPassada = this.registrosTodos.filter(
+        (r) => r.data >= inicioSemanaPassada && r.data < inicioSemanaAtual,
+      );
 
       deltaRegistros = this.calcularDelta(estaSemana.length, semanaPassada.length, true);
 
@@ -390,24 +406,43 @@ export class Dashboard implements OnInit, OnDestroy {
       const inicioMesPassado = new Date(hoje.getFullYear(), hoje.getMonth() - 1, 1);
 
       const diasEsteMes = new Set(
-        this.registrosTodos.filter(r => r.data >= inicioMesAtual).map(r => r.data.toDateString())
+        this.registrosTodos
+          .filter((r) => r.data >= inicioMesAtual)
+          .map((r) => r.data.toDateString()),
       ).size;
       const diasMesPassado = new Set(
-        this.registrosTodos.filter(r => r.data >= inicioMesPassado && r.data < inicioMesAtual).map(r => r.data.toDateString())
+        this.registrosTodos
+          .filter((r) => r.data >= inicioMesPassado && r.data < inicioMesAtual)
+          .map((r) => r.data.toDateString()),
       ).size;
       deltaDias = this.calcularDelta(diasEsteMes, diasMesPassado);
     }
 
     this.estatisticas = [
-      { valor: String(totalRegistros), label: 'Registros totais', delta: deltaRegistros.texto, positivo: deltaRegistros.positivo },
-      { valor: humorMedio.toFixed(1), label: 'Humor médio',      delta: deltaHumor.texto,      positivo: deltaHumor.positivo },
-      { valor: String(diasUnicos.size), label: 'Dias ativo',      delta: deltaDias.texto,       positivo: deltaDias.positivo },
+      {
+        valor: String(totalRegistros),
+        label: 'Registros totais',
+        delta: deltaRegistros.texto,
+        positivo: deltaRegistros.positivo,
+      },
+      {
+        valor: humorMedio.toFixed(1),
+        label: 'Humor médio',
+        delta: deltaHumor.texto,
+        positivo: deltaHumor.positivo,
+      },
+      {
+        valor: String(diasUnicos.size),
+        label: 'Dias ativo',
+        delta: deltaDias.texto,
+        positivo: deltaDias.positivo,
+      },
     ];
   }
 
   private calcularEmocoesFrequentes(registros: RegistroBasico[]): void {
     const contagem = new Map<string, number>();
-    registros.forEach(r => contagem.set(r.humor, (contagem.get(r.humor) ?? 0) + 1));
+    registros.forEach((r) => contagem.set(r.humor, (contagem.get(r.humor) ?? 0) + 1));
 
     this.emocoesFrequentes = [...contagem.entries()]
       .sort((a, b) => b[1] - a[1])
@@ -429,7 +464,7 @@ export class Dashboard implements OnInit, OnDestroy {
     const larguraUtil = this.largura - this.margem.esquerda - this.margem.direita;
     const alturaUtil = this.altura - this.margem.topo - this.margem.baixo;
     const passo = larguraUtil / (this.semana.length - 1);
-    const maiorValor = Math.max(...this.semana.map(d => d.v));
+    const maiorValor = Math.max(...this.semana.map((d) => d.v));
 
     return this.semana.map((dia, i) => ({
       x: this.margem.esquerda + i * passo,
@@ -483,7 +518,7 @@ export class Dashboard implements OnInit, OnDestroy {
     doc.text('Resumo', 14, y);
     y += 8;
     doc.setFontSize(11);
-    this.estatisticas.forEach(e => {
+    this.estatisticas.forEach((e) => {
       doc.text(`${e.label}: ${e.valor}  (${e.delta})`, 14, y);
       y += 7;
     });
@@ -493,7 +528,7 @@ export class Dashboard implements OnInit, OnDestroy {
     doc.text('Humor por dia — esta semana', 14, y);
     y += 8;
     doc.setFontSize(11);
-    this.semana.forEach(d => {
+    this.semana.forEach((d) => {
       doc.text(`${d.label}: ${d.v || '—'}`, 14, y);
       y += 7;
     });
@@ -506,7 +541,7 @@ export class Dashboard implements OnInit, OnDestroy {
     if (this.emocoesFrequentes.length === 0) {
       doc.text('Sem dados suficientes ainda.', 14, y);
     } else {
-      this.emocoesFrequentes.forEach(t => {
+      this.emocoesFrequentes.forEach((t) => {
         doc.text(`• ${t.label}`, 14, y);
         y += 7;
       });

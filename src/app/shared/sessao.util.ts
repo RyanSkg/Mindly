@@ -6,7 +6,9 @@ import { supabase } from '../integrations/supabase/client';
  * silêncio quando a aba fica muito tempo aberta em segundo plano.
  */
 export async function obterUsuarioValido() {
-  const { data: { session } } = await supabase.auth.getSession();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
   if (!session) return null;
 
   const expiraEm = (session.expires_at ?? 0) * 1000;

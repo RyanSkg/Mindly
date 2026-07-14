@@ -27,7 +27,9 @@ export class TemaService {
       if (this.temaAtual === 'automatico') this.aplicarModoDoSistema();
     });
 
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
     const userId = session?.user?.id;
     if (!userId) return;
 

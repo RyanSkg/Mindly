@@ -24,7 +24,13 @@ export class ModalService {
   private resolver: ((valor: boolean) => void) | null = null;
 
   /** Pergunta ao usuário e espera a resposta (substitui o confirm() nativo). */
-  confirmar(opcoes: { titulo: string; mensagem: string; textoConfirmar?: string; textoCancelar?: string; perigo?: boolean }): Promise<boolean> {
+  confirmar(opcoes: {
+    titulo: string;
+    mensagem: string;
+    textoConfirmar?: string;
+    textoCancelar?: string;
+    perigo?: boolean;
+  }): Promise<boolean> {
     this.estado.set({
       titulo: opcoes.titulo,
       mensagem: opcoes.mensagem,
@@ -34,7 +40,7 @@ export class ModalService {
       somenteAviso: false,
     });
     this.aberto.set(true);
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       this.resolver = resolve;
     });
   }
@@ -50,7 +56,7 @@ export class ModalService {
       somenteAviso: true,
     });
     this.aberto.set(true);
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       this.resolver = () => resolve();
     });
   }

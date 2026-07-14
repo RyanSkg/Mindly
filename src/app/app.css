@@ -1,51 +1,62 @@
 /* Tela de carregamento global (troca de rotas / sessão) */
 
 .tela-carregamento {
-    position: fixed;
-    inset: 0;
-    z-index: 200;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: color-mix(in oklab, var(--background) 82%, transparent);
-    backdrop-filter: blur(4px);
-    /* só aparece se a navegação demorar mais que ~0,15s — evita "piscar" em trocas rápidas */
-    opacity: 0;
-    animation: aparecer-suave 0.2s ease 0.15s forwards;
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: color-mix(in oklab, var(--background) 82%, transparent);
+  backdrop-filter: blur(4px);
+  /* só aparece se a navegação demorar mais que ~0,15s — evita "piscar" em trocas rápidas */
+  opacity: 0;
+  animation: aparecer-suave 0.2s ease 0.15s forwards;
 }
 
 .carregamento-conteudo {
-    position: relative;
-    width: 72px;
-    height: 72px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  position: relative;
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .carregamento-logo {
-    color: var(--brand);
-    animation: pulsar-logo 1.6s ease-in-out infinite;
+  color: var(--brand);
+  animation: pulsar-logo 1.6s ease-in-out infinite;
 }
 
 .carregamento-anel {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    border: 3px solid var(--accent);
-    border-top-color: var(--brand);
-    animation: girar-anel 0.9s linear infinite;
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 3px solid var(--accent);
+  border-top-color: var(--brand);
+  animation: girar-anel 0.9s linear infinite;
 }
 
 @keyframes aparecer-suave {
-    to { opacity: 1; }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes girar-anel {
-    to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes pulsar-logo {
-    0%, 100% { opacity: 0.55; transform: scale(0.96); }
-    50%       { opacity: 1;    transform: scale(1.04); }
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
 }

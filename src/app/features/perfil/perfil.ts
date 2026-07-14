@@ -63,15 +63,24 @@ export class Perfil implements OnInit {
     this.metodoLogin = user.app_metadata?.['provider'] === 'google' ? 'Google' : 'Email e senha';
 
     const [registros, contatos, relatorios] = await Promise.all([
-      supabase.from('registros').select('id, humor, texto, criado_em').eq('user_id', user.id).order('criado_em', { ascending: false }),
+      supabase
+        .from('registros')
+        .select('id, humor, texto, criado_em')
+        .eq('user_id', user.id)
+        .order('criado_em', { ascending: false }),
       supabase.from('contatos').select('id', { count: 'exact', head: true }).eq('user_id', user.id),
-      supabase.from('relatorios').select('id', { count: 'exact', head: true }).eq('user_id', user.id),
+      supabase
+        .from('relatorios')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', user.id),
     ]);
 
     if (registros.data) {
       this.totalRegistros = registros.data.length;
-      this.diasAtivos = new Set(registros.data.map(r => new Date(r.criado_em).toDateString())).size;
-      this.atividadeRecente = registros.data.slice(0, 5).map(r => ({
+      this.diasAtivos = new Set(
+        registros.data.map((r) => new Date(r.criado_em).toDateString()),
+      ).size;
+      this.atividadeRecente = registros.data.slice(0, 5).map((r) => ({
         id: r.id,
         humor: r.humor,
         texto: r.texto ?? '',

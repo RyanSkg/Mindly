@@ -1,33 +1,39 @@
 <!doctype html>
 <html lang="pt-BR">
-<head>
-  <meta charset="utf-8">
-  <title>Mindly — Diário emocional com IA</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Registre suas emoções, receba reflexões de IA e conecte-se com seus contatos de confiança e psicólogo(a).">
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="alternate icon" type="image/x-icon" href="favicon.ico">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
-  <script>
-    (function () {
-      try {
-        var tema = localStorage.getItem('mindly-tema') || 'escuro';
-        if (tema === 'automatico') {
-          var escuro = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          tema = escuro ? 'escuro' : 'claro';
-        }
-        document.documentElement.setAttribute('data-theme', tema);
-        if (localStorage.getItem('mindly-animacoes-reduzidas') === '1') {
-          document.documentElement.setAttribute('data-animacoes', 'reduzidas');
-        }
-      } catch (e) {}
-    })();
-  </script>
-</head>
-<body>
-  <app-root></app-root>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <title>Mindly — Diário emocional com IA</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Registre suas emoções, receba reflexões de IA e conecte-se com seus contatos de confiança e psicólogo(a)."
+    />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="alternate icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      (function () {
+        try {
+          var tema = localStorage.getItem('mindly-tema') || 'escuro';
+          if (tema === 'automatico') {
+            var escuro = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            tema = escuro ? 'escuro' : 'claro';
+          }
+          document.documentElement.setAttribute('data-theme', tema);
+          if (localStorage.getItem('mindly-animacoes-reduzidas') === '1') {
+            document.documentElement.setAttribute('data-animacoes', 'reduzidas');
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <app-root></app-root>
+  </body>
 </html>

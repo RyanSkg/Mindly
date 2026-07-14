@@ -32,8 +32,18 @@ export class Admin implements OnInit {
 
   private async carregarDados() {
     const [pendentes, aprovados, total] = await Promise.all([
-      supabase.from('perfis').select('*').eq('tipo', 'psicologo').eq('aprovado', false).order('criado_em', { ascending: true }),
-      supabase.from('perfis').select('*').eq('tipo', 'psicologo').eq('aprovado', true).order('criado_em', { ascending: false }),
+      supabase
+        .from('perfis')
+        .select('*')
+        .eq('tipo', 'psicologo')
+        .eq('aprovado', false)
+        .order('criado_em', { ascending: true }),
+      supabase
+        .from('perfis')
+        .select('*')
+        .eq('tipo', 'psicologo')
+        .eq('aprovado', true)
+        .order('criado_em', { ascending: false }),
       supabase.from('perfis').select('user_id', { count: 'exact', head: true }),
     ]);
 
@@ -46,9 +56,15 @@ export class Admin implements OnInit {
     if (this.processandoId) return;
     this.processandoId = perfil.user_id;
 
-    const { error } = await supabase.from('perfis').update({ aprovado: true }).eq('user_id', perfil.user_id);
+    const { error } = await supabase
+      .from('perfis')
+      .update({ aprovado: true })
+      .eq('user_id', perfil.user_id);
     if (error) {
-      this.modal.avisar({ titulo: 'Não foi possível aprovar', mensagem: 'Verifique se a migração de admin foi aplicada no Supabase e tente de novo.' });
+      this.modal.avisar({
+        titulo: 'Não foi possível aprovar',
+        mensagem: 'Verifique se a migração de admin foi aplicada no Supabase e tente de novo.',
+      });
     } else {
       await this.carregarDados();
     }
@@ -67,9 +83,15 @@ export class Admin implements OnInit {
     if (!confirmou) return;
 
     this.processandoId = perfil.user_id;
-    const { error } = await supabase.from('perfis').update({ tipo: 'usuario', aprovado: true }).eq('user_id', perfil.user_id);
+    const { error } = await supabase
+      .from('perfis')
+      .update({ tipo: 'usuario', aprovado: true })
+      .eq('user_id', perfil.user_id);
     if (error) {
-      this.modal.avisar({ titulo: 'Não foi possível recusar', mensagem: 'Verifique se a migração de admin foi aplicada no Supabase e tente de novo.' });
+      this.modal.avisar({
+        titulo: 'Não foi possível recusar',
+        mensagem: 'Verifique se a migração de admin foi aplicada no Supabase e tente de novo.',
+      });
     } else {
       await this.carregarDados();
     }
@@ -88,7 +110,10 @@ export class Admin implements OnInit {
     if (!confirmou) return;
 
     this.processandoId = perfil.user_id;
-    const { error } = await supabase.from('perfis').update({ aprovado: false }).eq('user_id', perfil.user_id);
+    const { error } = await supabase
+      .from('perfis')
+      .update({ aprovado: false })
+      .eq('user_id', perfil.user_id);
     if (!error) await this.carregarDados();
     this.processandoId = null;
   }

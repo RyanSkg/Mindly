@@ -14,11 +14,14 @@ export class PerfilService {
   async carregar(force = false): Promise<void> {
     if (this.carregado && !force) return;
 
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
     const user = session?.user;
     if (!user) return;
 
-    const nome = (user.user_metadata?.['display_name'] as string) || user.email?.split('@')[0] || 'Usuário';
+    const nome =
+      (user.user_metadata?.['display_name'] as string) || user.email?.split('@')[0] || 'Usuário';
     this.nome.set(nome);
     this.email.set(user.email ?? '');
     this.iniciais.set(this.gerarIniciais(nome));
@@ -58,9 +61,8 @@ export class PerfilService {
 
   private gerarIniciais(nome: string): string {
     const partes = nome.trim().split(/\s+/);
-    const iniciais = partes.length > 1
-      ? partes[0][0] + partes[partes.length - 1][0]
-      : partes[0].slice(0, 2);
+    const iniciais =
+      partes.length > 1 ? partes[0][0] + partes[partes.length - 1][0] : partes[0].slice(0, 2);
     return iniciais.toUpperCase();
   }
 }

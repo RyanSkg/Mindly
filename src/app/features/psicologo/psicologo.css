@@ -1,363 +1,387 @@
 .titulo {
-    font-size: 24px;
-    font-weight: 600;
-    color: var(--foreground);
-    margin-bottom: 4px;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--foreground);
+  margin-bottom: 4px;
 }
 
 .subtitulo {
-    font-size: 13px;
-    color: var(--brand-soft);
-    margin-bottom: 24px;
+  font-size: 13px;
+  color: var(--brand-soft);
+  margin-bottom: 24px;
 }
 
 .grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    align-items: start;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
 }
 
 /* Card da psicóloga */
 
 .card-psicologa {
-    display: flex;
-    gap: 16px;
-    background-color: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 18px;
-    margin-bottom: 12px;
+  display: flex;
+  gap: 16px;
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 12px;
 }
 
 .psicologa-avatar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--brand-muted), var(--brand));
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--brand-soft);
-    flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--brand-muted), var(--brand));
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--brand-soft);
+  flex-shrink: 0;
 }
 
 .psicologa-info {
-    flex: 1;
+  flex: 1;
 }
 
 .psicologa-nome {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--foreground);
-    margin-bottom: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--foreground);
+  margin-bottom: 4px;
 }
 
 .psicologa-crp {
-    font-size: 11px;
-    color: var(--brand-soft);
-    margin-bottom: 8px;
+  font-size: 11px;
+  color: var(--brand-soft);
+  margin-bottom: 8px;
 }
 
 .badge-conectada {
-    display: inline-block;
-    background-color: #022c22;
-    border: 1px solid #065f46;
-    color: #6ee7b7;
-    font-size: 10px;
-    padding: 2px 10px;
-    border-radius: 9999px;
-    margin-bottom: 10px;
+  display: inline-block;
+  background-color: #022c22;
+  border: 1px solid #065f46;
+  color: #6ee7b7;
+  font-size: 10px;
+  padding: 2px 10px;
+  border-radius: 9999px;
+  margin-bottom: 10px;
 }
 
 .psicologa-mensagem {
-    font-size: 12px;
-    font-style: italic;
-    color: var(--muted-fg);
-    line-height: 1.5;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--muted-fg);
+  line-height: 1.5;
 }
 
 .check-conversa {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 12px;
-    color: var(--muted-fg);
-    margin-bottom: 10px;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--muted-fg);
+  margin-bottom: 10px;
+  cursor: pointer;
 }
 
 .check-conversa input {
-    accent-color: var(--brand);
-    width: 14px;
-    height: 14px;
-    cursor: pointer;
+  accent-color: var(--brand);
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
 }
 
 .conversa-anexada-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 11px;
-    color: var(--brand-soft);
-    background-color: var(--accent);
-    border: 1px solid var(--border);
-    border-radius: 9999px;
-    padding: 3px 10px;
-    margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--brand-soft);
+  background-color: var(--accent);
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  padding: 3px 10px;
+  margin-top: 8px;
 }
 
 /* Botões */
 
 .btn-primario {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    background-color: var(--brand);
-    color: var(--brand-foreground);
-    border: none;
-    border-radius: 8px;
-    padding: 11px 16px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    margin-bottom: 8px;
-    transition: opacity 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background-color: var(--brand);
+  color: var(--brand-foreground);
+  border: none;
+  border-radius: 8px;
+  padding: 11px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: opacity 0.15s;
 }
 
-.btn-primario:hover { opacity: 0.9; }
+.btn-primario:hover {
+  opacity: 0.9;
+}
 
 .btn-secundario {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    background-color: var(--accent);
-    color: var(--brand-soft);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 11px 16px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background-color: var(--accent);
+  color: var(--brand-soft);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 11px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.15s;
 }
 
-.btn-secundario:hover { background-color: var(--surface-2); }
+.btn-secundario:hover {
+  background-color: var(--surface-2);
+}
 
 /* Seção título */
 
 .secao-titulo {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--brand-muted);
-    margin-bottom: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--brand-muted);
+  margin-bottom: 10px;
 }
 
 /* Relatórios */
 
 .relatorio-card {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 16px 18px;
-    margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 8px;
 }
 
-.relatorio-info { flex: 1; }
+.relatorio-info {
+  flex: 1;
+}
 
 .relatorio-titulo {
-    font-size: 13px;
-    color: var(--foreground);
-    margin-bottom: 4px;
+  font-size: 13px;
+  color: var(--foreground);
+  margin-bottom: 4px;
 }
 
 .relatorio-titulo-grande {
-    font-size: 14px;
-    font-weight: 500;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .relatorio-detalhes {
-    font-size: 12px;
-    color: var(--muted-fg);
-    margin-bottom: 10px;
+  font-size: 12px;
+  color: var(--muted-fg);
+  margin-bottom: 10px;
 }
 
 .relatorio-icone {
-    color: var(--brand-soft);
-    flex-shrink: 0;
-    margin-left: 12px;
+  color: var(--brand-soft);
+  flex-shrink: 0;
+  margin-left: 12px;
 }
 
 /* Tags */
 
 .tags-emocoes {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
 .tag {
-    border-radius: 9999px;
-    border: 1px solid;
-    padding: 3px 12px;
-    font-size: 11px;
+  border-radius: 9999px;
+  border: 1px solid;
+  padding: 3px 12px;
+  font-size: 11px;
 }
 
-.tag-roxo  { border-color: #594C7D; background: #231640; color: var(--brand-soft); }
-.tag-verde { border-color: #065f46; background: #022c22; color: #6ee7b7; }
-.tag-azul  { border-color: #1e40af; background: #0f1f5c; color: #93c5fd; }
-.tag-vermelho { border-color: #7f1d1d; background: #3b0a0a; color: #fca5a5; }
+.tag-roxo {
+  border-color: #594c7d;
+  background: #231640;
+  color: var(--brand-soft);
+}
+.tag-verde {
+  border-color: #065f46;
+  background: #022c22;
+  color: #6ee7b7;
+}
+.tag-azul {
+  border-color: #1e40af;
+  background: #0f1f5c;
+  color: #93c5fd;
+}
+.tag-vermelho {
+  border-color: #7f1d1d;
+  background: #3b0a0a;
+  color: #fca5a5;
+}
 
 .sem-relatorios {
-    font-size: 13px;
-    color: var(--muted-fg);
-    padding: 8px 0 12px;
+  font-size: 13px;
+  color: var(--muted-fg);
+  padding: 8px 0 12px;
 }
 
 /* Adicionar psicólogo(a) */
 
 .card-busca-psicologo {
-    background-color: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 16px 18px;
-    margin-bottom: 12px;
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 12px;
 }
 
 .busca-psicologo {
-    display: flex;
-    gap: 8px;
+  display: flex;
+  gap: 8px;
 }
 
 .busca-psicologo input {
-    flex: 1;
-    background-color: var(--background);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 9px 12px;
-    font-size: 13px;
-    color: var(--foreground);
-    font-family: inherit;
-    outline: none;
+  flex: 1;
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 13px;
+  color: var(--foreground);
+  font-family: inherit;
+  outline: none;
 }
 
 .busca-psicologo input:focus {
-    border-color: var(--brand);
+  border-color: var(--brand);
 }
 
 .busca-psicologo button {
-    background-color: var(--brand);
-    color: var(--brand-foreground);
-    border: none;
-    border-radius: 8px;
-    padding: 9px 16px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    white-space: nowrap;
+  background-color: var(--brand);
+  color: var(--brand-foreground);
+  border: none;
+  border-radius: 8px;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
 .busca-psicologo button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .erro-busca {
-    font-size: 12px;
-    color: #f87171;
-    margin-top: 8px;
+  font-size: 12px;
+  color: #f87171;
+  margin-top: 8px;
 }
 
 .pendente-envio {
-    font-size: 12px;
-    color: var(--brand-soft);
-    margin-top: 8px;
+  font-size: 12px;
+  color: var(--brand-soft);
+  margin-top: 8px;
 }
 
 .linha-pedido-recebido {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 13px;
-    color: var(--foreground);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--foreground);
 }
 
-.linha-pedido-recebido:last-child { border-bottom: none; }
+.linha-pedido-recebido:last-child {
+  border-bottom: none;
+}
 
 .acoes-pedido {
-    display: flex;
-    gap: 8px;
-    flex-shrink: 0;
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .btn-aceitar-pedido {
-    background-color: var(--brand);
-    color: var(--brand-foreground);
-    border: none;
-    border-radius: 6px;
-    padding: 6px 12px;
-    font-size: 12px;
-    cursor: pointer;
+  background-color: var(--brand);
+  color: var(--brand-foreground);
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
 }
 
 .btn-recusar-pedido {
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--muted-fg);
-    border-radius: 6px;
-    padding: 6px 12px;
-    font-size: 12px;
-    cursor: pointer;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted-fg);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
 }
 
 .btn-remover-psicologo {
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--muted-fg);
-    border-radius: 6px;
-    padding: 6px 10px;
-    font-size: 12px;
-    cursor: pointer;
-    align-self: flex-start;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted-fg);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  align-self: flex-start;
 }
 
 .campo-select-psicologo {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    font-size: 12px;
-    color: var(--muted-fg);
-    margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--muted-fg);
+  margin-bottom: 12px;
 }
 
 .campo-select-psicologo select {
-    background-color: var(--accent);
-    border: 1px solid var(--border);
-    color: var(--foreground);
-    border-radius: 8px;
-    padding: 8px 10px;
-    font-size: 13px;
-    font-family: inherit;
-    cursor: pointer;
+  background-color: var(--accent);
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
 }
 
 /* Mobile */
 
 @media (max-width: 720px) {
-    .grid-2 {
-        grid-template-columns: 1fr;
-    }
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
 }

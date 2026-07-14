@@ -1,5 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, RouterOutlet, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
+import {
+  Router,
+  ActivatedRoute,
+  RouterOutlet,
+  RouterLink,
+  RouterLinkActive,
+  NavigationEnd,
+} from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { supabase } from '../../integrations/supabase/client';
@@ -48,14 +55,10 @@ export class AppShell implements OnInit {
       this.ehPsicologo = true;
     }
 
-    this.router.events
-      .pipe(
-        filter(event => event instanceof NavigationEnd),
-      )
-      .subscribe(() => {
-        this.atualizarRota();
-        this.menuAberto = false;
-      });
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
+      this.atualizarRota();
+      this.menuAberto = false;
+    });
   }
 
   private atualizarRota(): void {

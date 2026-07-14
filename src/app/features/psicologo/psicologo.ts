@@ -49,8 +49,18 @@ export class Psicologo implements OnInit {
 
   private readonly coresTag = ['roxo', 'azul', 'verde', 'vermelho'];
   private readonly meses = [
-    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro',
+    'Janeiro',
+    'Fevereiro',
+    'Março',
+    'Abril',
+    'Maio',
+    'Junho',
+    'Julho',
+    'Agosto',
+    'Setembro',
+    'Outubro',
+    'Novembro',
+    'Dezembro',
   ];
 
   private topbarActions = inject(TopbarActionsService);
@@ -65,7 +75,7 @@ export class Psicologo implements OnInit {
     await this.carregarConexoes();
     await this.carregarRelatorios();
     await this.verificarConversaDisponivel();
-    this.topbarActions.acoes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(acao => {
+    this.topbarActions.acoes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((acao) => {
       if (acao.tipo === 'enviar-relatorio') this.enviarRelatorio();
     });
   }
@@ -75,11 +85,12 @@ export class Psicologo implements OnInit {
     // conexões tipo "psicologo" com os próprios pacientes, que não devem
     // aparecer como se fossem psicólogos dele.
     const aceitos = await this.conexoes.listar('psicologo', 'aceito');
-    this.psicologosConectados = aceitos.filter(c => c.outroPerfil.tipo === 'psicologo');
-    const pendentes = (await this.conexoes.listar('psicologo', 'pendente'))
-      .filter(c => c.outroPerfil.tipo === 'psicologo');
-    this.pendentesEnviados = pendentes.filter(p => p.souSolicitante);
-    this.pendentesRecebidos = pendentes.filter(p => !p.souSolicitante);
+    this.psicologosConectados = aceitos.filter((c) => c.outroPerfil.tipo === 'psicologo');
+    const pendentes = (await this.conexoes.listar('psicologo', 'pendente')).filter(
+      (c) => c.outroPerfil.tipo === 'psicologo',
+    );
+    this.pendentesEnviados = pendentes.filter((p) => p.souSolicitante);
+    this.pendentesRecebidos = pendentes.filter((p) => !p.souSolicitante);
     if (this.psicologosConectados.length > 0 && !this.psicologoSelecionadoId) {
       this.psicologoSelecionadoId = this.psicologosConectados[0].outroPerfil.user_id;
     }
@@ -114,7 +125,10 @@ export class Psicologo implements OnInit {
     this.buscandoPsicologo = true;
     this.erroBuscaPsicologo = '';
 
-    const resultado = await this.conexoes.solicitarPorUsername(this.buscaUsername.trim(), 'psicologo');
+    const resultado = await this.conexoes.solicitarPorUsername(
+      this.buscaUsername.trim(),
+      'psicologo',
+    );
     if (resultado.ok) {
       this.buscaUsername = '';
       await this.carregarConexoes();
@@ -174,7 +188,10 @@ export class Psicologo implements OnInit {
     const user = await obterUsuarioValido();
     if (!user) {
       this.enviando = false;
-      this.modal.avisar({ titulo: 'Sessão expirada', mensagem: 'Atualize a página e tente enviar o relatório de novo.' });
+      this.modal.avisar({
+        titulo: 'Sessão expirada',
+        mensagem: 'Atualize a página e tente enviar o relatório de novo.',
+      });
       return;
     }
 
@@ -188,15 +205,18 @@ export class Psicologo implements OnInit {
       .gte('criado_em', inicioMes.toISOString());
 
     const lista = registros ?? [];
-    const diasUnicos = new Set(lista.map(r => new Date(r.criado_em).toDateString())).size;
+    const diasUnicos = new Set(lista.map((r) => new Date(r.criado_em).toDateString())).size;
     const semanas = Math.max(1, Math.ceil(diasUnicos / 7));
 
     const contagem = new Map<string, number>();
-    lista.forEach(r => contagem.set(r.humor, (contagem.get(r.humor) ?? 0) + 1));
+    lista.forEach((r) => contagem.set(r.humor, (contagem.get(r.humor) ?? 0) + 1));
     const tags = [...contagem.entries()]
       .sort((a, b) => b[1] - a[1])
       .slice(0, 2)
-      .map(([humor], i) => ({ label: labelDoHumor(humor).toLowerCase(), cor: this.coresTag[i % this.coresTag.length] }));
+      .map(([humor], i) => ({
+        label: labelDoHumor(humor).toLowerCase(),
+        cor: this.coresTag[i % this.coresTag.length],
+      }));
 
     const titulo = `Relatório — ${this.meses[hoje.getMonth()]} ${hoje.getFullYear()}`;
     const detalhes = `${lista.length} registros · ${semanas} semana${semanas > 1 ? 's' : ''}`;
@@ -228,7 +248,7 @@ export class Psicologo implements OnInit {
       .single();
 
     if (!error && data) {
-      this.relatorios = this.relatorios.map(r => ({ ...r, principal: false }));
+      this.relatorios = this.relatorios.map((r) => ({ ...r, principal: false }));
       this.relatorios.unshift({
         id: data.id,
         titulo: data.titulo,
@@ -237,11 +257,19 @@ export class Psicologo implements OnInit {
         conversaAnexada: data.conversa_anexada ?? [],
         principal: true,
       });
-      const psicologo = this.psicologosConectados.find(p => p.outroPerfil.user_id === this.psicologoSelecionadoId);
-      this.notificacoes.criar('Relatório enviado', `${data.titulo} foi enviado para @${psicologo?.outroPerfil.username ?? 'seu(sua) psicólogo(a)'}.`);
+      const psicologo = this.psicologosConectados.find(
+        (p) => p.outroPerfil.user_id === this.psicologoSelecionadoId,
+      );
+      this.notificacoes.criar(
+        'Relatório enviado',
+        `${data.titulo} foi enviado para @${psicologo?.outroPerfil.username ?? 'seu(sua) psicólogo(a)'}.`,
+      );
       this.incluirConversa = false;
     } else {
-      this.modal.avisar({ titulo: 'Não foi possível enviar', mensagem: 'Algo deu errado ao enviar o relatório. Tente novamente.' });
+      this.modal.avisar({
+        titulo: 'Não foi possível enviar',
+        mensagem: 'Algo deu errado ao enviar o relatório. Tente novamente.',
+      });
     }
     this.enviando = false;
   }
@@ -265,7 +293,7 @@ export class Psicologo implements OnInit {
       doc.text('Emoções observadas:', 14, y);
       y += 8;
       doc.setFontSize(11);
-      relatorio.tags.forEach(tag => {
+      relatorio.tags.forEach((tag) => {
         doc.text(`• ${tag.label}`, 14, y);
         y += 7;
       });
@@ -277,7 +305,7 @@ export class Psicologo implements OnInit {
       doc.text('Conversa com a IA:', 14, y);
       y += 8;
       doc.setFontSize(10);
-      relatorio.conversaAnexada.forEach(msg => {
+      relatorio.conversaAnexada.forEach((msg) => {
         const prefixo = msg.role === 'user' ? 'Paciente: ' : 'IA: ';
         const linhas = doc.splitTextToSize(prefixo + msg.content, 180);
         linhas.forEach((linha: string) => {
@@ -292,7 +320,10 @@ export class Psicologo implements OnInit {
       });
     }
 
-    const nomeArquivo = relatorio.titulo.replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').toLowerCase();
+    const nomeArquivo = relatorio.titulo
+      .replace(/[^\w\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .toLowerCase();
     doc.save(`${nomeArquivo}.pdf`);
   }
 }

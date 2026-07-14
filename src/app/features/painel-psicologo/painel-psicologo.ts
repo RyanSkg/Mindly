@@ -110,10 +110,12 @@ export class PainelPsicologo implements OnInit {
   private async carregarTudo() {
     // Só usuários comuns são pacientes: se este psicólogo também tiver o
     // próprio psicólogo, a conexão entre eles não deve aparecer aqui.
-    this.pendentes = (await this.conexoes.listar('psicologo', 'pendente'))
-      .filter(c => c.outroPerfil.tipo === 'usuario');
-    this.pacientes = (await this.conexoes.listar('psicologo', 'aceito'))
-      .filter(c => c.outroPerfil.tipo === 'usuario');
+    this.pendentes = (await this.conexoes.listar('psicologo', 'pendente')).filter(
+      (c) => c.outroPerfil.tipo === 'usuario',
+    );
+    this.pacientes = (await this.conexoes.listar('psicologo', 'aceito')).filter(
+      (c) => c.outroPerfil.tipo === 'usuario',
+    );
     await this.carregarRelatorios();
 
     if (!this.pacienteSelecionadoId && this.pacientes.length > 0) {
@@ -131,7 +133,7 @@ export class PainelPsicologo implements OnInit {
       .eq('psicologo_id', user.id)
       .order('criado_em', { ascending: true });
 
-    this.relatoriosTodos = (data ?? []).map(r => ({
+    this.relatoriosTodos = (data ?? []).map((r) => ({
       id: r.id,
       titulo: r.titulo,
       detalhes: r.detalhes ?? '',
@@ -148,7 +150,7 @@ export class PainelPsicologo implements OnInit {
   get pacientesFiltrados(): ConexaoComPerfil[] {
     const busca = this.filtroPaciente.trim().replace(/^@/, '').toLowerCase();
     if (!busca) return this.pacientes;
-    return this.pacientes.filter(p => p.outroPerfil.username.toLowerCase().includes(busca));
+    return this.pacientes.filter((p) => p.outroPerfil.username.toLowerCase().includes(busca));
   }
 
   selecionarPaciente(userId: string) {
@@ -163,7 +165,8 @@ export class PainelPsicologo implements OnInit {
   /* ==== Mensagem pro paciente ==== */
 
   async enviarMensagem() {
-    if (!this.mensagemConteudo.trim() || this.enviandoMensagem || !this.pacienteSelecionadoId) return;
+    if (!this.mensagemConteudo.trim() || this.enviandoMensagem || !this.pacienteSelecionadoId)
+      return;
     this.enviandoMensagem = true;
     this.mensagemEnviada = false;
 
@@ -199,7 +202,9 @@ export class PainelPsicologo implements OnInit {
     this.pontoHumorAtivo = null;
     if (!this.pacienteSelecionadoId) return;
 
-    const { data } = await supabase.rpc('humor_do_paciente', { paciente: this.pacienteSelecionadoId });
+    const { data } = await supabase.rpc('humor_do_paciente', {
+      paciente: this.pacienteSelecionadoId,
+    });
     const registros: { humor: string; criado_em: string }[] = data ?? [];
     if (registros.length < 2) return;
 
@@ -297,24 +302,26 @@ export class PainelPsicologo implements OnInit {
   }
 
   get pacienteSelecionado(): ConexaoComPerfil | null {
-    return this.pacientes.find(p => p.outroPerfil.user_id === this.pacienteSelecionadoId) ?? null;
+    return this.pacientes.find((p) => p.outroPerfil.user_id === this.pacienteSelecionadoId) ?? null;
   }
 
   /* ==== Visão do paciente selecionado ==== */
 
   get relatoriosDoPaciente(): RelatorioRecebido[] {
     return this.relatoriosTodos
-      .filter(r => r.pacienteId === this.pacienteSelecionadoId)
+      .filter((r) => r.pacienteId === this.pacienteSelecionadoId)
       .slice()
       .reverse();
   }
 
   /** Barras: nº de registros em cada relatório recebido (evolução ao longo do tempo). */
   get graficoRegistros(): BarraGrafico[] {
-    const doPaciente = this.relatoriosTodos.filter(r => r.pacienteId === this.pacienteSelecionadoId);
+    const doPaciente = this.relatoriosTodos.filter(
+      (r) => r.pacienteId === this.pacienteSelecionadoId,
+    );
     const ultimos = doPaciente.slice(-8);
-    const maior = Math.max(1, ...ultimos.map(r => r.registros));
-    return ultimos.map(r => ({
+    const maior = Math.max(1, ...ultimos.map((r) => r.registros));
+    return ultimos.map((r) => ({
       label: r.criadoEm.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
       valor: r.registros,
       altura: Math.max(6, Math.round((r.registros / maior) * 100)),
@@ -323,9 +330,13 @@ export class PainelPsicologo implements OnInit {
 
   /** Emoções mais frequentes nas tags de todos os relatórios do paciente. */
   get emocoesFrequentes(): EmocaoFrequencia[] {
-    const doPaciente = this.relatoriosTodos.filter(r => r.pacienteId === this.pacienteSelecionadoId);
+    const doPaciente = this.relatoriosTodos.filter(
+      (r) => r.pacienteId === this.pacienteSelecionadoId,
+    );
     const contagem = new Map<string, number>();
-    doPaciente.forEach(r => r.tags.forEach(t => contagem.set(t.label, (contagem.get(t.label) ?? 0) + 1)));
+    doPaciente.forEach((r) =>
+      r.tags.forEach((t) => contagem.set(t.label, (contagem.get(t.label) ?? 0) + 1)),
+    );
 
     const total = [...contagem.values()].reduce((s, v) => s + v, 0);
     if (total === 0) return [];
@@ -344,7 +355,10 @@ export class PainelPsicologo implements OnInit {
     this.erroAdicionarPaciente = '';
     this.avisoPacienteAdicionado = '';
 
-    const resultado = await this.conexoes.solicitarPorUsername(this.novoPacienteUsername.trim(), 'psicologo');
+    const resultado = await this.conexoes.solicitarPorUsername(
+      this.novoPacienteUsername.trim(),
+      'psicologo',
+    );
     if (resultado.ok) {
       this.avisoPacienteAdicionado = `Pedido enviado para ${this.novoPacienteUsername.trim()}. Assim que o paciente aceitar, ele aparece na sua lista.`;
       this.novoPacienteUsername = '';
@@ -380,7 +394,11 @@ export class PainelPsicologo implements OnInit {
     y += 8;
     doc.setFontSize(10);
     doc.setTextColor(120);
-    doc.text(`Gerado em ${new Date().toLocaleDateString('pt-BR')} · ${this.relatoriosDoPaciente.length} relatório(s) recebido(s)`, 14, y);
+    doc.text(
+      `Gerado em ${new Date().toLocaleDateString('pt-BR')} · ${this.relatoriosDoPaciente.length} relatório(s) recebido(s)`,
+      14,
+      y,
+    );
     doc.setTextColor(0);
     y += 14;
 
@@ -395,7 +413,7 @@ export class PainelPsicologo implements OnInit {
       const larguraBarra = 14;
       const espaco = 8;
       const baseY = y + alturaMax;
-      const maior = Math.max(1, ...barras.map(b => b.valor));
+      const maior = Math.max(1, ...barras.map((b) => b.valor));
 
       barras.forEach((barra, i) => {
         const x = 14 + i * (larguraBarra + espaco);
@@ -403,7 +421,9 @@ export class PainelPsicologo implements OnInit {
         doc.setFillColor(...roxo);
         doc.rect(x, baseY - altura, larguraBarra, altura, 'F');
         doc.setFontSize(8);
-        doc.text(String(barra.valor), x + larguraBarra / 2, baseY - altura - 1.5, { align: 'center' });
+        doc.text(String(barra.valor), x + larguraBarra / 2, baseY - altura - 1.5, {
+          align: 'center',
+        });
         doc.text(barra.label, x + larguraBarra / 2, baseY + 4.5, { align: 'center' });
       });
       y = baseY + 14;
@@ -417,7 +437,7 @@ export class PainelPsicologo implements OnInit {
       y += 7;
 
       const larguraTrilho = 90;
-      emocoes.forEach(emocao => {
+      emocoes.forEach((emocao) => {
         doc.setFontSize(10);
         doc.text(emocao.label, 14, y + 3.5);
         doc.setFillColor(230, 230, 235);
@@ -458,12 +478,16 @@ export class PainelPsicologo implements OnInit {
       doc.text('Relatórios recebidos', 14, y);
       y += 7;
       doc.setFontSize(10);
-      this.relatoriosDoPaciente.forEach(r => {
+      this.relatoriosDoPaciente.forEach((r) => {
         if (y > 280) {
           doc.addPage();
           y = 20;
         }
-        doc.text(`• ${r.criadoEm.toLocaleDateString('pt-BR')} — ${r.titulo} (${r.detalhes})`, 14, y);
+        doc.text(
+          `• ${r.criadoEm.toLocaleDateString('pt-BR')} — ${r.titulo} (${r.detalhes})`,
+          14,
+          y,
+        );
         y += 6;
       });
     }
@@ -493,13 +517,16 @@ export class PainelPsicologo implements OnInit {
       doc.text('Emoções observadas:', 14, y);
       y += 8;
       doc.setFontSize(11);
-      relatorio.tags.forEach(tag => {
+      relatorio.tags.forEach((tag) => {
         doc.text(`• ${tag.label}`, 14, y);
         y += 7;
       });
     }
 
-    const nomeArquivo = relatorio.titulo.replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').toLowerCase();
+    const nomeArquivo = relatorio.titulo
+      .replace(/[^\w\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .toLowerCase();
     doc.save(`${nomeArquivo}.pdf`);
   }
 }

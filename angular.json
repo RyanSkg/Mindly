@@ -29,12 +29,8 @@
                 "output": "assets"
               }
             ],
-            "polyfills": [
-              "zone.js"
-            ],
-            "styles": [
-              "src/styles.css"
-            ],
+            "polyfills": ["zone.js"],
+            "styles": ["src/styles.css"],
             "server": "src/main.server.ts",
             "outputMode": "server",
             "security": {

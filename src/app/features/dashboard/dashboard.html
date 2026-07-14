@@ -5,7 +5,11 @@
       <div class="estatisticas-card">
         <div class="estatisticas-topo">
           <h2>{{ item.valor }}</h2>
-          <span class="delta" [class.delta-positivo]="item.positivo" [class.delta-negativo]="!item.positivo">
+          <span
+            class="delta"
+            [class.delta-positivo]="item.positivo"
+            [class.delta-negativo]="!item.positivo"
+          >
             {{ item.delta }}
           </span>
         </div>
@@ -19,9 +23,13 @@
     <div class="meta-card">
       <div class="meta-topo">
         <span class="meta-titulo">🎯 META SEMANAL</span>
-        <select [ngModel]="metaDiasSemana" (ngModelChange)="escolherMeta($event)" [disabled]="salvandoMeta">
+        <select
+          [ngModel]="metaDiasSemana"
+          (ngModelChange)="escolherMeta($event)"
+          [disabled]="salvandoMeta"
+        >
           <option [ngValue]="null">Sem meta</option>
-          @for (d of [1,2,3,4,5,6,7]; track d) {
+          @for (d of [1, 2, 3, 4, 5, 6, 7]; track d) {
             <option [ngValue]="d">{{ d }} dia{{ d > 1 ? 's' : '' }}/semana</option>
           }
         </select>
@@ -31,8 +39,13 @@
           <div class="meta-progresso-barra" [style.width.%]="progressoMeta"></div>
         </div>
         <p class="meta-texto">
-          {{ diasRegistradosSemana }} de {{ metaDiasSemana }} dia{{ metaDiasSemana > 1 ? 's' : '' }} registrado{{ diasRegistradosSemana === 1 ? '' : 's' }} essa semana
-          @if (progressoMeta >= 100) { — meta batida! 🎉 }
+          {{ diasRegistradosSemana }} de {{ metaDiasSemana }} dia{{
+            metaDiasSemana > 1 ? 's' : ''
+          }}
+          registrado{{ diasRegistradosSemana === 1 ? '' : 's' }} essa semana
+          @if (progressoMeta >= 100) {
+            — meta batida! 🎉
+          }
         </p>
       } @else {
         <p class="meta-texto">Escolha quantos dias por semana você quer registrar seu humor.</p>
@@ -44,7 +57,7 @@
       <div class="meta-topo">
         <span class="meta-titulo">✨ RESUMO DO MÊS COM IA</span>
         <button class="btn-resumo" (click)="gerarResumoMensal()" [disabled]="gerandoResumo">
-          {{ gerandoResumo ? 'Gerando...' : (resumoMensal ? 'Gerar de novo' : 'Gerar resumo') }}
+          {{ gerandoResumo ? 'Gerando...' : resumoMensal ? 'Gerar de novo' : 'Gerar resumo' }}
         </button>
       </div>
       @if (erroResumo) {
@@ -53,7 +66,9 @@
       @if (resumoMensal) {
         <p class="resumo-texto">{{ resumoMensal }}</p>
       } @else if (!erroResumo && !gerandoResumo) {
-        <p class="meta-texto">A IA analisa seus humores do mês e escreve um resumo com os padrões que encontrar.</p>
+        <p class="meta-texto">
+          A IA analisa seus humores do mês e escreve um resumo com os padrões que encontrar.
+        </p>
       }
     </div>
   </div>
@@ -61,14 +76,17 @@
   <div class="grafico">
     <div class="grafico-card carrossel">
       <div class="carrossel-viewport">
-        <button class="carrossel-zona carrossel-zona-esquerda"
+        <button
+          class="carrossel-zona carrossel-zona-esquerda"
           (click)="irParaSlide((slideAtual - 1 + totalSlides) % totalSlides)"
-          aria-label="Slide anterior"></button>
-        <button class="carrossel-zona carrossel-zona-direita"
+          aria-label="Slide anterior"
+        ></button>
+        <button
+          class="carrossel-zona carrossel-zona-direita"
           (click)="irParaSlide((slideAtual + 1) % totalSlides)"
-          aria-label="Próximo slide"></button>
-        <div class="carrossel-trilho" [style.transform]="'translateX(-' + (slideAtual * 100) + '%)'">
-
+          aria-label="Próximo slide"
+        ></button>
+        <div class="carrossel-trilho" [style.transform]="'translateX(-' + slideAtual * 100 + '%)'">
           <!-- Slide 1: gráfico de linha -->
           <div class="carrossel-slide">
             <div class="card-texto">
@@ -93,9 +111,13 @@
               <span>HUMOR POR DIA - ESTA SEMANA</span>
             </div>
 
-            <svg class="grafico-linha" [attr.viewBox]="'0 0 ' + largura + ' ' + altura"
-              preserveAspectRatio="xMidYMid meet" role="img"
-              aria-label="Gráfico de humor por dia da semana">
+            <svg
+              class="grafico-linha"
+              [attr.viewBox]="'0 0 ' + largura + ' ' + altura"
+              preserveAspectRatio="xMidYMid meet"
+              role="img"
+              aria-label="Gráfico de humor por dia da semana"
+            >
               <defs>
                 <linearGradient id="areaHumor" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stop-color="#A78BFA" stop-opacity="0.35" />
@@ -107,36 +129,70 @@
               <path [attr.d]="caminhoArea" fill="url(#areaHumor)" />
 
               <!-- Linha suave -->
-              <path [attr.d]="caminhoLinha" fill="none" stroke="#A78BFA" stroke-width="2"
-                stroke-linecap="round" />
+              <path
+                [attr.d]="caminhoLinha"
+                fill="none"
+                stroke="#A78BFA"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
 
               <!-- Pontos e rótulos -->
               @for (ponto of pontos; track ponto.label; let i = $index) {
                 <!-- Crosshair vertical no dia sob o mouse -->
                 @if (pontoAtivo === i) {
-                  <line [attr.x1]="ponto.x" [attr.y1]="margem.topo"
-                    [attr.x2]="ponto.x" [attr.y2]="altura - margem.baixo"
-                    class="crosshair" />
+                  <line
+                    [attr.x1]="ponto.x"
+                    [attr.y1]="margem.topo"
+                    [attr.x2]="ponto.x"
+                    [attr.y2]="altura - margem.baixo"
+                    class="crosshair"
+                  />
                 }
 
-                <circle [attr.cx]="ponto.x" [attr.cy]="ponto.y"
-                  [attr.r]="pontoAtivo === i ? 6 : (ponto.melhor ? 5 : 4)"
+                <circle
+                  [attr.cx]="ponto.x"
+                  [attr.cy]="ponto.y"
+                  [attr.r]="pontoAtivo === i ? 6 : ponto.melhor ? 5 : 4"
                   [attr.fill]="pontoAtivo === i || ponto.melhor ? '#A78BFA' : '#0F0A1E'"
-                  stroke="#A78BFA" stroke-width="2" class="ponto-grafico" />
+                  stroke="#A78BFA"
+                  stroke-width="2"
+                  class="ponto-grafico"
+                />
 
                 <!-- Valor: aparece no hover ou no melhor dia -->
                 @if (pontoAtivo === i || (ponto.melhor && pontoAtivo === null)) {
-                  <text [attr.x]="ponto.x" [attr.y]="ponto.y - 14" text-anchor="middle"
-                    class="valor-destaque">{{ ponto.v }}</text>
+                  <text
+                    [attr.x]="ponto.x"
+                    [attr.y]="ponto.y - 14"
+                    text-anchor="middle"
+                    class="valor-destaque"
+                  >
+                    {{ ponto.v }}
+                  </text>
                 }
 
-                <text [attr.x]="ponto.x" [attr.y]="altura - 8" text-anchor="middle"
-                  class="rotulo-dia" [class.rotulo-ativo]="pontoAtivo === i">{{ ponto.label }}</text>
+                <text
+                  [attr.x]="ponto.x"
+                  [attr.y]="altura - 8"
+                  text-anchor="middle"
+                  class="rotulo-dia"
+                  [class.rotulo-ativo]="pontoAtivo === i"
+                >
+                  {{ ponto.label }}
+                </text>
 
                 <!-- Alvo de hover: coluna inteira do dia, por cima de tudo -->
-                <rect [attr.x]="ponto.x - 40" y="0" width="80" [attr.height]="altura"
-                  fill="transparent" style="cursor: pointer"
-                  (mouseenter)="pontoAtivo = i" (mouseleave)="pontoAtivo = null" />
+                <rect
+                  [attr.x]="ponto.x - 40"
+                  y="0"
+                  width="80"
+                  [attr.height]="altura"
+                  fill="transparent"
+                  style="cursor: pointer"
+                  (mouseenter)="pontoAtivo = i"
+                  (mouseleave)="pontoAtivo = null"
+                />
               }
             </svg>
           </div>
@@ -144,7 +200,20 @@
           <!-- Slide 2: distribuição de humores (donut) -->
           <div class="carrossel-slide">
             <div class="card-texto">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 2a10 10 0 0 1 10 10" />
+              </svg>
               <span>DISTRIBUIÇÃO DE HUMORES</span>
             </div>
 
@@ -173,28 +242,67 @@
           <!-- Slide 3: sequência de dias ativos -->
           <div class="carrossel-slide">
             <div class="card-texto">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"
+                />
+              </svg>
               <span>SEQUÊNCIA</span>
             </div>
             <div class="streak-container">
               <div class="streak-numero">🔥 {{ diasSequencia }}</div>
               <div class="streak-label">
-                {{ diasSequencia === 0 ? 'Registre hoje para começar uma sequência!' : ('dia' + (diasSequencia === 1 ? '' : 's') + ' seguido' + (diasSequencia === 1 ? '' : 's') + ' registrando') }}
+                {{
+                  diasSequencia === 0
+                    ? 'Registre hoje para começar uma sequência!'
+                    : 'dia' +
+                      (diasSequencia === 1 ? '' : 's') +
+                      ' seguido' +
+                      (diasSequencia === 1 ? '' : 's') +
+                      ' registrando'
+                }}
               </div>
             </div>
           </div>
-
         </div>
       </div>
 
       <div class="carrossel-controles">
         <button class="carrossel-seta" (click)="slideAnterior()" title="Anterior">‹</button>
         <div class="carrossel-dots">
-          <button class="dot" [class.dot-ativo]="slideAtual === 0" (click)="irParaSlide(0)"></button>
-          <button class="dot" [class.dot-ativo]="slideAtual === 1" (click)="irParaSlide(1)"></button>
-          <button class="dot" [class.dot-ativo]="slideAtual === 2" (click)="irParaSlide(2)"></button>
+          <button
+            class="dot"
+            [class.dot-ativo]="slideAtual === 0"
+            (click)="irParaSlide(0)"
+          ></button>
+          <button
+            class="dot"
+            [class.dot-ativo]="slideAtual === 1"
+            (click)="irParaSlide(1)"
+          ></button>
+          <button
+            class="dot"
+            [class.dot-ativo]="slideAtual === 2"
+            (click)="irParaSlide(2)"
+          ></button>
         </div>
-        <button class="carrossel-seta" (click)="irParaSlide((slideAtual + 1) % totalSlides)" title="Próximo">›</button>
+        <button
+          class="carrossel-seta"
+          (click)="irParaSlide((slideAtual + 1) % totalSlides)"
+          title="Próximo"
+        >
+          ›
+        </button>
       </div>
     </div>
     <div class="emocoes-card">

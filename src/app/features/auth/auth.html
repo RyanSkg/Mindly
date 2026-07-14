@@ -1,10 +1,18 @@
 <div class="pagina-auth">
   <div class="card-auth">
-
     <!-- Logo -->
     <div class="auth-logo">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
         <path d="M12 18V5"></path>
         <path d="M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4"></path>
         <path d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5"></path>
@@ -20,23 +28,39 @@
     <!-- Título -->
     <h1>{{ modo === 'entrar' ? 'Bem-vindo de volta' : 'Crie sua conta' }}</h1>
     <p class="subtitulo">
-      {{ modo === 'entrar' ? 'Entre para continuar no seu diário' : 'Comece a registrar suas emoções' }}
+      {{
+        modo === 'entrar' ? 'Entre para continuar no seu diário' : 'Comece a registrar suas emoções'
+      }}
     </p>
 
     <!-- OAuth -->
     <div class="botoes-oauth">
       <button type="button" (click)="entrarComGoogle()" [disabled]="carregando">
         <svg width="16" height="16" viewBox="0 0 48 48" aria-hidden="true">
-          <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.4 29.3 35.5 24 35.5c-6.4 0-11.5-5.2-11.5-11.5S17.6 12.5 24 12.5c2.9 0 5.6 1.1 7.7 2.9l5.7-5.7C33.6 6.1 29 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.3-.4-3.5z"/>
-          <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19 12.5 24 12.5c2.9 0 5.6 1.1 7.7 2.9l5.7-5.7C33.6 6.1 29 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>
-          <path fill="#4CAF50" d="M24 44c5 0 9.5-1.9 12.9-5l-6-5c-1.9 1.3-4.2 2-6.9 2-5.3 0-9.7-3.1-11.3-7.5l-6.5 5C9.6 39.6 16.2 44 24 44z"/>
-          <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4.3 5.5l6 5c-.4.4 6.5-4.7 6.5-14.5 0-1.2-.1-2.3-.4-3.5z"/>
+          <path
+            fill="#FFC107"
+            d="M43.6 20.5H42V20H24v8h11.3C33.7 32.4 29.3 35.5 24 35.5c-6.4 0-11.5-5.2-11.5-11.5S17.6 12.5 24 12.5c2.9 0 5.6 1.1 7.7 2.9l5.7-5.7C33.6 6.1 29 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.3-.4-3.5z"
+          />
+          <path
+            fill="#FF3D00"
+            d="M6.3 14.7l6.6 4.8C14.7 16 19 12.5 24 12.5c2.9 0 5.6 1.1 7.7 2.9l5.7-5.7C33.6 6.1 29 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"
+          />
+          <path
+            fill="#4CAF50"
+            d="M24 44c5 0 9.5-1.9 12.9-5l-6-5c-1.9 1.3-4.2 2-6.9 2-5.3 0-9.7-3.1-11.3-7.5l-6.5 5C9.6 39.6 16.2 44 24 44z"
+          />
+          <path
+            fill="#1976D2"
+            d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4.3 5.5l6 5c-.4.4 6.5-4.7 6.5-14.5 0-1.2-.1-2.3-.4-3.5z"
+          />
         </svg>
         Continuar com Google
       </button>
       <button type="button" (click)="entrarComApple()" [disabled]="carregando">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M17.05 12.04c-.03-2.53 2.07-3.75 2.17-3.81-1.18-1.73-3.02-1.97-3.68-2-1.57-.16-3.06.92-3.86.92-.81 0-2.03-.9-3.34-.87-1.72.03-3.31 1-4.19 2.54-1.79 3.1-.46 7.7 1.28 10.22.85 1.23 1.86 2.62 3.18 2.57 1.28-.05 1.76-.83 3.31-.83s1.98.83 3.34.8c1.38-.02 2.25-1.25 3.09-2.49.97-1.43 1.37-2.82 1.4-2.89-.03-.01-2.68-1.03-2.7-4.16zM14.5 5.45c.71-.86 1.19-2.05 1.06-3.25-1.02.04-2.27.68-3 1.54-.66.77-1.23 1.99-1.08 3.16 1.14.09 2.31-.58 3.02-1.45z"/>
+          <path
+            d="M17.05 12.04c-.03-2.53 2.07-3.75 2.17-3.81-1.18-1.73-3.02-1.97-3.68-2-1.57-.16-3.06.92-3.86.92-.81 0-2.03-.9-3.34-.87-1.72.03-3.31 1-4.19 2.54-1.79 3.1-.46 7.7 1.28 10.22.85 1.23 1.86 2.62 3.18 2.57 1.28-.05 1.76-.83 3.31-.83s1.98.83 3.34.8c1.38-.02 2.25-1.25 3.09-2.49.97-1.43 1.37-2.82 1.4-2.89-.03-.01-2.68-1.03-2.7-4.16zM14.5 5.45c.71-.86 1.19-2.05 1.06-3.25-1.02.04-2.27.68-3 1.54-.66.77-1.23 1.99-1.08 3.16 1.14.09 2.31-.58 3.02-1.45z"
+          />
         </svg>
         Continuar com Apple
       </button>
@@ -55,8 +79,20 @@
         <div class="campo">
           <label>Tipo de conta</label>
           <div class="tipo-conta-segmentado">
-            <button type="button" [class.tipo-ativo]="tipoConta === 'usuario'" (click)="tipoConta = 'usuario'">Sou usuário</button>
-            <button type="button" [class.tipo-ativo]="tipoConta === 'psicologo'" (click)="tipoConta = 'psicologo'">Sou psicólogo(a)</button>
+            <button
+              type="button"
+              [class.tipo-ativo]="tipoConta === 'usuario'"
+              (click)="tipoConta = 'usuario'"
+            >
+              Sou usuário
+            </button>
+            <button
+              type="button"
+              [class.tipo-ativo]="tipoConta === 'psicologo'"
+              (click)="tipoConta = 'psicologo'"
+            >
+              Sou psicólogo(a)
+            </button>
           </div>
         </div>
         <div class="campo">
@@ -71,7 +107,13 @@
         </div>
         <div class="campo">
           <label for="especialidade">Especialidade</label>
-          <input id="especialidade" type="text" name="especialidade" [(ngModel)]="especialidade" placeholder="Ex: Psicóloga clínica" />
+          <input
+            id="especialidade"
+            type="text"
+            name="especialidade"
+            [(ngModel)]="especialidade"
+            placeholder="Ex: Psicóloga clínica"
+          />
         </div>
         <p class="aviso-psicologo">
           Seu cadastro passa por uma aprovação antes de liberar o acesso à área de psicólogo(a).
@@ -79,20 +121,35 @@
       }
       <div class="campo">
         <label for="email">Email</label>
-        <input id="email" type="email" name="email" [(ngModel)]="email" required
-          placeholder="voce@email.com" />
+        <input
+          id="email"
+          type="email"
+          name="email"
+          [(ngModel)]="email"
+          required
+          placeholder="voce@email.com"
+        />
       </div>
       <div class="campo">
         <label for="senha">Senha</label>
-        <input id="senha" type="password" name="senha" [(ngModel)]="senha" required
-          minlength="6" placeholder="••••••••" />
+        <input
+          id="senha"
+          type="password"
+          name="senha"
+          [(ngModel)]="senha"
+          required
+          minlength="6"
+          placeholder="••••••••"
+        />
       </div>
       @if (modo === 'cadastro') {
         <label class="campo-checkbox">
           <input type="checkbox" [(ngModel)]="aceitouPolitica" name="aceitouPolitica" />
           <span>
             Li e aceito a
-            <button type="button" class="link-politica" (click)="abrirPolitica()">Política de Privacidade</button>
+            <button type="button" class="link-politica" (click)="abrirPolitica()">
+              Política de Privacidade
+            </button>
           </span>
         </label>
       }
@@ -122,7 +179,6 @@
     <p class="voltar">
       <a routerLink="/home">Voltar ao início</a>
     </p>
-
   </div>
 
   <!-- Popup: Política de Privacidade -->
@@ -133,28 +189,47 @@
         <div class="politica-corpo">
           <p>
             A Mindly é um diário emocional que trata dados sobre sua saúde mental — considerados
-            <strong>dados sensíveis</strong> pela Lei Geral de Proteção de Dados (LGPD, Lei nº 13.709/2018).
-            Por isso, pedimos seu consentimento explícito antes de criar sua conta.
+            <strong>dados sensíveis</strong> pela Lei Geral de Proteção de Dados (LGPD, Lei nº
+            13.709/2018). Por isso, pedimos seu consentimento explícito antes de criar sua conta.
           </p>
 
           <h4>O que coletamos</h4>
-          <p>Nome, email, registros de humor e textos do diário, contatos de confiança que você cadastrar e, se optar por usar o áudio, a transcrição da sua fala.</p>
+          <p>
+            Nome, email, registros de humor e textos do diário, contatos de confiança que você
+            cadastrar e, se optar por usar o áudio, a transcrição da sua fala.
+          </p>
 
           <h4>Como usamos</h4>
-          <p>Seus registros são analisados por uma IA (Groq) para gerar reflexões e sugestões personalizadas, e podem ser usados para montar relatórios que você mesmo escolhe enviar ao seu psicólogo. Não vendemos nem compartilhamos seus dados com terceiros para fins de marketing.</p>
+          <p>
+            Seus registros são analisados por uma IA (Groq) para gerar reflexões e sugestões
+            personalizadas, e podem ser usados para montar relatórios que você mesmo escolhe enviar
+            ao seu psicólogo. Não vendemos nem compartilhamos seus dados com terceiros para fins de
+            marketing.
+          </p>
 
           <h4>Onde ficam armazenados</h4>
-          <p>Seus dados ficam no Supabase, com criptografia em repouso (AES-256) e em trânsito (TLS/HTTPS), protegidos por Row Level Security — apenas você consegue acessar seus próprios registros.</p>
+          <p>
+            Seus dados ficam no Supabase, com criptografia em repouso (AES-256) e em trânsito
+            (TLS/HTTPS), protegidos por Row Level Security — apenas você consegue acessar seus
+            próprios registros.
+          </p>
 
           <h4>Seus direitos</h4>
-          <p>Você pode exportar todos os seus dados em JSON ou excluir sua conta e todos os dados associados a qualquer momento, na página de Configurações.</p>
+          <p>
+            Você pode exportar todos os seus dados em JSON ou excluir sua conta e todos os dados
+            associados a qualquer momento, na página de Configurações.
+          </p>
 
           <h4>Contato</h4>
           <p>Dúvidas sobre esta política podem ser enviadas para ryansa.04&#64;gmail.com.</p>
         </div>
         <div class="politica-botoes">
-          <button type="button" class="btn-cancelar-politica" (click)="fecharPolitica()">Fechar</button>
-          <button type="button" class="btn-aceitar-politica" (click)="aceitarPolitica()">Li e aceito</button>
+          <button type="button" class="btn-cancelar-politica" (click)="fecharPolitica()">
+            Fechar
+          </button>
+          <button type="button" class="btn-aceitar-politica" (click)="aceitarPolitica()">
+            Li e aceito
+          </button>
         </div>
       </div>
     </div>

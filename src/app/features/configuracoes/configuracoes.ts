@@ -58,7 +58,9 @@ export class Configuracoes implements OnInit {
 
     const { data, error } = await supabase
       .from('preferencias')
-      .select('lembrete_diario, relatorio_semanal, alertas_ia, tema, animacoes_reduzidas, mostrar_humor_recente, relatorio_semanal_dia')
+      .select(
+        'lembrete_diario, relatorio_semanal, alertas_ia, tema, animacoes_reduzidas, mostrar_humor_recente, relatorio_semanal_dia',
+      )
       .eq('user_id', user.id)
       .maybeSingle();
 
@@ -87,7 +89,14 @@ export class Configuracoes implements OnInit {
 
   erroPreferencias = '';
 
-  async toggle(prop: 'lembreteDiario' | 'relatorioSemanal' | 'alertasIA' | 'animacoesReduzidas' | 'mostrarHumorRecente') {
+  async toggle(
+    prop:
+      | 'lembreteDiario'
+      | 'relatorioSemanal'
+      | 'alertasIA'
+      | 'animacoesReduzidas'
+      | 'mostrarHumorRecente',
+  ) {
     this[prop] = !this[prop];
     const sucesso = await this.salvar();
     if (!sucesso) {
@@ -183,7 +192,8 @@ export class Configuracoes implements OnInit {
 
     const confirmou = await this.modal.confirmar({
       titulo: 'Excluir conta',
-      mensagem: 'Tem certeza que quer excluir sua conta? Todos os seus registros, contatos e relatórios serão apagados para sempre. Essa ação não pode ser desfeita.',
+      mensagem:
+        'Tem certeza que quer excluir sua conta? Todos os seus registros, contatos e relatórios serão apagados para sempre. Essa ação não pode ser desfeita.',
       textoConfirmar: 'Excluir conta',
       perigo: true,
     });
@@ -192,7 +202,9 @@ export class Configuracoes implements OnInit {
     this.excluindo = true;
     this.erroExclusao = '';
 
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
     if (!session) {
       this.excluindo = false;
       this.erroExclusao = 'Sessão expirada. Faça login novamente e tente de novo.';
@@ -206,7 +218,9 @@ export class Configuracoes implements OnInit {
       });
 
       if (!resposta.ok) {
-        const erro = await resposta.json().catch(() => ({ error: `Erro ${resposta.status} ao excluir conta.` }));
+        const erro = await resposta
+          .json()
+          .catch(() => ({ error: `Erro ${resposta.status} ao excluir conta.` }));
         throw new Error(erro.error || `Erro ${resposta.status} ao excluir conta.`);
       }
 

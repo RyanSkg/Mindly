@@ -12,7 +12,7 @@ export interface Notificacao {
 @Injectable({ providedIn: 'root' })
 export class NotificacoesService {
   lista = signal<Notificacao[]>([]);
-  naoLidas = computed(() => this.lista().filter(n => !n.lida).length);
+  naoLidas = computed(() => this.lista().filter((n) => !n.lida).length);
 
   private carregado = false;
 
@@ -32,21 +32,25 @@ export class NotificacoesService {
   }
 
   async marcarComoLida(id: string): Promise<void> {
-    this.lista.update(atual => atual.map(n => (n.id === id ? { ...n, lida: true } : n)));
+    this.lista.update((atual) => atual.map((n) => (n.id === id ? { ...n, lida: true } : n)));
     await supabase.from('notificacoes').update({ lida: true }).eq('id', id);
   }
 
   async marcarTodasComoLidas(): Promise<void> {
-    const idsNaoLidas = this.lista().filter(n => !n.lida).map(n => n.id);
+    const idsNaoLidas = this.lista()
+      .filter((n) => !n.lida)
+      .map((n) => n.id);
     if (idsNaoLidas.length === 0) return;
 
-    this.lista.update(atual => atual.map(n => ({ ...n, lida: true })));
+    this.lista.update((atual) => atual.map((n) => ({ ...n, lida: true })));
     await supabase.from('notificacoes').update({ lida: true }).in('id', idsNaoLidas);
   }
 
   /** Cria uma notificação para o usuário logado e atualiza a lista/badge na hora. */
   async criar(titulo: string, mensagem?: string): Promise<void> {
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
     const user = session?.user;
     if (!user) return;
 
@@ -57,7 +61,7 @@ export class NotificacoesService {
       .single();
 
     if (!error && data) {
-      this.lista.update(atual => [data as Notificacao, ...atual]);
+      this.lista.update((atual) => [data as Notificacao, ...atual]);
     }
   }
 }
