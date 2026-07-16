@@ -4,8 +4,8 @@
     <div class="home-logo">
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
+        width="22"
+        height="22"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -24,6 +24,10 @@
       </svg>
       <span>Mindly</span>
     </div>
+    <nav class="home-nav">
+      <a href="#recursos">Recursos</a>
+      <a href="#tutorial">Como usar</a>
+    </nav>
     <div class="home-topbar-acoes">
       <button
         class="btn-tema"
@@ -79,69 +83,178 @@
 
   <!-- Hero -->
   <section class="hero">
-    <h1>Seu diário emocional,<br />com apoio de verdade</h1>
-    <p>
-      O Mindly ajuda você a registrar como está se sentindo, entender suas emoções com ajuda de IA e
-      se conectar com quem importa — seus contatos de confiança e seu psicólogo(a).
-    </p>
+    <button class="pill-novidade" (click)="irParaRegistro()">
+      <span class="pill-texto">Novo: conexão real com psicólogos</span>
+      <span class="pill-seta">→</span>
+    </button>
+
+    <h1>
+      Suas emoções,<br />
+      <span class="hero-apagado">com clareza</span>
+    </h1>
+    <p class="hero-sub">O diário emocional que entende você — com apoio de IA e de quem importa</p>
     <div class="hero-botoes">
-      <button class="btn-registrar btn-grande" (click)="irParaRegistro()">
-        Começar gratuitamente
-      </button>
-      <a href="#tutorial" class="btn-entrar btn-grande">Como funciona</a>
+      <button class="btn-comecar" (click)="irParaRegistro()">Começar agora</button>
+      <a href="#tutorial" class="btn-como">Como funciona</a>
     </div>
   </section>
 
-  <!-- Funcionalidades -->
-  <section class="funcionalidades">
-    <h2>Tudo que o Mindly oferece</h2>
-    <div class="grid-funcionalidades">
-      <div class="func-card">
-        <div class="func-icone">📓</div>
+  <!-- Recursos -->
+  <section class="recursos" id="recursos">
+    <h2>
+      Recursos que cuidam<br />
+      <span class="titulo-apagado">do seu dia a dia</span>
+    </h2>
+
+    <div class="chips-recursos">
+      <span class="chip">Diário</span>
+      <span class="chip">Análise com IA</span>
+      <span class="chip">Dashboard</span>
+      <span class="chip">8 Minutos</span>
+      <span class="chip">Psicólogo</span>
+    </div>
+
+    <div class="grid-recursos">
+      <div class="recurso">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="recurso-icone"
+        >
+          <path d="M2 6h4" />
+          <path d="M2 10h4" />
+          <path d="M2 14h4" />
+          <path d="M2 18h4" />
+          <rect width="16" height="20" x="4" y="2" rx="2" />
+          <path d="M16 2v20" />
+        </svg>
         <h3>Diário emocional</h3>
         <p>
-          Registre seu humor com texto ou áudio (transcrito automaticamente), filtre por data e
-          acompanhe seus registros recentes.
+          Registre como você se sente com texto ou áudio transcrito automaticamente, selecionando
+          quantos humores quiser.
         </p>
       </div>
-      <div class="func-card">
-        <div class="func-icone">🤖</div>
-        <h3>Análise com IA</h3>
+      <div class="recurso">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="recurso-icone"
+        >
+          <path
+            d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"
+          />
+        </svg>
+        <h3>Reflexões com IA</h3>
         <p>
-          Receba uma reflexão específica sobre o que você escreveu, uma sugestão prática e
-          indicações de conteúdo — e continue a conversa com a IA.
+          Cada registro recebe uma análise específica, uma sugestão prática e indicações de conteúdo
+          — e você pode continuar a conversa.
         </p>
       </div>
-      <div class="func-card">
-        <div class="func-icone">📊</div>
-        <h3>Dashboard</h3>
+      <div class="recurso">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="recurso-icone"
+        >
+          <path d="M3 3v18h18" />
+          <path d="M18 17V9" />
+          <path d="M13 17V5" />
+          <path d="M8 17v-3" />
+        </svg>
+        <h3>Evolução visível</h3>
         <p>
-          Gráficos do seu humor por semana, distribuição de emoções, sequência de dias ativos e
+          Gráficos semanais, distribuição de emoções, metas, resumo do mês gerado por IA e
           exportação em PDF.
         </p>
       </div>
-      <div class="func-card">
-        <div class="func-icone">💛</div>
-        <h3>8 Minutos</h3>
+      <div class="recurso">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="recurso-icone"
+        >
+          <path
+            d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+          />
+        </svg>
+        <h3>Rede de apoio</h3>
         <p>
-          Sua rede de apoio: conecte-se com outros usuários do Mindly, avise um contato de confiança
-          pelo app ou WhatsApp, e tenha acesso rápido a CVV e SAMU.
+          Conecte-se a contatos de confiança pelo &#64;usuario, avise alguém num momento difícil e
+          tenha CVV e SAMU a um toque.
         </p>
       </div>
-      <div class="func-card">
-        <div class="func-icone">🩺</div>
-        <h3>Conexão com psicólogo(a)</h3>
+      <div class="recurso">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="recurso-icone"
+        >
+          <path
+            d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"
+          />
+          <path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4" />
+          <circle cx="20" cy="10" r="2" />
+        </svg>
+        <h3>Psicólogo de verdade</h3>
         <p>
-          Adicione seu psicólogo(a) pelo @usuario e envie relatórios do seu progresso — manualmente
-          ou automaticamente toda semana.
+          Adicione seu profissional, envie relatórios do seu progresso — manualmente ou toda semana,
+          automático.
         </p>
       </div>
-      <div class="func-card">
-        <div class="func-icone">🔒</div>
-        <h3>Privacidade em primeiro lugar</h3>
+      <div class="recurso">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="recurso-icone"
+        >
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        </svg>
+        <h3>Privacidade primeiro</h3>
         <p>
-          Dados criptografados, consentimento LGPD, e você decide o que compartilhar — inclusive se
-          seus contatos podem ver seu humor recente.
+          Consentimento LGPD, dados criptografados e você no controle do que compartilha — até do
+          seu humor recente.
         </p>
       </div>
     </div>
@@ -149,10 +262,14 @@
 
   <!-- Tutorial -->
   <section class="tutorial" id="tutorial">
-    <h2>Como usar o Mindly</h2>
+    <h2>
+      Comece em minutos,<br />
+      <span class="titulo-apagado">do seu jeito</span>
+    </h2>
+
     <div class="tutorial-abas">
       <button [class.aba-ativa]="abaTutorial === 'usuario'" (click)="abaTutorial = 'usuario'">
-        Para usuários
+        Para você
       </button>
       <button [class.aba-ativa]="abaTutorial === 'psicologo'" (click)="abaTutorial = 'psicologo'">
         Para psicólogos(as)
@@ -160,131 +277,117 @@
     </div>
 
     @if (abaTutorial === 'usuario') {
-      <div class="passos">
-        <div class="passo">
-          <span class="passo-numero">1</span>
+      <ol class="passos">
+        <li class="passo">
+          <span class="passo-numero">01</span>
           <div>
             <h3>Crie sua conta</h3>
             <p>
-              Clique em <strong>Registrar</strong>, escolha "Sou usuário", preencha seus dados e
-              aceite a Política de Privacidade. Confirme seu email e pronto.
+              Clique em <strong>Registrar</strong>, escolha "Sou usuário" e aceite a Política de
+              Privacidade. Confirme o email e pronto.
             </p>
           </div>
-        </div>
-        <div class="passo">
-          <span class="passo-numero">2</span>
+        </li>
+        <li class="passo">
+          <span class="passo-numero">02</span>
           <div>
-            <h3>Registre seu humor no Diário</h3>
+            <h3>Registre seu humor</h3>
             <p>
-              Escolha o humor que mais combina com seu momento, escreva (ou grave um áudio) sobre
-              como você está se sentindo e clique em <strong>Analisar com IA</strong> para receber
-              uma reflexão personalizada.
+              Selecione os humores do momento, escreva ou grave um áudio e peça a
+              <strong>análise da IA</strong> pra receber uma reflexão personalizada.
             </p>
           </div>
-        </div>
-        <div class="passo">
-          <span class="passo-numero">3</span>
+        </li>
+        <li class="passo">
+          <span class="passo-numero">03</span>
           <div>
-            <h3>Acompanhe sua evolução no Dashboard</h3>
+            <h3>Acompanhe sua evolução</h3>
             <p>
-              Veja gráficos do seu humor ao longo da semana, a distribuição das suas emoções e sua
-              sequência de dias registrando.
+              O Dashboard mostra seus gráficos da semana, emoções mais frequentes, sequência de dias
+              e sua meta semanal.
             </p>
           </div>
-        </div>
-        <div class="passo">
-          <span class="passo-numero">4</span>
+        </li>
+        <li class="passo">
+          <span class="passo-numero">04</span>
           <div>
-            <h3>Monte sua rede de apoio no 8 Minutos</h3>
+            <h3>Monte sua rede de apoio</h3>
             <p>
-              Adicione contatos de confiança pelo <strong>&#64;usuario</strong> deles no Mindly ou
-              por link de convite. Nos momentos difíceis, avise alguém com um clique — pelo app ou
-              WhatsApp.
+              No 8 Minutos, adicione contatos de confiança pelo <strong>&#64;usuario</strong> ou por
+              link de convite — e avise alguém com um clique.
             </p>
           </div>
-        </div>
-        <div class="passo">
-          <span class="passo-numero">5</span>
+        </li>
+        <li class="passo">
+          <span class="passo-numero">05</span>
           <div>
-            <h3>Conecte-se com seu psicólogo(a)</h3>
+            <h3>Conecte seu psicólogo(a)</h3>
             <p>
-              Na aba <strong>Psicólogo</strong>, adicione o &#64;usuario do seu profissional e envie
-              relatórios do seu progresso. Em Configurações, você pode ativar o envio automático
-              semanal no dia que preferir.
+              Adicione o &#64;usuario do seu profissional e envie relatórios do progresso — ou ative
+              o envio automático semanal.
             </p>
           </div>
-        </div>
-        <div class="passo">
-          <span class="passo-numero">6</span>
-          <div>
-            <h3>Personalize tudo em Configurações</h3>
-            <p>
-              Tema claro, escuro ou automático, animações reduzidas, lembretes por email,
-              privacidade do seu humor recente e exportação de todos os seus dados.
-            </p>
-          </div>
-        </div>
-      </div>
+        </li>
+      </ol>
     } @else {
-      <div class="passos">
-        <div class="passo">
-          <span class="passo-numero">1</span>
+      <ol class="passos">
+        <li class="passo">
+          <span class="passo-numero">01</span>
           <div>
             <h3>Crie sua conta profissional</h3>
             <p>
-              Clique em <strong>Registrar</strong>, escolha <strong>"Sou psicólogo(a)"</strong> e
-              informe seu CRP e especialidade. Seu cadastro passa por uma aprovação antes de liberar
-              o acesso.
+              Em <strong>Registrar</strong>, escolha "Sou psicólogo(a)" e informe seu CRP e
+              especialidade. O cadastro passa por aprovação.
             </p>
           </div>
-        </div>
-        <div class="passo">
-          <span class="passo-numero">2</span>
+        </li>
+        <li class="passo">
+          <span class="passo-numero">02</span>
           <div>
-            <h3>Aguarde a aprovação</h3>
+            <h3>Convide seus pacientes</h3>
             <p>
-              Enquanto seu cadastro está em análise, você verá uma tela de espera. Assim que for
-              aprovado, o Painel de Pacientes é liberado automaticamente no próximo acesso.
+              Aprovado, compartilhe seu link de convite ou seu &#64;usuario — ou cadastre o paciente
+              você mesmo pelo &#64; dele.
             </p>
           </div>
-        </div>
-        <div class="passo">
-          <span class="passo-numero">3</span>
+        </li>
+        <li class="passo">
+          <span class="passo-numero">03</span>
           <div>
-            <h3>Compartilhe seu link com pacientes</h3>
+            <h3>Acompanhe de verdade</h3>
             <p>
-              No Painel de Pacientes, copie seu <strong>link de convite</strong> e envie para seus
-              pacientes — ou passe seu &#64;usuario para eles te adicionarem pela aba Psicólogo.
+              Linha do tempo do humor, relatórios recebidos, anotações privadas e mensagens direto
+              pro paciente — tudo num painel só.
             </p>
           </div>
-        </div>
-        <div class="passo">
-          <span class="passo-numero">4</span>
+        </li>
+        <li class="passo">
+          <span class="passo-numero">04</span>
           <div>
-            <h3>Aceite os pedidos de conexão</h3>
+            <h3>Privacidade preservada</h3>
             <p>
-              Quando um paciente pedir conexão, o pedido aparece no seu painel. Você decide aceitar
-              ou recusar.
+              Você vê o humor e os relatórios que o paciente envia — o texto do diário dele continua
+              sempre privado.
             </p>
           </div>
-        </div>
-        <div class="passo">
-          <span class="passo-numero">5</span>
-          <div>
-            <h3>Receba relatórios dos pacientes</h3>
-            <p>
-              Os relatórios que seus pacientes enviarem (manualmente ou automaticamente toda semana)
-              chegam no seu painel, com resumo de registros e emoções — e podem ser baixados em PDF.
-            </p>
-          </div>
-        </div>
-      </div>
+        </li>
+      </ol>
     }
+  </section>
+
+  <!-- Chamada final -->
+  <section class="chamada-final">
+    <h2>Pronto pra se conhecer melhor?</h2>
+    <button class="btn-comecar" (click)="irParaRegistro()">Criar minha conta</button>
   </section>
 
   <!-- Rodapé -->
   <footer class="home-rodape">
-    <p>Mindly — Diário emocional com IA</p>
-    <button class="btn-registrar" (click)="irParaRegistro()">Criar minha conta</button>
+    <p>Mindly — Diário emocional com IA · Projeto Ford Enter</p>
+    <div class="rodape-links">
+      <a href="#recursos">Recursos</a>
+      <a href="#tutorial">Como usar</a>
+      <a routerLink="/auth">Entrar</a>
+    </div>
   </footer>
 </div>

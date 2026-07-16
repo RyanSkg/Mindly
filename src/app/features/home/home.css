@@ -5,18 +5,21 @@
   overflow-y: auto;
 }
 
-/* Topbar */
+/* ===== Topbar ===== */
 
 .home-topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 32px;
-  border-bottom: 1px solid var(--border);
-  background-color: var(--sidebar);
+  gap: 20px;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 18px 32px;
   position: sticky;
   top: 0;
   z-index: 10;
+  background-color: color-mix(in oklab, var(--background) 88%, transparent);
+  backdrop-filter: blur(10px);
 }
 
 .home-logo {
@@ -30,9 +33,29 @@
 }
 
 .home-logo span {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
-  color: var(--brand-soft);
+  color: var(--foreground);
+  letter-spacing: -0.01em;
+}
+
+.home-nav {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  margin-right: auto;
+  margin-left: 26px;
+}
+
+.home-nav a {
+  font-size: 13px;
+  color: var(--muted-fg);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.home-nav a:hover {
+  color: var(--foreground);
 }
 
 .home-topbar-acoes {
@@ -45,12 +68,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   background: none;
-  border: 1px solid var(--border);
+  border: none;
   color: var(--muted-fg);
-  border-radius: 8px;
+  border-radius: 9999px;
   cursor: pointer;
   transition:
     background-color 0.15s,
@@ -59,22 +82,21 @@
 
 .btn-tema:hover {
   background-color: var(--accent);
-  color: var(--brand-soft);
+  color: var(--foreground);
 }
 
 .btn-entrar {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   background: none;
-  border: 1px solid var(--border);
+  border: none;
   color: var(--foreground);
-  border-radius: 8px;
-  padding: 9px 18px;
+  padding: 8px 14px;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
   text-decoration: none;
+  border-radius: 9999px;
   transition: background-color 0.15s;
 }
 
@@ -85,133 +107,210 @@
 .btn-registrar {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  background-color: var(--brand);
-  color: var(--brand-foreground);
+  background-color: var(--foreground);
+  color: var(--background);
   border: none;
-  border-radius: 8px;
-  padding: 9px 18px;
+  border-radius: 9999px;
+  padding: 8px 18px;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   text-decoration: none;
-  transition: opacity 0.15s;
+  transition:
+    opacity 0.15s,
+    transform 0.15s;
 }
 
 .btn-registrar:hover {
-  opacity: 0.9;
+  opacity: 0.85;
 }
 
-.btn-grande {
-  padding: 12px 26px;
-  font-size: 15px;
-}
-
-/* Hero */
+/* ===== Hero ===== */
 
 .hero {
   text-align: center;
-  padding: 90px 24px 70px;
-  max-width: 720px;
+  padding: 110px 24px 130px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
-.hero h1 {
-  font-size: 42px;
-  font-weight: 700;
-  line-height: 1.15;
-  color: var(--foreground);
-  margin-bottom: 18px;
+.pill-novidade {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  padding: 7px 16px;
+  margin-bottom: 40px;
+  font-size: 13px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    transform 0.2s;
 }
 
-.hero p {
-  font-size: 16px;
-  line-height: 1.7;
+.pill-novidade:hover {
+  border-color: var(--brand-muted);
+  transform: translateY(-1px);
+}
+
+.pill-texto {
+  background: linear-gradient(90deg, #f8a88f, #f0a9ec 50%, #a78bfa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 500;
+}
+
+.pill-seta {
+  color: var(--brand-soft);
+}
+
+.hero h1 {
+  font-size: clamp(44px, 8.5vw, 82px);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  color: var(--foreground);
+  margin-bottom: 26px;
+}
+
+.hero-apagado {
   color: var(--muted-fg);
-  margin-bottom: 30px;
+}
+
+.hero-sub {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--muted-fg);
+  max-width: 480px;
+  margin: 0 auto 38px;
 }
 
 .hero-botoes {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 20px;
   flex-wrap: wrap;
 }
 
-/* Funcionalidades */
-
-.funcionalidades {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 30px 24px 70px;
-}
-
-.funcionalidades h2,
-.tutorial h2 {
-  font-size: 26px;
+.btn-comecar {
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--brand);
+  color: var(--brand-foreground);
+  border: none;
+  border-radius: 9999px;
+  padding: 13px 30px;
+  font-size: 15px;
   font-weight: 600;
-  text-align: center;
-  color: var(--foreground);
-  margin-bottom: 32px;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    box-shadow 0.2s,
+    transform 0.2s;
 }
 
-.grid-funcionalidades {
+.btn-comecar:hover {
+  box-shadow: 0 0 28px color-mix(in oklab, var(--brand) 45%, transparent);
+  transform: translateY(-2px);
+}
+
+.btn-como {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--brand-soft);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.btn-como:hover {
+  color: var(--foreground);
+}
+
+/* ===== Títulos de seção (estilo angular.dev: 2 linhas, metade apagada) ===== */
+
+.recursos h2,
+.tutorial h2 {
+  font-size: clamp(30px, 4.5vw, 48px);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--foreground);
+  margin-bottom: 34px;
+}
+
+.titulo-apagado {
+  color: var(--muted-fg);
+}
+
+/* ===== Recursos ===== */
+
+.recursos {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 40px 32px 110px;
+  scroll-margin-top: 80px;
+}
+
+.chips-recursos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 54px;
+}
+
+.chip {
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  padding: 7px 18px;
+  font-size: 13px;
+  color: var(--muted-fg);
+}
+
+.grid-recursos {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  gap: 48px 40px;
 }
 
-.func-card {
-  background-color: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 22px;
-  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 40%);
-  transition: border-color 0.2s;
+.recurso-icone {
+  color: var(--brand-soft);
+  margin-bottom: 14px;
 }
 
-.func-card:hover {
-  border-color: var(--brand-muted);
-}
-
-.func-icone {
-  font-size: 26px;
-  margin-bottom: 10px;
-}
-
-.func-card h3 {
+.recurso h3 {
   font-size: 15px;
   font-weight: 600;
   color: var(--foreground);
   margin-bottom: 8px;
+  letter-spacing: -0.01em;
 }
 
-.func-card p {
-  font-size: 13px;
-  line-height: 1.6;
+.recurso p {
+  font-size: 13.5px;
+  line-height: 1.65;
   color: var(--muted-fg);
 }
 
-/* Tutorial */
+/* ===== Tutorial ===== */
 
 .tutorial {
   max-width: 760px;
   margin: 0 auto;
-  padding: 30px 24px 70px;
-  scroll-margin-top: 70px;
+  padding: 40px 32px 110px;
+  scroll-margin-top: 80px;
 }
 
 .tutorial-abas {
-  display: flex;
-  justify-content: center;
+  display: inline-flex;
   gap: 4px;
-  background-color: var(--card);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 9999px;
   padding: 4px;
-  width: fit-content;
-  margin: 0 auto 30px;
+  margin-bottom: 44px;
 }
 
 .tutorial-abas button {
@@ -220,8 +319,8 @@
   color: var(--muted-fg);
   font-size: 13px;
   font-weight: 500;
-  padding: 9px 20px;
-  border-radius: 8px;
+  padding: 8px 20px;
+  border-radius: 9999px;
   cursor: pointer;
   transition:
     background-color 0.15s,
@@ -229,58 +328,71 @@
 }
 
 .tutorial-abas button.aba-ativa {
-  background-color: var(--brand);
-  color: var(--brand-foreground);
+  background-color: var(--foreground);
+  color: var(--background);
 }
 
 .passos {
+  list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 14px;
 }
 
 .passo {
   display: flex;
-  gap: 16px;
-  background-color: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 18px 20px;
-  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 40%);
+  gap: 26px;
+  padding: 26px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.passo:last-child {
+  border-bottom: none;
 }
 
 .passo-numero {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--brand-muted), var(--brand));
-  color: var(--brand-foreground);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
+  color: var(--brand-soft);
+  font-variant-numeric: tabular-nums;
+  padding-top: 2px;
   flex-shrink: 0;
 }
 
 .passo h3 {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--foreground);
-  margin-bottom: 5px;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
 }
 
 .passo p {
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.65;
   color: var(--muted-fg);
 }
 
 .passo strong {
   color: var(--brand-soft);
+  font-weight: 500;
 }
 
-/* Rodapé */
+/* ===== Chamada final ===== */
+
+.chamada-final {
+  text-align: center;
+  padding: 40px 24px 120px;
+}
+
+.chamada-final h2 {
+  font-size: clamp(26px, 4vw, 40px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--foreground);
+  margin-bottom: 30px;
+}
+
+/* ===== Rodapé ===== */
 
 .home-rodape {
   display: flex;
@@ -289,8 +401,8 @@
   gap: 16px;
   flex-wrap: wrap;
   border-top: 1px solid var(--border);
-  padding: 24px 32px;
-  max-width: 1000px;
+  padding: 26px 32px;
+  max-width: 1120px;
   margin: 0 auto;
 }
 
@@ -299,23 +411,51 @@
   color: var(--muted-fg);
 }
 
-/* Mobile */
+.rodape-links {
+  display: flex;
+  gap: 20px;
+}
+
+.rodape-links a {
+  font-size: 12px;
+  color: var(--muted-fg);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.rodape-links a:hover {
+  color: var(--foreground);
+}
+
+/* ===== Mobile ===== */
 
 @media (max-width: 720px) {
-  .hero {
-    padding: 56px 20px 44px;
-  }
-
-  .hero h1 {
-    font-size: 30px;
-  }
-
-  .grid-funcionalidades {
-    grid-template-columns: 1fr;
-  }
-
   .home-topbar {
-    padding: 12px 16px;
+    padding: 14px 18px;
+  }
+
+  .home-nav {
+    display: none;
+  }
+
+  .hero {
+    padding: 64px 20px 80px;
+  }
+
+  .grid-recursos {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .recursos,
+  .tutorial {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 72px;
+  }
+
+  .passo {
+    gap: 16px;
   }
 
   .home-rodape {
