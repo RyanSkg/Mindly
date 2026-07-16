@@ -23,7 +23,7 @@ export class Auth implements OnInit, OnDestroy {
   erro: string = '';
   mensagem: string = '';
   aceitouPolitica: boolean = false;
-  mostrarPolitica: boolean = false;
+  documentoAberto: 'politica' | 'termos' | null = null;
 
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -61,16 +61,20 @@ export class Auth implements OnInit, OnDestroy {
   }
 
   abrirPolitica() {
-    this.mostrarPolitica = true;
+    this.documentoAberto = 'politica';
   }
 
-  fecharPolitica() {
-    this.mostrarPolitica = false;
+  abrirTermos() {
+    this.documentoAberto = 'termos';
   }
 
-  aceitarPolitica() {
+  fecharDocumento() {
+    this.documentoAberto = null;
+  }
+
+  aceitarDocumento() {
     this.aceitouPolitica = true;
-    this.mostrarPolitica = false;
+    this.documentoAberto = null;
   }
 
   async entrar() {

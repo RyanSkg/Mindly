@@ -146,7 +146,11 @@
         <label class="campo-checkbox">
           <input type="checkbox" [(ngModel)]="aceitouPolitica" name="aceitouPolitica" />
           <span>
-            Li e aceito a
+            Li e aceito os
+            <button type="button" class="link-politica" (click)="abrirTermos()">
+              Termos de Uso
+            </button>
+            e a
             <button type="button" class="link-politica" (click)="abrirPolitica()">
               Política de Privacidade
             </button>
@@ -181,53 +185,110 @@
     </p>
   </div>
 
-  <!-- Popup: Política de Privacidade -->
-  @if (mostrarPolitica) {
-    <div class="politica-backdrop" (click)="fecharPolitica()">
+  <!-- Popup: Termos de Uso / Política de Privacidade -->
+  @if (documentoAberto) {
+    <div class="politica-backdrop" (click)="fecharDocumento()">
       <div class="politica-card" (click)="$event.stopPropagation()">
-        <h3>Política de Privacidade</h3>
-        <div class="politica-corpo">
-          <p>
-            A Mindly é um diário emocional que trata dados sobre sua saúde mental — considerados
-            <strong>dados sensíveis</strong> pela Lei Geral de Proteção de Dados (LGPD, Lei nº
-            13.709/2018). Por isso, pedimos seu consentimento explícito antes de criar sua conta.
-          </p>
+        <h3>{{ documentoAberto === 'termos' ? 'Termos de Uso' : 'Política de Privacidade' }}</h3>
+        @if (documentoAberto === 'termos') {
+          <div class="politica-corpo">
+            <p>
+              Ao criar uma conta no Mindly, você concorda com as condições abaixo. Leia com atenção
+              — elas existem pra proteger você.
+            </p>
 
-          <h4>O que coletamos</h4>
-          <p>
-            Nome, email, registros de humor e textos do diário, contatos de confiança que você
-            cadastrar e, se optar por usar o áudio, a transcrição da sua fala.
-          </p>
+            <h4>1. O que o Mindly é (e o que não é)</h4>
+            <p>
+              O Mindly é uma ferramenta de <strong>autoconhecimento e apoio emocional</strong>:
+              diário de humor, reflexões geradas por inteligência artificial e conexão com sua rede
+              de apoio. Ele <strong>não é um serviço de saúde</strong>, não faz diagnóstico, não
+              prescreve tratamento e <strong>não substitui</strong> acompanhamento psicológico,
+              psiquiátrico ou médico.
+            </p>
 
-          <h4>Como usamos</h4>
-          <p>
-            Seus registros são analisados por uma IA (Groq) para gerar reflexões e sugestões
-            personalizadas, e podem ser usados para montar relatórios que você mesmo escolhe enviar
-            ao seu psicólogo. Não vendemos nem compartilhamos seus dados com terceiros para fins de
-            marketing.
-          </p>
+            <h4>2. Emergências</h4>
+            <p>
+              O Mindly não é um canal de emergência. Em situações de crise ou risco, procure ajuda
+              imediata: <strong>CVV (188)</strong>, <strong>SAMU (192)</strong> ou o serviço de
+              saúde mais próximo.
+            </p>
 
-          <h4>Onde ficam armazenados</h4>
-          <p>
-            Seus dados ficam no Supabase, com criptografia em repouso (AES-256) e em trânsito
-            (TLS/HTTPS), protegidos por Row Level Security — apenas você consegue acessar seus
-            próprios registros.
-          </p>
+            <h4>3. Sobre as respostas da IA</h4>
+            <p>
+              As reflexões, sugestões e resumos são gerados por inteligência artificial e podem
+              conter imprecisões. Use-os como apoio à reflexão, nunca como orientação clínica.
+            </p>
 
-          <h4>Seus direitos</h4>
-          <p>
-            Você pode exportar todos os seus dados em JSON ou excluir sua conta e todos os dados
-            associados a qualquer momento, na página de Configurações.
-          </p>
+            <h4>4. Sua conta e conduta</h4>
+            <p>
+              Você é responsável por manter sua senha segura e pelas informações que cadastra. É
+              proibido usar o Mindly pra assediar outras pessoas, se passar por profissional de
+              saúde sem registro ou violar leis. Contas de psicólogo(a) passam por aprovação e podem
+              ser revogadas.
+            </p>
 
-          <h4>Contato</h4>
-          <p>Dúvidas sobre esta política podem ser enviadas para ryansa.04&#64;gmail.com.</p>
-        </div>
+            <h4>5. Compartilhamento que você controla</h4>
+            <p>
+              Nada seu é visível pra outras pessoas sem sua ação: conexões dependem de aceite dos
+              dois lados, relatórios só chegam ao psicólogo(a) que você escolher e o texto do seu
+              diário nunca é compartilhado.
+            </p>
+
+            <h4>6. Encerramento e alterações</h4>
+            <p>
+              Você pode excluir sua conta a qualquer momento nas Configurações (a exclusão é
+              definitiva). Estes termos podem ser atualizados; mudanças relevantes serão avisadas no
+              app. Projeto acadêmico desenvolvido para o programa Ford Enter, fornecido "como está",
+              sem garantias de disponibilidade.
+            </p>
+
+            <h4>Contato</h4>
+            <p>Dúvidas sobre estes termos: ryansa.04&#64;gmail.com.</p>
+          </div>
+        } @else {
+          <div class="politica-corpo">
+            <p>
+              A Mindly é um diário emocional que trata dados sobre sua saúde mental — considerados
+              <strong>dados sensíveis</strong> pela Lei Geral de Proteção de Dados (LGPD, Lei nº
+              13.709/2018). Por isso, pedimos seu consentimento explícito antes de criar sua conta.
+            </p>
+
+            <h4>O que coletamos</h4>
+            <p>
+              Nome, email, registros de humor e textos do diário, contatos de confiança que você
+              cadastrar e, se optar por usar o áudio, a transcrição da sua fala.
+            </p>
+
+            <h4>Como usamos</h4>
+            <p>
+              Seus registros são analisados por uma IA (Groq) para gerar reflexões e sugestões
+              personalizadas, e podem ser usados para montar relatórios que você mesmo escolhe
+              enviar ao seu psicólogo. Não vendemos nem compartilhamos seus dados com terceiros para
+              fins de marketing.
+            </p>
+
+            <h4>Onde ficam armazenados</h4>
+            <p>
+              Seus dados ficam no Supabase, com criptografia em repouso (AES-256) e em trânsito
+              (TLS/HTTPS), protegidos por Row Level Security — apenas você consegue acessar seus
+              próprios registros.
+            </p>
+
+            <h4>Seus direitos</h4>
+            <p>
+              Você pode exportar todos os seus dados em JSON ou excluir sua conta e todos os dados
+              associados a qualquer momento, na página de Configurações.
+            </p>
+
+            <h4>Contato</h4>
+            <p>Dúvidas sobre esta política podem ser enviadas para ryansa.04&#64;gmail.com.</p>
+          </div>
+        }
         <div class="politica-botoes">
-          <button type="button" class="btn-cancelar-politica" (click)="fecharPolitica()">
+          <button type="button" class="btn-cancelar-politica" (click)="fecharDocumento()">
             Fechar
           </button>
-          <button type="button" class="btn-aceitar-politica" (click)="aceitarPolitica()">
+          <button type="button" class="btn-aceitar-politica" (click)="aceitarDocumento()">
             Li e aceito
           </button>
         </div>
