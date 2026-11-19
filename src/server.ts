@@ -17,12 +17,37 @@ const angularApp = new AngularNodeAppEngine();
 
 app.use(express.json());
 
+const SUPABASE_ANON_KEY =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRtcmV2cHNxcWF2enhjYXZzanZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM0Njg0NjcsImV4cCI6MjA5OTA0NDQ2N30.umbOAnZBNEaHeQpMIQZxq3c1g-p_r634f_Nr1E1mW24';
+const supabaseAuth = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
+
+/**
+ * Só deixa passar requisições de usuários logados (token do Supabase no
+ * header Authorization), pra ninguém usar a cota da IA de fora do app.
+ */
+const exigirUsuario: express.RequestHandler = async (req, res, next) => {
+  const authHeader = req.headers.authorization ?? '';
+  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '';
+  if (!token) {
+    res.status(401).json({ error: 'Não autenticado.' });
+    return;
+  }
+  const { data, error } = await supabaseAuth.auth.getUser(token);
+  if (error || !data.user) {
+    res.status(401).json({ error: 'Sessão inválida.' });
+    return;
+  }
+  next();
+};
+
 /**
  * Analisa o humor/emoji/texto do Diário com IA (Groq, gratuito, sem cartão)
  * e devolve um comentário empático + tags de emoções. A chave da API
  * nunca chega ao navegador — fica só aqui no servidor.
  */
-app.post('/api/analisar', async (req, res) => {
+app.post('/api/analisar', exigirUsuario, async (req, res) => {
   const { humor, emoji, texto } = req.body ?? {};
   const apiKey = process.env['GROQ_API_KEY'];
 
@@ -79,7 +104,7 @@ app.post('/api/analisar', async (req, res) => {
  * Diário (botão "Responder" na análise). Diferente de /api/analisar,
  * aqui a IA conversa de verdade — faz perguntas, dá suporte.
  */
-app.post('/api/conversar', async (req, res) => {
+app.post('/api/conversar', exigirUsuario, async (req, res) => {
   const { mensagens } = req.body ?? {};
   const apiKey = process.env['GROQ_API_KEY'];
 
@@ -134,48 +159,53 @@ app.post('/api/conversar', async (req, res) => {
  * Transcreve um áudio gravado no navegador (Diário → botão "Áudio")
  * usando o Whisper do Groq (gratuito), e devolve o texto reconhecido.
  */
-app.post('/api/transcrever', express.raw({ type: '*/*', limit: '15mb' }), async (req, res) => {
-  const apiKey = process.env['GROQ_API_KEY'];
+app.post(
+  '/api/transcrever',
+  exigirUsuario,
+  express.raw({ type: '*/*', limit: '15mb' }),
+  async (req, res) => {
+    const apiKey = process.env['GROQ_API_KEY'];
 
-  if (!apiKey) {
-    res.status(500).json({ error: 'GROQ_API_KEY não configurada no servidor.' });
-    return;
-  }
-
-  const audioBuffer = req.body as Buffer;
-  if (!audioBuffer || !Buffer.isBuffer(audioBuffer) || audioBuffer.length === 0) {
-    res.status(400).json({ error: 'Áudio vazio.' });
-    return;
-  }
-
-  try {
-    const formData = new FormData();
-    formData.append(
-      'file',
-      new Blob([new Uint8Array(audioBuffer)], { type: 'audio/webm' }),
-      'gravacao.webm',
-    );
-    formData.append('model', 'whisper-large-v3-turbo');
-    formData.append('language', 'pt');
-
-    const resposta = await fetch('https://api.groq.com/openai/v1/audio/transcriptions', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${apiKey}` },
-      body: formData,
-    });
-
-    if (!resposta.ok) {
-      const erro = await resposta.text();
-      res.status(resposta.status).json({ error: erro });
+    if (!apiKey) {
+      res.status(500).json({ error: 'GROQ_API_KEY não configurada no servidor.' });
       return;
     }
 
-    const dados = await resposta.json();
-    res.json({ texto: dados.text ?? '' });
-  } catch (err) {
-    res.status(500).json({ error: err instanceof Error ? err.message : 'Erro ao transcrever' });
-  }
-});
+    const audioBuffer = req.body as Buffer;
+    if (!audioBuffer || !Buffer.isBuffer(audioBuffer) || audioBuffer.length === 0) {
+      res.status(400).json({ error: 'Áudio vazio.' });
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append(
+        'file',
+        new Blob([new Uint8Array(audioBuffer)], { type: 'audio/webm' }),
+        'gravacao.webm',
+      );
+      formData.append('model', 'whisper-large-v3-turbo');
+      formData.append('language', 'pt');
+
+      const resposta = await fetch('https://api.groq.com/openai/v1/audio/transcriptions', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${apiKey}` },
+        body: formData,
+      });
+
+      if (!resposta.ok) {
+        const erro = await resposta.text();
+        res.status(resposta.status).json({ error: erro });
+        return;
+      }
+
+      const dados = await resposta.json();
+      res.json({ texto: dados.text ?? '' });
+    } catch (err) {
+      res.status(500).json({ error: err instanceof Error ? err.message : 'Erro ao transcrever' });
+    }
+  },
+);
 
 /**
  * Apaga a conta do usuário autenticado (dados + login) de vez.
@@ -304,7 +334,7 @@ app.get('/api/lembrete-diario', async (req, res) => {
  * Gera um resumo do mês do usuário com IA (Groq), a partir dos humores
  * agregados que o navegador envia (sem textos do diário — só humor + data).
  */
-app.post('/api/resumo-mensal', async (req, res) => {
+app.post('/api/resumo-mensal', exigirUsuario, async (req, res) => {
   const { registros, mes } = req.body ?? {};
   const apiKey = process.env['GROQ_API_KEY'];
 

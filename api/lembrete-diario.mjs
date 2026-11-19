@@ -1,13 +1,10 @@
+import { cronAutorizado } from './_auth.mjs';
 import { createClient } from '@supabase/supabase-js';
 
 const SUPABASE_URL = 'https://dmrevpsqqavzxcavsjvd.supabase.co';
 
 export default async function handler(req, res) {
-  const cronSecret = process.env.CRON_SECRET;
-  if (cronSecret && req.headers.authorization !== `Bearer ${cronSecret}`) {
-    res.status(401).json({ error: 'Não autorizado.' });
-    return;
-  }
+  if (!cronAutorizado(req, res)) return;
 
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const resendKey = process.env.RESEND_API_KEY;

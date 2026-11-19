@@ -1,3 +1,5 @@
+import { exigirUsuario } from './_auth.mjs';
+
 export const config = {
   api: {
     bodyParser: false,
@@ -9,6 +11,8 @@ export default async function handler(req, res) {
     res.status(405).json({ error: 'Método não permitido' });
     return;
   }
+
+  if (!(await exigirUsuario(req, res))) return;
 
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {

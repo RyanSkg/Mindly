@@ -1,3 +1,5 @@
+import { exigirUsuario } from './_auth.mjs';
+
 /**
  * Gera um resumo do mês do usuário com IA (Groq), a partir dos humores
  * agregados que o navegador envia (sem textos do diário — só humor + data).
@@ -7,6 +9,8 @@ export default async function handler(req, res) {
     res.status(405).json({ error: 'Método não permitido' });
     return;
   }
+
+  if (!(await exigirUsuario(req, res))) return;
 
   const { registros, mes } = req.body ?? {};
   const apiKey = process.env.GROQ_API_KEY;
