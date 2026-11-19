@@ -8,7 +8,7 @@ import { TopbarActionsService } from '../../shared/topbar-actions.service';
 import { PerfilService } from '../../shared/perfil.service';
 import { NotificacoesService } from '../../shared/notificacoes.service';
 import { ModalService } from '../../shared/modal.service';
-import { obterUsuarioValido } from '../../shared/sessao.util';
+import { cabecalhoAutenticacao, obterUsuarioValido } from '../../shared/sessao.util';
 
 interface Humor {
   id: string;
@@ -301,7 +301,7 @@ export class Diario implements OnInit {
     try {
       const resposta = await fetch('/api/analisar', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(await cabecalhoAutenticacao()) },
         body: JSON.stringify({
           humor: (registro.humores ?? [registro.humor]).join(', '),
           emoji: (registro.humores ?? [registro.humor])
@@ -403,7 +403,7 @@ export class Diario implements OnInit {
     try {
       const resposta = await fetch('/api/transcrever', {
         method: 'POST',
-        headers: { 'Content-Type': 'audio/webm' },
+        headers: { 'Content-Type': 'audio/webm', ...(await cabecalhoAutenticacao()) },
         body: blob,
       });
 
@@ -550,7 +550,7 @@ export class Diario implements OnInit {
     try {
       const resposta = await fetch('/api/conversar', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(await cabecalhoAutenticacao()) },
         body: JSON.stringify({ mensagens: this.mensagensConversa }),
       });
 

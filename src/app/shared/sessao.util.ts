@@ -22,3 +22,15 @@ export async function obterUsuarioValido() {
 
   return session.user;
 }
+
+/**
+ * Header Authorization com o token da sessão atual (renovado se preciso),
+ * exigido pelos endpoints /api/* que usam a IA.
+ */
+export async function cabecalhoAutenticacao(): Promise<Record<string, string>> {
+  await obterUsuarioValido();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  return session ? { Authorization: `Bearer ${session.access_token}` } : {};
+}

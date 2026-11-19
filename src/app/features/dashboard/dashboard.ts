@@ -5,7 +5,7 @@ import jsPDF from 'jspdf';
 import { supabase } from '../../integrations/supabase/client';
 import { valorDoHumor, labelDoHumor } from '../../shared/humor.util';
 import { TopbarActionsService } from '../../shared/topbar-actions.service';
-import { obterUsuarioValido } from '../../shared/sessao.util';
+import { cabecalhoAutenticacao, obterUsuarioValido } from '../../shared/sessao.util';
 
 interface DiaDaSemana {
   id: string;
@@ -219,7 +219,7 @@ export class Dashboard implements OnInit, OnDestroy {
     try {
       const resposta = await fetch('/api/resumo-mensal', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(await cabecalhoAutenticacao()) },
         body: JSON.stringify({ registros: registrosDoMes, mes: this.mesFiltro }),
       });
 
